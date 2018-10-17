@@ -67,3 +67,11 @@ keyword_text = """
 <meta name="description" content="mydescription">
 <meta name="keywords" content="mykeywords">
 """
+
+ad_text = """
+<div align="center">
+  <a href="" target=_blank rel="nofollow"  >
+    < img style="width: 1200px;" src="http://www.dsmks.com/images/car.png"  rel="nofollow" >
+  </a >
+</div>
+"""

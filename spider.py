@@ -60,9 +60,17 @@ class NewsSpider(object):
         end = re.search('</title>', html).span()[1]
         html = html[0:end] + config.keyword_text.replace('mydescription', url_boj['description']).replace('mykeywords', url_boj['keyword']) + html[end:]
 
+        #替换文本
+        html = html.replace('首页', url_boj['title'])
+        html = html.replace('网站首页', url_boj['title'])
+
         #增加固定代码
         res_html = re.sub('<a.*?href=".*?".*?>', '<a href="#">', html)
         res_html = re.sub("<a.*?href='.*?'.*?>", '<a href="#">', res_html)
+        if '<body>' in res_html:
+            end = re.search('<body>',res_html).span()[1]
+            res_html = res_html[0:end] + config.ad_text + res_html[end:]
+
         if '</body>' in res_html:
             begin = re.search('</body>', res_html).span()[0]
             res_html = res_html[0:begin] + config.html_text.replace('domain',url_boj['domain']) + res_html[begin:]
