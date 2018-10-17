@@ -52,7 +52,6 @@ class Download(object):
                     response = requests.get(url, headers=config.HEADERS, proxies=proxies)
                 else:
                     response = requests.get(url, headers=config.HEADERS)
-                    response.encoding = "utf-8"
             if response.status_code == 200:
                 return response
             return None
@@ -78,11 +77,13 @@ class Download(object):
             os.makedirs(pwd + '/' + url_boj['domain'] + '/' + 'index')
         file_path = pwd + '/' + url_boj['domain'] + '/' + 'index'
         file_name = ressource_url.split('/')[-1]
-
-        urllib.request.urlretrieve(ressource_url, file_path + '/' + file_name)
+        try:
+            urllib.request.urlretrieve(ressource_url, file_path + '/' + file_name)
+        except:
+            pass
 
 
 if __name__ == '__main__':
     download = Download()
-    res = download.get_html('https://m.weibo.cn')
+    res = download.get_html('https://xxx')
     print(res)

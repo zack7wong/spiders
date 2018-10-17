@@ -2,7 +2,7 @@
 REQUEST_NUM = 0
 
 #请求多少次后换IP配置
-CHANGE_IP = 150
+CHANGE_IP = 0
 
 #代理IP
 IP = ''
@@ -22,8 +22,8 @@ HEADERS = {
     'accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
 }
 
-html_text = """<a href="http://baidu.com/" target="_blank" style="display: none;">http://baidu.com</a> 
-		<a href="http://www.baidu.com/" target="_blank" style="display: none;">http://www.baidu.com</a> 
+html_text = """<a href="http://domain.com/" target="_blank" style="display: none;">http://domain.com</a> 
+		<a href="http://www.domain.com/" target="_blank" style="display: none;">http://www.domain.com</a> 
                 <a href="http://m.baidu.com/" target="_blank" style="display: none;">http://m.baidu.com</a> 
 		<a href="http://wap.baidu.com/" target="_blank" style="display: none;">http://wap.baidu.com</a> 
 		<a href="http://web.baidu.com/" target="_blank" style="display: none;">http://web.baidu.com</a> 
@@ -60,4 +60,10 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-<div style="display:none"></div>"""
+<div style="display:none"></div><p align="center">
+<a href=" " target=_blank rel="nofollow"><img src="http://www.dsmks.com/images/car.png"  rel="nofollow" width="990px"></a ></p >"""
+
+keyword_text = """
+<meta name="description" content="mydescription">
+<meta name="keywords" content="mykeywords">
+"""
