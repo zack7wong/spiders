@@ -37,6 +37,7 @@ class Download(object):
 
     def get_html(self,url):
         if self.retry_num > config.ERROR_MAX:
+            self.retry_num = 0
             print('请求出错次数大于最大出错次数，已终止')
             return None
 
