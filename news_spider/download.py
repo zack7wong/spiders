@@ -3,7 +3,7 @@ import urllib.request
 import json
 import os
 from time import sleep
-import config
+from news_spider import config
 from requests import RequestException
 
 class Download(object):

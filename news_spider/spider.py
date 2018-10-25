@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
-import download
+from news_spider import download, config
 import re
 import os
-import config
+
 
 class NewsSpider(object):
     def __init__(self):
@@ -85,10 +85,10 @@ class NewsSpider(object):
 
             if '</body>' in res_html:
                 begin = re.search('</body>', res_html).span()[0]
-                res_html = res_html[0:begin] + config.html_text.replace('domain',url_boj['domain']) + res_html[begin:]
+                res_html = res_html[0:begin] + config.html_text.replace('domain', url_boj['domain']) + res_html[begin:]
             elif '</html>' in res_html:
                 begin = re.search('</html>', res_html).span()[0]
-                res_html = res_html[0:begin] + config.html_text.replace('domain',url_boj['domain']) + res_html[begin:]
+                res_html = res_html[0:begin] + config.html_text.replace('domain', url_boj['domain']) + res_html[begin:]
             else:
                 res_html = res_html + config.html_text
 
