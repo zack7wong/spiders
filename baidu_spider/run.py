@@ -46,14 +46,16 @@ class BaiduSpider(object):
 
         html_text = response
         results = re.findall('<script.*?data-repeatable>({"data".*?)</script>',html_text)
+        order_list = []
         item_list = []
         for res in results:
             json_obj = json.loads(res)
 
             #搜索列表位置  order
             order = json_obj['order']
+            order_list.append(order)
 
-            # contentType 音频，视频，优质科普文章，专家回答, 专家语音解答
+            # contentType 音频，视频，优质科普文章，专家回答, 专家语音解答, 问答
             if 'title' in json_obj['data']:
                 contentType = json_obj['data']['title']
             elif 'extend_data' in json_obj['data']:
@@ -73,7 +75,7 @@ class BaiduSpider(object):
             if 'video' in json_obj['data']:
                 contentType = '视频'
 
-            #contentStyle 搜索智能聚合
+            #contentStyle top1, 搜索智能聚合, 权威样式（特殊处理）
             if 'showLeftText' in json_obj['data']:
                 contentStyle = json_obj['data']['showLeftText']
             elif 'extend_data' in json_obj['data'] and 'showLeftText' in json_obj['data']['extend_data']:
@@ -203,6 +205,41 @@ class BaiduSpider(object):
                     item_list.append(obj)
                     print(obj)
 
+        #匹配非js json模式的，权威样式
+        html = HTML(html_text)
+        # results = html.xpath('//div[@id="results"]/div[@class="c-result result c-clk-recommend"]')
+        results = html.xpath('//div[@id="results"]/div[@class="c-result result"]')
+        print(order_list)
+        for res in results:
+            detail_html_text = etree.tostring(res)
+            order_res = re.search('order="(\d+)"', detail_html_text.decode()).group(1)
+            if order_res in order_list:
+                continue
+            detail_html = HTML(detail_html_text.decode())
+            order = order_res
+            query = detail_html.xpath('string(//span[@class="c-title-text"])').split('_')[0].replace('?', '')
+            # contentType = detail_html.xpath('string(//span[@class="c-title-text"])').split('_')[1]
+            contentType = '问答'
+            contentStyle = '权威样式'
+            name = detail_html.xpath('string(//div[@class="c-span11 c-line-clamp1"]//span[1])')
+            hospital = detail_html.xpath('string(//div[@class="c-span11 c-line-clamp1"]//span[3])')
+            jobTitle = detail_html.xpath('string(//div[@class="c-span11 c-line-clamp1"]//span[2])')
+            origin = detail_html.xpath('string(//span[@class="c-color-gray"])')
+            obj = {
+                'keyword': url_boj['keyword'],
+                'order': order,
+                'query': query,
+                'contentType': contentType,
+                'contentStyle': contentStyle,
+                'name': name,
+                'hospital': hospital,
+                'jobTitle': jobTitle,
+                'origin': origin,
+            }
+            if name == '':
+                continue
+            item_list.append(obj)
+            print(obj)
 
         self.write(item_list)
 
@@ -214,23 +251,6 @@ class BaiduSpider(object):
         if len(item_list) == 0:
             with open('failed_urls.txt', 'a') as f:
                 f.write(str(url_boj) + '\n')
-
-
-            # html = HTML(html_text)
-            # results = html.xpath('//div[@id="results"]/div[@class="c-result result c-clk-recommend"]')
-            # results = html.xpath('//div[@id="results"]/div[@class="c-result result"]')
-            # print(results)
-            #
-            # for res in results:
-            #     detail_html_text = etree.tostring(res)
-            #     detail_html = HTML(detail_html_text.decode())
-            #     detail = detail_html.xpath('string(//div[@class="c-result-content"])')
-            #     print(detail)
-
-        # except:
-        #     with open('failed_urls.txt', 'a') as f:
-        #         f.write(str(url_boj))
-
 
 
 if __name__ == '__main__':
