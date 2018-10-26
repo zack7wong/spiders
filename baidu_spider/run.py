@@ -59,18 +59,28 @@ class BaiduSpider(object):
             elif 'extend_data' in json_obj['data']:
                 if 'showLeftText' in json_obj['data']['extend_data']:
                     contentStyle = json_obj['data']['extend_data']['showLeftText']
+            elif 'extendData' in json_obj['data']:
+                if 'showLeftText' in json_obj['data']['extendData']:
+                    contentStyle = json_obj['data']['extendData']['showLeftText']
             else:
                 contentStyle = 'top1'
 
-            #音频，视频，优质科普文章  contentType
+            #音频，视频，优质科普文章，专家回答, 专家语音解答  contentType
             if 'title' in json_obj['data']:
                 contentType = json_obj['data']['title']
-                if '_' in contentType:
-                    contentType = contentType.split('_')[1]
-                if '-' in contentType:
-                    contentType = contentType.split('-')[1]
-                if 'hasVoice' in json_obj['data']:
-                    contentType = '音频'
+            elif 'extend_data' in json_obj['data']:
+                contentType = json_obj['data']['extend_data']['title']
+            elif 'extendData' in json_obj['data']:
+                contentType = json_obj['data']['extendData']['title']
+
+            if '_' in contentType:
+                contentType = contentType.split('_')[1]
+                contentType = re.sub('(\(.*?\))', '', contentType)
+            if '-' in contentType:
+                contentType = contentType.split('-')[0].strip()
+            if 'hasVoice' in json_obj['data']:
+                contentType = '音频'
+
 
             #医生详情
             #1.top1样式
@@ -93,10 +103,23 @@ class BaiduSpider(object):
                 }
                 item_list.append(obj)
                 print(obj)
-            #2.优质文章类型
-            elif 'list' in json_obj['data']:
-                for item in json_obj['data']['list']:
-                    query = item['title'].split('<em>', '').split('</em>', '')
+            #2.优质科普文章类型,  专家回答类型
+            elif 'list' in json_obj['data'] or 'extend_data' in json_obj['data']:
+                if 'list' in json_obj['data']:
+                    data = json_obj['data']['list']
+                elif 'extend_data' in json_obj['data']:
+                    data = json_obj['data']['extend_data']['list']
+
+                for item in data:
+                    query = item['title'].replace('<em>', '').replace('</em>', '').replace('？', '').replace('。', '')
+                    name = item['doctorName'] if 'doctorName' in item else item['doctorInfo'].split(' ')[0]
+                    hospital = item['hospital'] if 'hospital' in item else item['doctorInfo'].split(' ')[1]
+                    jobTitle = item['doctorTitle'] if 'doctorTitle' in item else ''
+
+                    if 'list' in json_obj['data']:
+                        origin = item['source']
+                    elif 'extend_data' in json_obj['data']:
+                        origin = item['miptitle']
                     obj = {
                         'keyword': url_boj['keyword'],
                         'order': order,
@@ -110,6 +133,58 @@ class BaiduSpider(object):
                     }
                     item_list.append(obj)
                     print(obj)
+            #视频类
+            elif 'videoList' in json_obj['data']:
+                for item in json_obj['data']['videoList']:
+                    query = item['title'].replace('<em>', '').replace('</em>', '').replace('？', '').replace('。', '')
+                    name = item['doctor_name'] if 'doctor_name' in item else ''
+                    hospital = item['hospital'] if 'hospital' in item else ''
+                    jobTitle = item['doctor_level'] if 'doctor_level' in item else ''
+                    origin = item['source'] if 'source' in item else ''
+                    obj = {
+                        'keyword': url_boj['keyword'],
+                        'order': order,
+                        'query': query,
+                        'contentType': contentType,
+                        'contentStyle': contentStyle,
+                        'name': name,
+                        'hospital': hospital,
+                        'jobTitle': jobTitle,
+                        'origin': origin,
+                    }
+                    item_list.append(obj)
+                    print(obj)
+            #音频类
+            elif 'extendData' in json_obj['data']:
+                for item in json_obj['data']['extendData']['list']:
+                    query = item['title'].replace('<em>', '').replace('</em>', '').replace('？', '').replace('。', '')
+                    name = item['doctorName'] if 'doctorName' in item else ''
+                    hospital = item['hospital'] if 'hospital' in item else ''
+                    jobTitle = item['doctorTitle'] if 'doctorTitle' in item else ''
+                    origin = item['miptitle'] if 'miptitle' in item else ''
+                    obj = {
+                        'keyword': url_boj['keyword'],
+                        'order': order,
+                        'query': query,
+                        'contentType': contentType,
+                        'contentStyle': contentStyle,
+                        'name': name,
+                        'hospital': hospital,
+                        'jobTitle': jobTitle,
+                        'origin': origin,
+                    }
+                    item_list.append(obj)
+                    print(obj)
+
+
+        self.write(item_list)
+
+    def write(self,item_list):
+        for item in item_list:
+            with open('results.csv','a') as f:
+                write_res = item['keyword'] + ',' + item['order'] + ',' + item['query'] + ',' + item['contentType'] + ',' + item['contentStyle'] + ',' + item['name'] + ',' + item['hospital'] + ',' + item['jobTitle'] + ',' + item['origin'] + '\n'
+                f.write(write_res)
+
 
             # html = HTML(html_text)
             # results = html.xpath('//div[@id="results"]/div[@class="c-result result c-clk-recommend"]')
