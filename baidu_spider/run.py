@@ -175,6 +175,8 @@ class BaiduSpider(object):
                         'jobTitle': jobTitle,
                         'origin': origin,
                     }
+                    if name == None:
+                        continue
                     item_list.append(obj)
                     print(obj)
             #4.音频类
@@ -196,6 +198,8 @@ class BaiduSpider(object):
                         'jobTitle': jobTitle,
                         'origin': origin,
                     }
+                    if name == None:
+                        continue
                     item_list.append(obj)
                     print(obj)
 
@@ -207,6 +211,9 @@ class BaiduSpider(object):
             with open('results.csv','a') as f:
                 write_res = item['keyword'] + ',' + item['order'] + ',' + item['query'] + ',' + item['contentType'] + ',' + item['contentStyle'] + ',' + item['name'] + ',' + item['hospital'] + ',' + item['jobTitle'] + ',' + item['origin'] + '\n'
                 f.write(write_res)
+        if len(item_list) == 0:
+            with open('failed_urls.txt', 'a') as f:
+                f.write(str(url_boj) + '\n')
 
 
             # html = HTML(html_text)
@@ -238,7 +245,6 @@ if __name__ == '__main__':
             print('该URL请求失败')
             print(url_boj['url'])
             with open('failed_urls.txt', 'a') as f:
-                f.write(str(url_boj))
+                f.write(str(url_boj) + '\n')
         else:
             spider.parse_html(url_boj, response)
-            break
