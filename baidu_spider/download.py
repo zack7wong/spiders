@@ -3,8 +3,13 @@ import urllib.request
 import json
 import os
 from time import sleep
-from news_spider import config
+from baidu_spider import config
 from requests import RequestException
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 class Download(object):
     def __init__(self):
@@ -54,7 +59,7 @@ class Download(object):
                 else:
                     response = requests.get(url, headers=config.HEADERS)
             if response.status_code == 200:
-                return response
+                return response.text
             return None
         except requests.exceptions.ConnectTimeout:
             print('请求RUL连接超时，正在重试', url)
@@ -69,6 +74,19 @@ class Download(object):
             self.retry_num += 1
             return self.get_html(url)
 
+    def driver_get_html(self, url):
+        try:
+            executable_path = config.executable_path
+            dcap = dict(DesiredCapabilities.PHANTOMJS)
+            dcap["phantomjs.page.settings.userAgent"] = (
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:25.0) Gecko/20100101 Firefox/25.0 "
+            )
+            driver = webdriver.PhantomJS(executable_path=executable_path, desired_capabilities=dcap)
+            driver.set_page_load_timeout(15)
+            driver.get(url)
+            return driver.page_source
+        except:
+            return None
 
 if __name__ == '__main__':
     download = Download()
