@@ -57,7 +57,7 @@ class Download(object):
                 if config.PROXY_SWITCH:
                     response = requests.get(url, headers=config.HEADERS, proxies=proxies)
                 else:
-                    response = requests.get(url, headers=config.HEADERS)
+                    response = requests.get(url, headers=config.HEADERS, verify=False)
             if response.status_code == 200:
                 return response.text
             return None

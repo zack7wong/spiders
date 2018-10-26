@@ -53,25 +53,15 @@ class BaiduSpider(object):
             #搜索列表位置  order
             order = json_obj['order']
 
-            #搜索智能聚合  contentStyle
-            if 'showLeftText' in json_obj['data']:
-                contentStyle = json_obj['data']['showLeftText']
-            elif 'extend_data' in json_obj['data']:
-                if 'showLeftText' in json_obj['data']['extend_data']:
-                    contentStyle = json_obj['data']['extend_data']['showLeftText']
-            elif 'extendData' in json_obj['data']:
-                if 'showLeftText' in json_obj['data']['extendData']:
-                    contentStyle = json_obj['data']['extendData']['showLeftText']
-            else:
-                contentStyle = 'top1'
-
-            #音频，视频，优质科普文章，专家回答, 专家语音解答  contentType
+            # contentType 音频，视频，优质科普文章，专家回答, 专家语音解答
             if 'title' in json_obj['data']:
                 contentType = json_obj['data']['title']
             elif 'extend_data' in json_obj['data']:
                 contentType = json_obj['data']['extend_data']['title']
             elif 'extendData' in json_obj['data']:
                 contentType = json_obj['data']['extendData']['title']
+            else:
+                contentType = '结构卡'
 
             if '_' in contentType:
                 contentType = contentType.split('_')[1]
@@ -80,16 +70,49 @@ class BaiduSpider(object):
                 contentType = contentType.split('-')[0].strip()
             if 'hasVoice' in json_obj['data']:
                 contentType = '音频'
+            if 'video' in json_obj['data']:
+                contentType = '视频'
+
+            #contentStyle 搜索智能聚合
+            if 'showLeftText' in json_obj['data']:
+                contentStyle = json_obj['data']['showLeftText']
+            elif 'extend_data' in json_obj['data'] and 'showLeftText' in json_obj['data']['extend_data']:
+                contentStyle = json_obj['data']['extend_data']['showLeftText']
+            elif 'extendData' in json_obj['data'] and 'showLeftText' in json_obj['data']['extendData']:
+                contentStyle = json_obj['data']['extendData']['showLeftText']
+            else:
+                contentStyle = 'top1'
 
 
             #医生详情
-            #1.top1样式
+            #1.top1样式1
             if 'info' in json_obj['data']:
                 query = json_obj['data']['unhighTitle']
                 name = json_obj['data']['info']['author']['name']
                 hospital = json_obj['data']['info']['content'][1]
                 jobTitle = json_obj['data']['info']['content'][0]
                 origin = json_obj['data']['showurl_area']['logo_name']
+                obj = {
+                    'keyword': url_boj['keyword'],
+                    'order': order,
+                    'query': query,
+                    'contentType': contentType,
+                    'contentStyle': contentStyle,
+                    'name': name,
+                    'hospital': hospital,
+                    'jobTitle': jobTitle,
+                    'origin': origin,
+                }
+                item_list.append(obj)
+                print(obj)
+            #1.top1样式2 结构卡 （头疼怎么办）
+            elif 'tabList' in json_obj['data']:
+                query = json_obj['data']['sgTitle']
+                name = json_obj['data']['tabList'][0]['doctor']['name']
+                hospital = json_obj['data']['tabList'][0]['doctor']['hospital']
+                jobTitle = json_obj['data']['tabList'][0]['doctor']['level']
+                origin = ''
+                contentStyle = 'top1'
                 obj = {
                     'keyword': url_boj['keyword'],
                     'order': order,
@@ -133,7 +156,7 @@ class BaiduSpider(object):
                     }
                     item_list.append(obj)
                     print(obj)
-            #视频类
+            #3.视频类
             elif 'videoList' in json_obj['data']:
                 for item in json_obj['data']['videoList']:
                     query = item['title'].replace('<em>', '').replace('</em>', '').replace('？', '').replace('。', '')
@@ -154,7 +177,7 @@ class BaiduSpider(object):
                     }
                     item_list.append(obj)
                     print(obj)
-            #音频类
+            #4.音频类
             elif 'extendData' in json_obj['data']:
                 for item in json_obj['data']['extendData']['list']:
                     query = item['title'].replace('<em>', '').replace('</em>', '').replace('？', '').replace('。', '')
