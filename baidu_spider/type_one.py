@@ -81,7 +81,7 @@ class TypeOneSpider(object):
                             else:
                                 #非聚合，非top1
                                 with open('results1.csv', 'a') as f:
-                                    write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '否' + ',' + '否' + ',' + order_res + '\n'
+                                    write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '否' + ',' + '否' + ',' + order_res.group(1) + '\n'
                                     print(write_res)
                                     f.write(write_res)
                                     return None
