@@ -13,7 +13,7 @@ class TypeTwoSpider(object):
         self.urls = []
         #初始化文件
         write_res = '关键词,搜索列表位置,query抓取,内容形式,内容展示样式,专家姓名,医院,职称,来源平台' + '\n'
-        with open('resutls1.csv','a') as f:
+        with open('results2.csv','a') as f:
             f.write(write_res)
 
     def get_urls(self):
@@ -259,7 +259,7 @@ class TypeTwoSpider(object):
 
     def write(self, url_boj, item_list):
         for item in item_list:
-            with open('results.csv','a') as f:
+            with open('results2.csv','a') as f:
                 write_res = item['keyword'] + ',' + item['order'] + ',' + item['query'] + ',' + item['contentType'] + ',' + item['contentStyle'] + ',' + item['name'] + ',' + item['hospital'] + ',' + item['jobTitle'] + ',' + item['origin'] + '\n'
                 f.write(write_res)
         if len(item_list) == 0:
