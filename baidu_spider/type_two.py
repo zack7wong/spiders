@@ -11,6 +11,10 @@ import json
 class TypeTwoSpider(object):
     def __init__(self):
         self.urls = []
+        #初始化文件
+        write_res = '关键词,搜索列表位置,query抓取,内容形式,内容展示样式,专家姓名,医院,职称,来源平台' + '\n'
+        with open('resutls1.csv','a') as f:
+            f.write(write_res)
 
     def get_urls(self):
         with open('keyword.txt') as f:

@@ -10,6 +10,10 @@ import json
 class TypeOneSpider(object):
     def __init__(self):
         self.urls = []
+        #初始化文件
+        with open('results1.csv','a') as f:
+            write_res = '问题标题,链接,top1,智能聚合,权威样式' + '\n'
+            f.write(write_res)
 
     def get_urls(self):
         with open('title_url.txt') as f:
@@ -48,12 +52,12 @@ class TypeOneSpider(object):
                     if 'info' in json_obj['data'] or ('tabList' in json_obj['data'] and 'imageCount' not in json_obj['data']):
                         #是top1
                         with open('results1.csv', 'a') as f:
-                            write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '是' + ',' + '是' + ',' + '否' + '\n'
+                            write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '1' + ',' + '1' + ',' + '否' + '\n'
                             print(write_res)
                             f.write(write_res)
                     else:
                         with open('results1.csv', 'a') as f:
-                            write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '否' + ',' + '是' + ',' + '否' + '\n'
+                            write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '否' + ',' + str(json['data']['order']) + ',' + '否' + '\n'
                             print(write_res)
                             f.write(write_res)
                     break
@@ -67,17 +71,20 @@ class TypeOneSpider(object):
                     detail_search_res = re.search(url_boj['exist_url'].replace('https://','').replace('http://',''), detail_html_text.decode())
                     if detail_search_res:
                         order_res = re.search('order="(\d+)"', detail_html_text.decode())
-                        if order_res and order_res.group(1) == '1':
-                            with open('results1.csv', 'a') as f:
-                                write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '是' + ',' + '否' + ',' + '是' + '\n'
-                                print(write_res)
-                                f.write(write_res)
-                                return None
-                #非聚合，非top1
-                with open('results1.csv', 'a') as f:
-                    write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '否' + ',' + '否' + ',' + '是' + '\n'
-                    print(write_res)
-                    f.write(write_res)
+                        if order_res:
+                            if order_res.group(1) == '1':
+                                with open('results1.csv', 'a') as f:
+                                    write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '1' + ',' + '否' + ',' + '1' + '\n'
+                                    print(write_res)
+                                    f.write(write_res)
+                                    return None
+                            else:
+                                #非聚合，非top1
+                                with open('results1.csv', 'a') as f:
+                                    write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '否' + ',' + '否' + ',' + order_res + '\n'
+                                    print(write_res)
+                                    f.write(write_res)
+                                    return None
         else:
             #不存在
             with open('results1.csv', 'a') as f:
