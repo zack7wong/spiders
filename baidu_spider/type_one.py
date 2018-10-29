@@ -55,13 +55,14 @@ class TypeOneSpider(object):
                             write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '1' + ',' + '否' + ',' + '否' + '\n'
                             print(write_res)
                             f.write(write_res)
+                            return None
                     else:
                         with open('results1.csv', 'a') as f:
                             write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '否' + ',' + str(json['data']['order']) + ',' + '否' + '\n'
                             print(write_res)
                             f.write(write_res)
-                    break
-            # 权威样式
+                            return None
+            # 判断权威样式
             if flag:
                 #非聚合，判断是不是top1
                 html = HTML(response)
@@ -75,26 +76,45 @@ class TypeOneSpider(object):
                             if order_res.group(1) == '1':
                                 exist_img = re.search('<img src=.*?', detail_html_text.decode())
                                 if exist_img:
-                                    with open('results1.csv', 'a') as f:
-                                        write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '1' + ',' + '否' + ',' + '否' + '\n'
-                                        print(write_res)
-                                        f.write(write_res)
-                                        return None
+                                    #判断图片大小
+                                    img_size = re.search('<img src=.*?w=(\d+)|<img src=.*?w%3D(\d+)', detail_html_text.decode())
+                                    if img_size and int(img_size.group(1)) > 120:
+                                        with open('results1.csv', 'a') as f:
+                                            write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '1' + ',' + '否' + ',' + '否' + '\n'
+                                            print(write_res)
+                                            f.write(write_res)
+                                            return None
+                                    else:
+                                        with open('results1.csv', 'a') as f:
+                                            write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '否' + ',' + '否' + ',' + order_res.group(1) + '\n'
+                                            print(write_res)
+                                            f.write(write_res)
+                                            return None
+                                # 无图，全否
                                 else:
-                                    # 非聚合，非top1
                                     with open('results1.csv', 'a') as f:
                                         write_res = url_boj['title'] + ',' + url_boj[
-                                            'exist_url'] + ',' + '否' + ',' + '否' + ',' + order_res.group(1) + '\n'
+                                            'exist_url'] + ',' + '否' + ',' + '否' + ',' + '否' + '\n'
                                         print(write_res)
                                         f.write(write_res)
                                         return None
+                            #order不等于1，非top1
                             else:
-                                #非聚合，非top1
-                                with open('results1.csv', 'a') as f:
-                                    write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '否' + ',' + '否' + ',' + order_res.group(1) + '\n'
-                                    print(write_res)
-                                    f.write(write_res)
-                                    return None
+                                exist_img = re.search('<img src=.*?', detail_html_text.decode())
+                                # 有图，权威
+                                if exist_img:
+                                    with open('results1.csv', 'a') as f:
+                                        write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '否' + ',' + '否' + ',' + order_res.group(1) + '\n'
+                                        print(write_res)
+                                        f.write(write_res)
+                                        return None
+                                # 无图，全否
+                                else:
+                                    with open('results1.csv', 'a') as f:
+                                        write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '否' + ',' + '否' + ',' + '否' + '\n'
+                                        print(write_res)
+                                        f.write(write_res)
+                                        return None
         else:
             #不存在
             with open('results1.csv', 'a') as f:
