@@ -52,7 +52,7 @@ class TypeOneSpider(object):
                     if 'info' in json_obj['data'] or ('tabList' in json_obj['data'] and 'imageCount' not in json_obj['data']):
                         #是top1
                         with open('results1.csv', 'a') as f:
-                            write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '1' + ',' + '1' + ',' + '否' + '\n'
+                            write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '1' + ',' + '否' + ',' + '否' + '\n'
                             print(write_res)
                             f.write(write_res)
                     else:
@@ -73,11 +73,21 @@ class TypeOneSpider(object):
                         order_res = re.search('order="(\d+)"', detail_html_text.decode())
                         if order_res:
                             if order_res.group(1) == '1':
-                                with open('results1.csv', 'a') as f:
-                                    write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '1' + ',' + '否' + ',' + '1' + '\n'
-                                    print(write_res)
-                                    f.write(write_res)
-                                    return None
+                                exist_img = re.search('<img src=.*?', detail_html_text.decode())
+                                if exist_img:
+                                    with open('results1.csv', 'a') as f:
+                                        write_res = url_boj['title'] + ',' + url_boj['exist_url'] + ',' + '1' + ',' + '否' + ',' + '否' + '\n'
+                                        print(write_res)
+                                        f.write(write_res)
+                                        return None
+                                else:
+                                    # 非聚合，非top1
+                                    with open('results1.csv', 'a') as f:
+                                        write_res = url_boj['title'] + ',' + url_boj[
+                                            'exist_url'] + ',' + '否' + ',' + '否' + ',' + order_res.group(1) + '\n'
+                                        print(write_res)
+                                        f.write(write_res)
+                                        return None
                             else:
                                 #非聚合，非top1
                                 with open('results1.csv', 'a') as f:
