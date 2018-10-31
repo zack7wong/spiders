@@ -54,6 +54,7 @@ class Job(object):
             lastJob_department = data['lastJobDetail']['department'] if 'department' in data['lastJobDetail'] else ''
             lastJob_jobName = data['lastJobDetail']['jobName'] if 'jobName' in data['lastJobDetail'] else ''
             lastJob_description = data['lastJobDetail']['description'] if 'description' in data['lastJobDetail'] else ''
+            lastJob_description = lastJob_description.replace(',','，')
             school_beginDate = data['schoolDetail']['beginDate'] if 'beginDate' in data['schoolDetail'] else ''
             school_endDate = data['schoolDetail']['endDate'] if 'endDate' in data['schoolDetail'] else ''
             school_schoolName = data['schoolDetail']['schoolName'] if 'schoolName' in data['schoolDetail'] else ''
@@ -67,7 +68,7 @@ class Job(object):
             # del lastJobDetail['profession']
             # del lastJobDetail['companyType']
             # del schoolDetail['degree']
-            write_res = id + ',' + username + ',' + sex + ',' + age + ',' + jobTitle + ',' + jobType + ',' + eduLevel + ',' + city + ',' + desiredSalary + ',' + careerStatus + ',' + workYears + ',' + employment + ',' + username\
+            write_res = id + ',' + username + ',' + sex + ',' + age + ',' + jobTitle + ',' + jobType + ',' + eduLevel + ',' + city + ',' + desiredSalary + ',' + careerStatus + ',' + workYears + ',' + employment\
             + ',' + lastJob_beginDate + ',' + lastJob_endDate + ',' + lastJob_companyName + ',' + lastJob_department + ',' + lastJob_jobName + ',' + lastJob_description + ',' + school_beginDate + ',' + school_endDate + ',' + school_schoolName + ',' + school_major + ',' + modifyDate + '\n'
             print(write_res)
             self.write(write_res)
