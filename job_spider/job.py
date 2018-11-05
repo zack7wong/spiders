@@ -89,7 +89,7 @@ class Job(object):
 
             work_str = ''
             for work in work_list:
-                temp_str = str(work) + ','
+                temp_str = str(work).replace(',','，') + ','
                 work_str +=temp_str
 
             #项目经验
@@ -111,7 +111,7 @@ class Job(object):
 
             project_str = ''
             for project in project_list:
-                temp_str = str(project) + ','
+                temp_str = str(project).replace(',','，') + ','
                 project_str += temp_str
 
             # lastJobDetail = data['lastJobDetail']
