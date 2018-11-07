@@ -3,8 +3,7 @@ import urllib.request
 import json
 import os
 from time import sleep
-from job_spider import config
-# import config
+import config
 from requests import RequestException
 
 class Download(object):

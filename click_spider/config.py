@@ -7,6 +7,13 @@ CHANGE_IP = 0
 #代理IP
 IP = ''
 
+#浏览器设置
+width = 1200
+height = 800
+
+#搜索框
+c_s = '#kw'
+
 #是否开启代理
 PROXY_SWITCH = False
 #是否使用cookies
