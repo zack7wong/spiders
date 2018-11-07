@@ -5,6 +5,7 @@ import download
 import config
 import re
 import time
+import random
 from lxml.etree import HTML
 from lxml import etree
 import json
@@ -57,13 +58,11 @@ class Chrome(object):
         self.driver = webdriver.Chrome()
 
     def search(self, url_obj):
-        print(1)
         WebDriverWait(self.driver, 15, 0.5).until(ec.presence_of_all_elements_located((By.CSS_SELECTOR, config.c_s)))
         self.driver.find_element_by_css_selector('#kw').send_keys(url_obj['keyword'])
         self.driver.find_element_by_css_selector('#su').click()
         time.sleep(2)
         self.parse_html(url_obj)
-        print(2)
 
     def parse_html(self, url_obj):
         flag =False
@@ -84,22 +83,33 @@ class Chrome(object):
             results = html.xpath('//div[@id="content_left"]/div')
             for res in results:
                 detail_html_text = etree.tostring(res)
-                detail_search_res = re.search(url_obj['url'], detail_html_text.decode())
+                search_parse = url_obj['url'] + '|' + url_obj['url'].replace('https://', '').replace('http://', '')
+                detail_search_res = re.search(search_parse, detail_html_text.decode())
                 if detail_search_res:
                     id_str = re.search('<div class="result c-container " id="(\d+)"', detail_html_text.decode())
                     if id_str:
-                        print('已找到该网站')
-                        clickToken = id_str.group(1)[0] + ' ' + id_str.group(1)[1]
+                        if len(id_str.group(1)) == 1:
+                            rank = id_str.group(1)
+                            clickToken = id_str.group(1)[0] + ' '
+                        else:
+                            rank = id_str.group(1)[1]
+                            clickToken = id_str.group(1)[0] + ' ' + id_str.group(1)[1]
+                        print('已找到该网站，第' + str(pageToken) + '页,第' + rank +'条')
                         selecter_str = '#\\3{clickToken} > h3 > a'.format(clickToken=clickToken)
-                        WebDriverWait(self.driver, 5, 0.5).until(ec.presence_of_all_elements_located((By.CSS_SELECTOR, selecter_str)))
-                        self.driver.find_element_by_css_selector(selecter_str).click()
+                        try:
+                            WebDriverWait(self.driver, 5, 0.5).until(ec.presence_of_all_elements_located((By.CSS_SELECTOR, selecter_str)))
+                            self.driver.find_element_by_css_selector(selecter_str).click()
+                            print('百度页面点击成功')
+                        except:
+                            print('百度页面点击异常')
+                            return None
                         time.sleep(3)
                         print('开始随机点击网站。。')
                         self.random_click(url_obj)
                     flag = True
                     break
 
-            if flag:
+            if flag or pageToken >= 20:
                 break
 
             #翻页
@@ -108,5 +118,22 @@ class Chrome(object):
             self.driver.find_element_by_css_selector(css_selector).click()
 
     def random_click(self,url_obj):
-        html_str = self.driver.page_source
-        find_res = re.findall('<a href="(.*?)">', html_str)
+        html_str = requests.get(url_obj['url']).text
+        # html_str = self.driver.page_source
+        find_res = re.findall('<a.*?href="(.*?)"', html_str)
+        print(find_res)
+        click_res = random.sample(find_res, 3)
+        for click in click_res:
+            if click[0:4] == 'http':
+                url = click
+            else:
+                if url_obj['url'][-1] == '/':
+                    domain = url_obj['url'][:-1]
+                else:
+                    domain = url_obj['url']
+                url = domain + click
+
+            print(url)
+            self.driver.get(url)
+            time.sleep(5)
+
