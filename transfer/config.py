@@ -29,7 +29,7 @@ SPIDER = False
 Calculation = True
 
 #是否开启代理
-PROXY_SWITCH = True
+PROXY_SWITCH = False
 #是否使用cookies
 COOKIES_SWITCH = False
 #请求最大出错次数

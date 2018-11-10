@@ -59,11 +59,12 @@ class Train(object):
                     else:
                         status = '1'
                     resultsStr = data
-                    ts = time.strptime(datetime, "%Y-%m-%d")
+                    timestampStr = datetime + ' ' + startTime
+                    ts = time.strptime(timestampStr, "%Y-%m-%d %H:%M")
                     timestamp = str(int(time.mktime(ts)))
                     # print(datetime,startStation,endStation,startStationNum,endStationNum,trainName,startTime,endTime,duration,arrivalDate,status,resultsStr,timestamp)
                     sql = "insert into results(datetime,startStation,endStation,startStationNum,endStationNum,trainName,startTime,endTime,duration,arrivalDate,status,resultsStr,timestamp) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"\
-                          %(datetime,startStation,endStation,startStationNum,endStationNum,trainName,startTime,endTime,duration,arrivalDate,status,resultsStr,timestamp)+ "ON DUPLICATE KEY UPDATE startTime='%s', endTime='%s'"%(startTime,endTime)
+                          %(datetime,startStation,endStation,startStationNum,endStationNum,trainName,startTime,endTime,duration,arrivalDate,status,resultsStr,timestamp)+ "ON DUPLICATE KEY UPDATE startTime='%s', endTime='%s',timestamp='%s'"%(startTime,endTime,timestamp)
                     print(sql)
                     self.mysql.save(sql)
             except:

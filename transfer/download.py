@@ -42,8 +42,8 @@ class Download(object):
             return None
 
         proxies = {
-                'http': 'http://JIANYIHTT20:KIFKOYY84J@http-proxy-sg1.dobel.cn:9180',
-                'https': 'http://JIANYIHTT20:KIFKOYY84J@http-proxy-sg1.dobel.cn:9180'
+                'http': 'http://',
+                'https': 'http://'
         }
         try:
             if config.COOKIES_SWITCH:
