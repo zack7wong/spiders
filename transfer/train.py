@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-"""
--------------------------------------------------
-   File Name：     trainTime
-   Description :
-   Author :        hayden_huang
-   Date：          2018/11/10 12:18
--------------------------------------------------
-"""
 
 import db
 import config
@@ -77,5 +69,5 @@ class Train(object):
             except:
                 print('未知错误')
                 with open('fail.txt', 'a') as f:
-                    f.write(start_url+','+start+','+end+','+datetime+'\n')
+                    f.write(start_url+'\n')
 

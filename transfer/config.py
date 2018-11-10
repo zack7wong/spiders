@@ -23,6 +23,10 @@ START_URL = 'https://kyfw.12306.cn/otn/leftTicket/query?leftTicketDTO.train_date
 TIME_LIST = ['2018-11-12']
 CITY = ['北京','上海','天津','重庆','长沙','成都','福州','广州','合肥','杭州','济南','昆明','兰州','南京','南昌','沈阳','武汉','西安','深圳','厦门']
 
+#爬虫模式
+SPIDER = False
+#计算模式
+Calculation = True
 
 #是否开启代理
 PROXY_SWITCH = True

@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-"""
--------------------------------------------------
-   File Name：     get_site
-   Description :
-   Author :        hayden_huang
-   Date：          2018/11/10 12:07
--------------------------------------------------
-"""
 
 import db
 
