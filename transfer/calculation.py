@@ -3,6 +3,7 @@
 
 import db
 import datetime as dtime
+import time
 
 class Calculation(object):
     def __init__(self):
@@ -41,26 +42,45 @@ class Calculation(object):
                     'trainName': res[6],
                     'startTime': res[7],
                     'endTime': res[8],
-                    'duration': res[9]
+                    'duration': res[9],
+                    'timestamp': res[13]
                 }
                 self.one_results_list.append(obj)
-                break
 
     def get_two(self,trainStation,endStation,datetime,startTime,trainTime):
         for res in self.one_results_list:
-            timeStr = datetime + ' ' + res['startTime']
-            gohour = res['duration'].split(':')[0]
-            gominute = res['duration'].split(':')[1]
-            arriveday,trainday = self.tran_time(timeStr=timeStr, gohour=gohour,gominute=gominute,trainTime=trainTime)
-            trainday_datetime = trainday.split(' ')[0]
-            trainday_hourminute = trainday.split(' ')[1]
-            sql = "select * from results where (startStation like '%s' and endStation like '%s' and datetime='%s')" % (trainStation + '%', endStation + '%', trainday_datetime)
+            if res['endTime'][0:2] == '24':
+                timestampStr = datetime
+                ts = time.strptime(timestampStr, "%Y-%m-%d")
+                start_timestamp = str(int(time.mktime(ts)) + 86400)
+            else:
+                timestampStr = datetime + ' ' + res['endTime']
+                ts = time.strptime(timestampStr, "%Y-%m-%d %H:%M")
+                start_timestamp = str(int(time.mktime(ts)))
+
+            end_timestamp = str(int(start_timestamp) + int(trainTime)*3600)
+            sql = "select * from results where (startStation like '%s' and endStation like '%s' and timestamp>='%s' and timestamp<='%s')" % (trainStation + '%', endStation + '%', start_timestamp,end_timestamp)
             sql_results = self.mysql.find_all(sql)
+            arriveday = time.strftime('%Y-%m-%d %H:%M', time.localtime(int(start_timestamp)))
             for sql_res in sql_results:
-                if trainday_hourminute > sql_res[7]:
-                    print('车次:' + res['trainName'] + ' ' + res['startStation'] + '->' + res['endStation']+ ' 出发时间:' + res['startTime'] + ' 到达时间:' + arriveday + ' ==> ' +
-                          '车次:' + sql_res[6] + ' ' + sql_res[2] + '->' + sql_res[3] + ' 出发时间:' + sql_res[7])
-                    print('\n')
+                print('车次:' + res['trainName'] + ' ' + res['startStation'] + '->' + res['endStation']+ ' 出发时间:' + res['startTime'] + ' 到达时间:' + arriveday + ' ==> ' +
+                      '车次:' + sql_res[6] + ' ' + sql_res[2] + '->' + sql_res[3] + ' 出发时间:' + sql_res[7])
+                print('\n')
+
+        # for res in self.one_results_list:
+        #     timeStr = datetime + ' ' + res['startTime']
+        #     gohour = res['duration'].split(':')[0]
+        #     gominute = res['duration'].split(':')[1]
+        #     arriveday,trainday = self.tran_time(timeStr=timeStr, gohour=gohour,gominute=gominute,trainTime=trainTime)
+        #     trainday_datetime = trainday.split(' ')[0]
+        #     trainday_hourminute = trainday.split(' ')[1]
+        #     sql = "select * from results where (startStation like '%s' and endStation like '%s' and datetime='%s')" % (trainStation + '%', endStation + '%', trainday_datetime)
+        #     sql_results = self.mysql.find_all(sql)
+        #     for sql_res in sql_results:
+        #         if trainday_hourminute > sql_res[7]:
+        #             print('车次:' + res['trainName'] + ' ' + res['startStation'] + '->' + res['endStation']+ ' 出发时间:' + res['startTime'] + ' 到达时间:' + arriveday + ' ==> ' +
+        #                   '车次:' + sql_res[6] + ' ' + sql_res[2] + '->' + sql_res[3] + ' 出发时间:' + sql_res[7])
+        #             print('\n')
 
     def tran_time(self,timeStr,gohour,gominute,trainTime):
         year,month,day,hour,minute = self.split_time(timeStr)
