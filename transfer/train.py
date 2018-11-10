@@ -60,8 +60,15 @@ class Train(object):
                         status = '1'
                     resultsStr = data
                     timestampStr = datetime + ' ' + startTime
-                    ts = time.strptime(timestampStr, "%Y-%m-%d %H:%M")
-                    timestamp = str(int(time.mktime(ts)))
+
+                    if startTime[0:2] == '24':
+                        timestampStr = datetime
+                        ts = time.strptime(timestampStr, "%Y-%m-%d")
+                        timestamp = str(int(time.mktime(ts)) + 86400)
+                    else:
+                        ts = time.strptime(timestampStr, "%Y-%m-%d %H:%M")
+                        timestamp = str(int(time.mktime(ts)))
+
                     # print(datetime,startStation,endStation,startStationNum,endStationNum,trainName,startTime,endTime,duration,arrivalDate,status,resultsStr,timestamp)
                     sql = "insert into results(datetime,startStation,endStation,startStationNum,endStationNum,trainName,startTime,endTime,duration,arrivalDate,status,resultsStr,timestamp) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"\
                           %(datetime,startStation,endStation,startStationNum,endStationNum,trainName,startTime,endTime,duration,arrivalDate,status,resultsStr,timestamp)+ "ON DUPLICATE KEY UPDATE startTime='%s', endTime='%s',timestamp='%s'"%(startTime,endTime,timestamp)
