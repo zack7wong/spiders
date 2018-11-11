@@ -17,11 +17,11 @@ class Calculation(object):
         # datetime = input('请输入出发日期(eg:2018-11-12)： ')
         # startTime = input('请输入出发时间(eg:09:00)： ')
         # trainTime = input('请输入换乘间隔时间，单位为小时(eg:2)： ')
-        startStation = '北京'
+        startStation = '上海'
         trainStation = '天津'
-        endStation = '上海'
+        endStation = '北京'
         datetime = '2018-11-12'
-        startTime = '09:00'
+        startTime = '17:00'
         trainTime = '2'
         self.get_one(startStation,trainStation,datetime,startTime)
         self.get_two(trainStation,endStation,datetime,startTime,trainTime)
@@ -48,28 +48,23 @@ class Calculation(object):
                     'startTime': res[7],
                     'endTime': res[8],
                     'duration': res[9],
+                    'status': res[11],
                     'timestamp': res[13]
                 }
                 self.one_results_list.append(obj)
 
     def get_two(self,trainStation,endStation,datetime,startTime,trainTime):
         for res in self.one_results_list:
-            if res['endTime'][0:2] == '24':
-                timestampStr = datetime
-                ts = time.strptime(timestampStr, "%Y-%m-%d")
-                start_timestamp = str(int(time.mktime(ts)) + 86400)
-            else:
-                timestampStr = datetime + ' ' + res['endTime']
-                ts = time.strptime(timestampStr, "%Y-%m-%d %H:%M")
-                start_timestamp = str(int(time.mktime(ts)))
+            duration_timestamp  = int(res['duration'][0:2]) * 3600 + int(res['duration'][3:5]) * 60
+            start_timestamp = res['timestamp'] + duration_timestamp
 
             end_timestamp = str(int(start_timestamp) + int(trainTime)*3600)
             sql = "select * from results where (startStation like '%s' and endStation like '%s' and timestamp>='%s' and timestamp<='%s')" % (trainStation + '%', endStation + '%', start_timestamp,end_timestamp)
             sql_results = self.mysql.find_all(sql)
             arriveday = time.strftime('%Y-%m-%d %H:%M', time.localtime(int(start_timestamp)))
             for sql_res in sql_results:
-                print('车次:' + res['trainName'] + ' ' + res['startStation'] + '->' + res['endStation']+ ' 出发时间:' + res['startTime'] + ' 到达时间:' + arriveday + ' ==> ' +
-                      '车次:' + sql_res[6] + ' ' + sql_res[2] + '->' + sql_res[3] + ' 出发时间:' + sql_res[7])
+                print('车次:' + res['trainName'] + ' ' + res['startStation'] + '->' + res['endStation']+ ' 出发时间:' + res['startTime'] + ' 到达时间:' + arriveday + '   ==>   ' +
+                      '车次:' + sql_res[6] + ' ' + sql_res[2] + '->' + sql_res[3] + ' 出发时间:' + sql_res[1] + ' ' + sql_res[7])
                 print('\n')
 
         # for res in self.one_results_list:
