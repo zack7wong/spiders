@@ -21,10 +21,17 @@ class Train(object):
         return_res = []
         for res in results:
             for city in config.CITY:
-                if city in res[2]:
+                if city == res[2]:
                     return_res.append(res)
+                # if city in res[2]:
+                #     return_res.append(res)
 
         return return_res
+
+    def get_stationName(self,stationNum):
+        sql = "select * from site where transferid = '%s'"%(stationNum)
+        results = self.mysql.find_one(sql)
+        return results
 
     def get_results(self,start_url,start,end,datetime):
         down = download.Download()
@@ -39,10 +46,10 @@ class Train(object):
                     item = data.split('|')
 
                     datetime = datetime
-                    startStation = start[2]
-                    endStation = end[2]
-                    startStationNum = start[3]
-                    endStationNum = end[3]
+                    startStation = self.get_stationName(item[6])[2]
+                    endStation = self.get_stationName(item[7])[2]
+                    startStationNum = item[6]
+                    endStationNum = item[7]
                     trainName = item[3]
                     startTime = item[8]
                     endTime = item[9]

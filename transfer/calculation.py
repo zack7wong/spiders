@@ -11,18 +11,18 @@ class Calculation(object):
         self.mysql = db.MysqlClient()
 
     def start(self):
-        startStation = input('请输入起始站： ')
-        trainStation = input('请输入换乘站： ')
-        endStation = input('请输入终点站： ')
-        datetime = input('请输入出发日期(eg:2018-11-12)： ')
-        startTime = input('请输入出发时间(eg:09:00)： ')
-        trainTime = input('请输入换乘间隔时间，单位为小时(eg:2)： ')
-        # startStation = '广州'
-        # trainStation = '深圳'
-        # endStation = '福州'
-        # datetime = '2018-11-12'
-        # startTime = '09:00'
-        # trainTime = '2'
+        # startStation = input('请输入起始站： ')
+        # trainStation = input('请输入换乘站： ')
+        # endStation = input('请输入终点站： ')
+        # datetime = input('请输入出发日期(eg:2018-11-12)： ')
+        # startTime = input('请输入出发时间(eg:09:00)： ')
+        # trainTime = input('请输入换乘间隔时间，单位为小时(eg:2)： ')
+        startStation = '北京'
+        trainStation = '天津'
+        endStation = '上海'
+        datetime = '2018-11-12'
+        startTime = '09:00'
+        trainTime = '2'
         self.get_one(startStation,trainStation,datetime,startTime)
         self.get_two(trainStation,endStation,datetime,startTime,trainTime)
 
@@ -32,8 +32,13 @@ class Calculation(object):
         print('\n')
         print('############### 符合换乘的列车有 ###################')
         print('\n')
+
+        twohor_str = datetime + ' ' + startTime
+        twohor_str_res = time.strptime(twohor_str, '%Y-%m-%d %H:%M')
+        startTime_twohour = int(time.mktime(twohor_str_res))
+        startTime_twohour = startTime_twohour + 7200
         for res in results:
-            if startTime < res[7]:
+            if startTime < res[7] and startTime_twohour > res[13]:
                 # print('车次:'+res[6]+'   起始站:' + res[2] + '   终点站:' + res[3] + '   出发时间:' + res[7] + '   到达时间:' + res[8] + '   时长:' + res[9])
                 obj = {
                     'datetime':datetime,
