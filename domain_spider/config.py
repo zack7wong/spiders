@@ -1,13 +1,11 @@
-
-
 #当前请求次数
 REQUEST_NUM = 0
 
 #请求多少次后换IP配置
-CHANGE_IP = 0
+CHANGE_IP = 50
 
 #代理IP
-IP = ''
+IP_URL = 'http://api.xdaili.cn/xdaili-api//greatRecharge/getGreatIp?spiderId=a9363202c98d47149a95ba299927b1e0&orderno=YZ201811139742062xj6&returnType=2&count=1'
 
 START_URL = 'https://kyfw.12306.cn/otn/leftTicket/query?leftTicketDTO.train_date={datetime}&leftTicketDTO.from_station={start}&leftTicketDTO.to_station={end}&purpose_codes=ADULT'
 
@@ -16,7 +14,7 @@ QUERY_PR_URL = 'https://pr.aizhan.com/{domain}/'
 SOGOU_URL = 'https://www.sogou.com/web?query={domain}&_asf=www.sogou.com'
 
 #是否开启代理
-PROXY_SWITCH = False
+PROXY_SWITCH = True
 #是否使用cookies
 COOKIES_SWITCH = False
 #请求最大出错次数

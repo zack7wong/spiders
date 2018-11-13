@@ -9,6 +9,8 @@ from requests import RequestException
 class Download(object):
     def __init__(self):
         self.retry_num = 0
+        self.chang_ip_num = 0
+        self.ip = ''
 
     def get_ip(self,url):
         print('正在获取IP。。')
@@ -40,10 +42,13 @@ class Download(object):
             self.retry_num = 0
             print('请求出错次数大于最大出错次数，已终止')
             return None
-
+        if config.PROXY_SWITCH:
+            if self.chang_ip_num % config.CHANGE_IP == 0:
+                self.ip = self.get_ip(config.IP_URL)
+        self.chang_ip_num += 1
         proxies = {
-                'http': 'http://',
-                'https': 'http://'
+                'http': 'http://' + self.ip,
+                'https': 'http://' + self.ip
         }
         try:
             if config.COOKIES_SWITCH:

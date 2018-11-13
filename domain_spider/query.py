@@ -80,15 +80,8 @@ class Query(object):
             if sogou_pr == '':
                 sogou_pr = '-1'
 
-            sogou_headers = {
-                    # 'connection': "keep-alive",
-                    # 'cache-control': "max-age=0",
-                    # 'user-agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
-                    # 'accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-                    'Cookie':'SUV=1522740796080229; SMYUV=1522740796081448; SUID=12C710B7572B8B0A5AC449150002FF06; wuid=AAHMaltFHwAAAAqLK1fWjgoApwM=; CXID=96B7F31133531AC7F5BFB5EBA3EFDB1D; IPLOC=CN4403; pgv_pvi=606208; sw_uuid=8342716051; ssuid=6295371917; dt_ssuid=8529746536; start_time=1540134704266; pex=C864C03270DED3DD8A06887A372DA219231FFAC25A9D64AE09E82AED12E416AC; ad=$yllllllll2bf01JlllllVs$5y6lllllWv2XEZllll9lllllRqxlw@@@@@@@@@@@; ABTEST=0|1542102394|v17; browerV=3; osV=2; SNUID=BF4B1356303555B882B52BE53082AD5C; sct=78; sst0=213; ld=eyllllllll2bfILnlllllVs$IdklllllWv260ZllllklllllRylll5@@@@@@@@@@'
-                }
             sogou_url = config.SOGOU_URL.format(domain=domain_obj['url'])
-            sogou_reponse = self.download.get_html(sogou_url, headers=sogou_headers)
+            sogou_reponse = self.download.get_html(sogou_url)
             if sogou_reponse:
                 sogou_html = HTML(sogou_reponse.text)
                 sogou_search = sogou_html.xpath('string(//div[@class="search-info"])')
