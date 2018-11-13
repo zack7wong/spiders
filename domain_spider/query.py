@@ -20,10 +20,13 @@ class Query(object):
         self.download = download.Download()
         #初始化两个文件
         with open('registed.csv', 'w') as f:
-            write_res = '域名'+'\n'
+            write_res = 'domain'+'\n'
             f.write(write_res)
         with open('unregister.csv', 'w') as f:
-            write_res = '域名,谷歌pr,搜狗pr,搜狗外链数'+'\n'
+            write_res = 'domain,google_pr,sogou_pr,sogou_link'+'\n'
+            f.write(write_res)
+        with open('failed_domain.csv', 'w') as f:
+            write_res = 'failed'+'\n'
             f.write(write_res)
 
     def get_url(self):
@@ -43,15 +46,17 @@ class Query(object):
                         ff.write(res)
 
     def query_domain(self,domain_obj):
-        start_url = config.QUERY_DOMAIN_URL.format(domain=domain_obj['url'])
+        really_domain = domain_obj['url'].replace('www.','')
+        start_url = config.QUERY_DOMAIN_URL.format(domain=really_domain)
         response = self.download.get_html(start_url)
         if response:
             search_res = re.search('<original>(.*?)</original>',response.text)
             if search_res:
                 if 'Domain name is available' in search_res.group(1):
                     # 未注册
+                    print('未注册')
                     self.query_pr(domain_obj)
-                elif 'In use' in search_res.group(1) or 'Invalid Domain Name' in search_res.group(1) :
+                elif 'In use' in search_res.group(1) or 'Invalid Domain Name' in search_res.group(1) or 'Domain name is not available' in search_res.group(1):
                     # 已注册
                     print('已注册')
                     self.write_registed(domain_obj)
@@ -75,8 +80,15 @@ class Query(object):
             if sogou_pr == '':
                 sogou_pr = '-1'
 
+            sogou_headers = {
+                    # 'connection': "keep-alive",
+                    # 'cache-control': "max-age=0",
+                    # 'user-agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+                    # 'accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+                    'Cookie':'SUV=1522740796080229; SMYUV=1522740796081448; SUID=12C710B7572B8B0A5AC449150002FF06; wuid=AAHMaltFHwAAAAqLK1fWjgoApwM=; CXID=96B7F31133531AC7F5BFB5EBA3EFDB1D; IPLOC=CN4403; pgv_pvi=606208; sw_uuid=8342716051; ssuid=6295371917; dt_ssuid=8529746536; start_time=1540134704266; pex=C864C03270DED3DD8A06887A372DA219231FFAC25A9D64AE09E82AED12E416AC; ad=$yllllllll2bf01JlllllVs$5y6lllllWv2XEZllll9lllllRqxlw@@@@@@@@@@@; ABTEST=0|1542102394|v17; browerV=3; osV=2; SNUID=BF4B1356303555B882B52BE53082AD5C; sct=78; sst0=213; ld=eyllllllll2bfILnlllllVs$IdklllllWv260ZllllklllllRylll5@@@@@@@@@@'
+                }
             sogou_url = config.SOGOU_URL.format(domain=domain_obj['url'])
-            sogou_reponse = self.download.get_html(sogou_url)
+            sogou_reponse = self.download.get_html(sogou_url, headers=sogou_headers)
             if sogou_reponse:
                 sogou_html = HTML(sogou_reponse.text)
                 sogou_search = sogou_html.xpath('string(//div[@class="search-info"])')
@@ -93,8 +105,8 @@ class Query(object):
 
 
     def write_failed(self,domain_obj):
-        with open('failed_domain.txt', 'a') as f:
-            f.write(str(domain_obj)+'\n')
+        with open('failed_domain.csv', 'a') as f:
+            f.write(str(domain_obj['url'])+'\n')
 
     def write_registed(self,domain_obj):
         with open('registed.csv', 'a') as f:
