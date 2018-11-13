@@ -56,7 +56,7 @@ class Download(object):
             else:
                 if config.PROXY_SWITCH:
                     if method == 'get':
-                        response = requests.get(url, headers=headers, proxies=proxies)
+                        response = requests.get(url, headers=headers, proxies=proxies, timeout=15)
                     elif method == 'post':
                         response = requests.post(url, headers=headers, data=body, proxies=proxies)
                 else:
