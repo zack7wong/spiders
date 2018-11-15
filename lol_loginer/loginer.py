@@ -42,6 +42,7 @@ def login(account):
         WebDriverWait(driver, 10, 0.5).until(ec.presence_of_all_elements_located((By.CSS_SELECTOR, '#bottom')))
         html = driver.page_source
         get_email(html,account)
+        driver.delete_all_cookies()
         driver.close()
         driver.quit()
     except:
@@ -77,6 +78,16 @@ def wirte_failed(account):
         f.write(write_res)
 
 def get_account():
+    success_list = []
+    try:
+        with open('success.txt') as f:
+            results = f.readlines()
+            for res in results:
+                name = res.split(':')[0]
+                success_list.append(name)
+    except:
+        pass
+
     with open('account.txt') as f:
         results = f.readlines()
         for res in results:
@@ -89,6 +100,8 @@ def get_account():
                     'password': password,
                     'area': area,
                 }
+                if name in success_list:
+                    continue
                 account_list.append(account_obj)
             except:
                 print('该行文本格式有误')
