@@ -34,12 +34,17 @@ def login(account):
         url = 'https://auth.riotgames.com/authorize?redirect_uri=https://login.support.riotgames.com/login_callback&client_id=player-support-zendesk&ui_locales=en-us%20en-us&response_type=code&scope=openid%20email'
         driver.get(url)
         driver.find_element_by_css_selector('#login-form-username').send_keys(name)
+        time.sleep(1)
         driver.find_element_by_css_selector('#login-form-password').send_keys(password)
+        time.sleep(1)
         driver.find_element_by_css_selector(area_list[area]).click()
+        time.sleep(1)
         driver.find_element_by_css_selector('#login-form-region').click()
+        time.sleep(1)
         driver.find_element_by_css_selector('#login-form-region > option:nth-child(3)').click()
+        time.sleep(1)
         driver.find_element_by_css_selector('#login-button').click()
-        WebDriverWait(driver, 10, 0.5).until(ec.presence_of_all_elements_located((By.CSS_SELECTOR, '#bottom')))
+        WebDriverWait(driver, 10).until(ec.presence_of_all_elements_located((By.CSS_SELECTOR, '#bottom')))
         html = driver.page_source
         get_email(html,account)
         driver.delete_all_cookies()
