@@ -50,7 +50,12 @@ def login(account):
         driver.delete_all_cookies()
         driver.close()
         driver.quit()
+        time.sleep(8)
     except:
+        print('加载超时失败')
+        driver.delete_all_cookies()
+        driver.close()
+        driver.quit()
         wirte_failed(account)
 
 
