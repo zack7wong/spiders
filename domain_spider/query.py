@@ -46,7 +46,8 @@ class Query(object):
                         ff.write(res)
 
     def query_domain(self,domain_obj):
-        really_domain = domain_obj['url'].replace('www.','')
+        really_domain = re.match('([a-zA-Z1-9]+.).*?$',domain_obj['url']).group(1)
+        really_domain = domain_obj['url'].replace(really_domain,'')
         start_url = config.QUERY_DOMAIN_URL.format(domain=really_domain)
         response = self.download.get_html(start_url)
         if response:
