@@ -13,7 +13,7 @@ account_list = []
 area_list = {
     'Brazil':'#login-form-region > option:nth-child(1)',
     'EU_Nordic_East':'#login-form-region > option:nth-child(2)',
-    'EU_West':'#region-selector > span.placeholder > span.placeholder-text',
+    'EU_West':'#login-form-region > option:nth-child(3)',
     'Japan':'#login-form-region > option:nth-child(4)',
     'Korea':'#login-form-region > option:nth-child(5)',
     'Latin_America_North':'#login-form-region > option:nth-child(6)',
@@ -37,11 +37,11 @@ def login(account):
         time.sleep(1)
         driver.find_element_by_css_selector('#login-form-password').send_keys(password)
         time.sleep(1)
-        driver.find_element_by_css_selector(area_list[area]).click()
+        driver.find_element_by_css_selector('#region-selector > span.placeholder > span.placeholder-text').click()
         time.sleep(1)
         driver.find_element_by_css_selector('#login-form-region').click()
         time.sleep(1)
-        driver.find_element_by_css_selector('#login-form-region > option:nth-child(3)').click()
+        driver.find_element_by_css_selector(area_list[area]).click()
         time.sleep(1)
         driver.find_element_by_css_selector('#login-button').click()
         WebDriverWait(driver, 10).until(ec.presence_of_all_elements_located((By.CSS_SELECTOR, '#bottom')))
