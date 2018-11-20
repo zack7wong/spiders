@@ -28,9 +28,8 @@ class Shenhua(object):
         return token
 
     def get_phone(self,token):
-        area = random.sample(Area_list, 1)
-        print('当前区域：'+area[0])
-        url = 'http://api.shjmpt.com:9002/pubApi/GetPhone?ItemId=229266&token={token}&Area={area}'.format(token=token,area=area[0])
+        area = '浙江'
+        url = 'http://api.shjmpt.com:9002/pubApi/GetPhone?ItemId=229266&token={token}&Area={area}'.format(token=token,area=area)
         response = requests.get(url)
         return_res = response.text.replace(';', '')
         return return_res
