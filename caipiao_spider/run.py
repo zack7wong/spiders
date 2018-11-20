@@ -12,8 +12,7 @@ from lxml.etree import HTML
 RESULTS_LIST = []
 bodong = ''
 
-def start(pageToken):
-    start_url = config.START_URL
+def start(pageToken,start_url):
     body = config.BODY.format(pageToken=pageToken)
     response = download.get_html(start_url,'post',body=body)
     html = HTML(response.text)
@@ -33,11 +32,11 @@ def parse_html(results):
         ab = res.split(',')[2][:2]
         ac = res.split(',')[2][0]+res.split(',')[2][2]
         bc = res.split(',')[2][1:3]
-        if len(list(set(ab_list))) < 80:
+        if len(list(set(ab_list))) < 90:
             ab_list.append(ab)
-        if len(list(set(ac_list))) < 80:
+        if len(list(set(ac_list))) < 90:
             ac_list.append(ac)
-        if len(list(set(bc_list))) < 80:
+        if len(list(set(bc_list))) < 90:
             bc_list.append(bc)
         # print('波动值为：'+res + '  ab：'+ ab + '  ac：'+ ac + '  bc：'+ bc)
 
@@ -115,20 +114,20 @@ def test_enough(results):
         ab = res.split(',')[2][:2]
         ac = res.split(',')[2][0] + res.split(',')[2][2]
         bc = res.split(',')[2][1:3]
-        if len(list(set(ab_list))) < 80:
+        if len(list(set(ab_list))) < 90:
             ab_list.append(ab)
-        if len(list(set(ac_list))) < 80:
+        if len(list(set(ac_list))) < 90:
             ac_list.append(ac)
-        if len(list(set(bc_list))) < 80:
+        if len(list(set(bc_list))) < 90:
             bc_list.append(bc)
 
-        if len(list(set(ab_list)))>=80 and len(list(set(ac_list)))>=80 and len(list(set(ac_list)))>=80:
+        if len(list(set(ab_list)))>=90 and len(list(set(ac_list)))>=90 and len(list(set(ac_list)))>=90:
             return True
 
-def run():
+def run(start_url):
     for i in range(1,20):
         # print('当前页数: '+str(i))
-        start(str(i))
+        start(str(i),start_url)
         if test_enough(RESULTS_LIST):
             break
 
@@ -143,9 +142,26 @@ if __name__ == '__main__':
     print('|| 在线咨询qq 6557397        || ')
     print('|| QQ 1757011479            || ')
     print('=============================')
-    print('程序开始运行。。。')
+    print('程序开始运行,请稍等。。。')
     download = download.Download()
+    #初始化请求的链接
+    response = download.get_html('http://www.77tj.org/')
+    html = HTML(response.text)
+    now = html.xpath('string(//table[@class="gridview"]//tr[2]/td[2])')
+
+    mynow_url = config.START_URL
+    body = config.BODY.format(pageToken='1')
+    response = download.get_html(mynow_url, 'post', body=body)
+    html = HTML(response.text)
+    mynow = html.xpath('string(//table[@class="gridview"]//tr[2]/td[2])')
+
+    if mynow == now:
+        start_url = config.START_URL
+    else:
+        start_url = config.START_URL2
+
     while True:
-        run()
-        RESULTS_LIST.clear()
-        time.sleep(55)
+        if int(time.time()) % 60 == 0:
+            run(start_url)
+            RESULTS_LIST.clear()
+            time.sleep(1)
