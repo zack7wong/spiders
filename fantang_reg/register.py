@@ -15,7 +15,7 @@ import json
 import re
 import random
 
-Area_list = ['浙江','江苏', '福建', '上海', '海南', '湖北']
+Area_list = ['浙江','海南']
 
 class Shenhua(object):
     def __init__(self):
@@ -29,7 +29,8 @@ class Shenhua(object):
 
     def get_phone(self,token):
         area = random.sample(Area_list, 1)
-        url = 'http://api.shjmpt.com:9002/pubApi/GetPhone?ItemId=229266&token={token}'.format(token=token)
+        print('当前区域：'+area[0])
+        url = 'http://api.shjmpt.com:9002/pubApi/GetPhone?ItemId=229266&token={token}&Area={area}'.format(token=token,area=area[0])
         response = requests.get(url)
         return_res = response.text.replace(';', '')
         return return_res
