@@ -37,12 +37,12 @@ class Download(object):
             sleep(5)
             return self.get_ip(url)
 
-    def get_html(self, url, method='get', body=None, headers=config.HEADERS):
+    def get_html(self, url, method='get', body=None, headers=config.HEADERS,proxy=False):
         if self.retry_num > config.ERROR_MAX:
             self.retry_num = 0
             print('请求出错次数大于最大出错次数，已终止')
             return None
-        if config.PROXY_SWITCH:
+        if config.PROXY_SWITCH and proxy:
             if self.chang_ip_num % config.CHANGE_IP == 0:
                 self.ip = self.get_ip(config.IP_URL)
         self.chang_ip_num += 1

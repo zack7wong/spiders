@@ -82,7 +82,7 @@ class Query(object):
                 sogou_pr = '-1'
 
             sogou_url = config.SOGOU_URL.format(domain=domain_obj['url'])
-            sogou_reponse = self.download.get_html(sogou_url)
+            sogou_reponse = self.download.get_html(sogou_url,proxy=True)
             if sogou_reponse:
                 sogou_html = HTML(sogou_reponse.text)
                 sogou_search = sogou_html.xpath('string(//div[@class="search-info"])')
