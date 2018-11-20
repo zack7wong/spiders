@@ -7,7 +7,7 @@ CHANGE_IP = 50
 #代理IP
 IP_URL = ''
 
-START_URL = 'http://www.77tj.org/'
+START_URL = 'http://www.77tj.org/tencent'
 
 
 #是否开启代理

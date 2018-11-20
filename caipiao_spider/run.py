@@ -80,8 +80,18 @@ def parse_html(results):
         if intersecti in axc_list and intersecti in xbc_list:
             intersecti_list.append(intersecti)
 
+    old_num_list = []
+    try:
+        with open('results.txt') as f:
+            results = f.readlines()
+            for res in results:
+                num = res.split(' ')
+                old_num_list = old_num_list + num
+    except:
+        pass
+
     zhongjiang = bodong[-3:]
-    if zhongjiang in intersecti_list:
+    if zhongjiang in old_num_list:
         print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()) + '  最新波动值为：' + bodong + '  中奖！')
     else:
         print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()) + '  最新波动值为：' + bodong + '  未中奖')
@@ -125,14 +135,17 @@ def run():
     parse_html(RESULTS_LIST)
 
 if __name__ == '__main__':
-    print('正信在线稳定运营0污点打入市场')
-    print('人人赚分红模式，人人不贴分红')
-    print('日提500万，大户必备平台之一')
-    print('正信在线2筹备中敬请期待')
-    print('在线咨询qq6557397')
+    print('=============================')
+    print('|| 正信在线稳定运营0污点打入市场||')
+    print('|| 人人赚分红模式，人人不贴分红 || ')
+    print('|| 日提500万大户必备平台之一   || ')
+    print('|| 正信在线2筹备中敬请期待     || ')
+    print('|| 在线咨询qq 6557397        || ')
+    print('|| QQ 1757011479            || ')
+    print('=============================')
     print('程序开始运行。。。')
     download = download.Download()
     while True:
         run()
         RESULTS_LIST.clear()
-        time.sleep(60)
+        time.sleep(55)

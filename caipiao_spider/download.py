@@ -68,15 +68,15 @@ class Download(object):
                 return response
             return None
         except requests.exceptions.ConnectTimeout:
-            print('请求RUL连接超时，正在重试', url)
+            print('请求RUL连接超时，正在重试')
             self.retry_num +=1
             return self.get_html(url,headers=headers)
         except requests.exceptions.Timeout:
-            print('请求RUL超时，正在重试', url)
+            print('请求RUL超时，正在重试')
             self.retry_num += 1
             return self.get_html(url,headers=headers)
         except RequestException:
-            print('未知错误，正在重试',url)
+            print('未知错误，正在重试')
             self.retry_num += 1
             return self.get_html(url,headers=headers)
 
