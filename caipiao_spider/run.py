@@ -12,7 +12,8 @@ from lxml.etree import HTML
 RESULTS_LIST = []
 bodong = ''
 
-def start(pageToken,start_url):
+def start(pageToken):
+    start_url = config.START_URL
     body = config.BODY.format(pageToken=pageToken)
     response = download.get_html(start_url,'post',body=body)
     html = HTML(response.text)
@@ -124,44 +125,30 @@ def test_enough(results):
         if len(list(set(ab_list)))>=90 and len(list(set(ac_list)))>=90 and len(list(set(ac_list)))>=90:
             return True
 
-def run(start_url):
+def run():
     for i in range(1,20):
         # print('当前页数: '+str(i))
-        start(str(i),start_url)
+        start(str(i))
         if test_enough(RESULTS_LIST):
             break
 
     parse_html(RESULTS_LIST)
 
 if __name__ == '__main__':
-    print('=============================')
+    print('================================')
     print('|| 正信在线稳定运营0污点打入市场||')
     print('|| 人人赚分红模式，人人不贴分红 || ')
     print('|| 日提500万大户必备平台之一   || ')
     print('|| 正信在线2筹备中敬请期待     || ')
     print('|| 在线咨询qq 6557397        || ')
     print('|| QQ 1757011479            || ')
-    print('=============================')
+    print('================================')
     print('程序开始运行,请稍等。。。')
     download = download.Download()
-    #初始化请求的链接
-    response = download.get_html('http://www.77tj.org/')
-    html = HTML(response.text)
-    now = html.xpath('string(//table[@class="gridview"]//tr[2]/td[2])')
-
-    mynow_url = config.START_URL
-    body = config.BODY.format(pageToken='1')
-    response = download.get_html(mynow_url, 'post', body=body)
-    html = HTML(response.text)
-    mynow = html.xpath('string(//table[@class="gridview"]//tr[2]/td[2])')
-
-    if mynow == now:
-        start_url = config.START_URL
-    else:
-        start_url = config.START_URL2
 
     while True:
         if int(time.time()) % 60 == 0:
-            run(start_url)
+            time.sleep(3)
+            run()
             RESULTS_LIST.clear()
             time.sleep(1)
