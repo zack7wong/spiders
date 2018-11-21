@@ -24,6 +24,17 @@ area_list = {
     'Russia':'#login-form-region > option:nth-child(11)',
     'Turkey':'#login-form-region > option:nth-child(12)',
 }
+def get_driver():
+
+    # Firefox
+    executable_path = r'E:\geckodriver.exe'
+    width = 3000
+    height = 3000
+    options = webdriver.FirefoxOptions()
+    options.headless = True
+    driver = webdriver.Firefox(executable_path=executable_path)
+    driver.set_window_size(width=width,height=height)
+    return driver
 
 def login(account):
     name = account['name']
