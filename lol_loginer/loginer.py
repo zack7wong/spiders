@@ -44,7 +44,7 @@ def login(account):
         driver.find_element_by_css_selector(area_list[area]).click()
         time.sleep(1)
         driver.find_element_by_css_selector('#login-button').click()
-        WebDriverWait(driver, 10).until(ec.presence_of_all_elements_located((By.CSS_SELECTOR, '#bottom')))
+        WebDriverWait(driver, 15).until(ec.presence_of_all_elements_located((By.CSS_SELECTOR, '#bottom')))
         html = driver.page_source
         get_email(html,account)
         driver.delete_all_cookies()
