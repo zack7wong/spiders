@@ -36,9 +36,9 @@ class Baidu():
                     results = html.xpath('//div[@id="content_left"]/div[@class="result c-container "]')
                     for res in results:
                         detail_html_text = etree.tostring(res)
-                        detail_search_res = re.search(url_obj['url']+'|'+url_obj['domain'], detail_html_text.decode())
+                        detail_search_res = re.search(url_obj['url']+'|'+url_obj['domain'], detail_html_text.decode().replace('</b>','').replace('<b>',''))
                         if detail_search_res:
-                            rank = re.search('<div class="result c-container " id="(\d+)"', detail_html_text.decode()).group(1)
+                            rank = re.search('<div class="result c-container " id="(\d+)"', detail_html_text.decode(),re.S).group(1)
                             rank = rank[-1]
                             if rank == '0':
                                 rank = '10'
@@ -77,7 +77,7 @@ class Baidu():
                         detail_html_text = etree.tostring(res)
                         detail_search_res = re.search(url_obj['url'] + '|' + url_obj['domain'],detail_html_text.decode())
                         if detail_search_res:
-                            rank = re.search('order="(\d+)"', detail_html_text.decode()).group(1)
+                            rank = re.search('order="(\d+)"', detail_html_text.decode(),re.S).group(1)
                             rank = rank[-1]
                             if rank == '0':
                                 rank = '10'
@@ -104,7 +104,7 @@ class Baidu():
             elif res['type'] == 'm_baidu':
                 type = '百度移动'
 
-            write_res = '关键词：' + res['keyword'] + '  来源：'+ type + '  排名：第' + res['pageNum'] + '页第' + res['rank'] + '个' + '\n'
+            write_res = '关键词：' + res['keyword'] + '             来源：'+ type + '              排名：第' + res['pageNum'] + '页第' + res['rank'] + '个' + '\n'
             print(write_res)
             self.write_res(write_res)
 

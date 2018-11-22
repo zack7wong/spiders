@@ -11,12 +11,19 @@ class getKeyword(object):
     def __init__(self):
         self.down = download.Download()
         self.kw_list = []
+        with open('results.txt','w') as f:
+            f.write('')
 
     def get_url(self):
+        url = input('请输入要查询的网站(eg:http://www.xxx.com)：')
+        if url[-1] == '/':
+            url = url[:-1]
+        domain = re.match('((http|https)://[a-zA-Z1-9]+.).*?$', url).group(1)
+        domain = url.replace(domain, '')
         urls_list = []
         url_obj = {
-            'url': 'http://www.aliwuxi.com',
-            'domain': 'aliwuxi.com',
+            'url': url,
+            'domain': domain,
         }
         urls_list.append(url_obj)
         # try:
