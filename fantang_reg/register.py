@@ -23,21 +23,21 @@ class Shenhua(object):
 
     def login(self):
         url = 'http://api.shjmpt.com:9002/pubApi/uLogin?uName=caojiani1&pWord=4623369'
-        response = requests.get(url)
+        response = requests.get(url,timeout=40)
         token = response.text.split('&')[0]
         return token
 
     def get_phone(self,token):
         area = '浙江'
         url = 'http://api.shjmpt.com:9002/pubApi/GetPhone?ItemId=229266&token={token}&Area={area}'.format(token=token,area=area)
-        response = requests.get(url)
+        response = requests.get(url,timeout=40)
         return_res = response.text.replace(';', '')
         return return_res
 
     def get_message(self, token, phone):
         for i in range(8):
             url = 'http://api.shjmpt.com:9002/pubApi/GMessage?token={token}&ItemId=229266&Phone={phone}'.format(token=token, phone=phone)
-            response = requests.get(url)
+            response = requests.get(url,timeout=40)
             print(response.text)
             if '&' in response.text:
                 message = response.text.split('&')[3]
@@ -71,7 +71,7 @@ headers = {
 def send_code(phone):
     url = 'http://www.topfans.cc/tupu/LoginAPI/getPhoneCode.do'
     body = 'phonenum={phone}'.format(phone=phone)
-    response = requests.post(url, headers=headers, data=body)
+    response = requests.post(url, headers=headers, data=body,timeout=40)
     if response.status_code == 200:
         json_boj = json.loads(response.text)
         if json_boj['resultCode'] == '1000':
@@ -82,7 +82,7 @@ def send_code(phone):
 def register(phone,code):
     url = 'http://www.topfans.cc/tupu/LoginAPI/oAuthLoginNew.do'
     body = 'checkcode={code}&clientType=android&inviteuserid=412222&latitude=30.31&longitude=120.20&openid={phone}&password=e10adc3949ba59abbe56e057f20f883e&phonenum={phone}&phoneType=1'.format(phone=phone,code=code)
-    response = requests.post(url, headers=headers, data=body)
+    response = requests.post(url, headers=headers, data=body,timeout=40)
     print(response.text)
     if response.status_code == 200:
         json_boj = json.loads(response.text)
@@ -92,29 +92,32 @@ def register(phone,code):
     return None
 
 def start():
-    token = shenhua.login()
-    phone = shenhua.get_phone(token)
-    print('\n')
-    print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()))
-    print('当前手机号:' + phone)
-    send_res = send_code(phone)
-    if send_res:
-        message_res = shenhua.get_message(token, phone)
-        if message_res:
-            reg_res = register(phone, message_res)
-            if reg_res:
-                print('注册成功')
-                global success_num
-                success_num+=1
-                with open('account.txt', 'a') as f:
-                    write_res = phone + ',123456' + '\n'
-                    f.write(write_res)
-                    return
-        print('注册失败')
-        return
-    else:
-        print('发送验证码失败')
-        return
+    try:
+        token = shenhua.login()
+        phone = shenhua.get_phone(token)
+        print('\n')
+        print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()))
+        print('当前手机号:' + phone)
+        send_res = send_code(phone)
+        if send_res:
+            message_res = shenhua.get_message(token, phone)
+            if message_res:
+                reg_res = register(phone, message_res)
+                if reg_res:
+                    print('注册成功')
+                    global success_num
+                    success_num+=1
+                    with open('account.txt', 'a') as f:
+                        write_res = phone + ',123456' + '\n'
+                        f.write(write_res)
+                        return
+            print('注册失败')
+            return
+        else:
+            print('发送验证码失败')
+            return
+    except:
+        print('异常，跳过。。')
 
 if __name__ == '__main__':
     shenhua = Shenhua()
