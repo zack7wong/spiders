@@ -13,6 +13,7 @@ import re
 import download
 from lxml.etree import HTML
 from lxml import etree
+import config
 
 class Baidu():
     def __init__(self):
@@ -49,7 +50,7 @@ class Baidu():
                                 'rank':rank,
                                 'type':'web_baidu'
                             }
-                            self.result.append(obj)
+                            config.RESULTS.append(obj)
                             flag = True
                             break
                 else:
@@ -88,7 +89,7 @@ class Baidu():
                                 'rank': rank,
                                 'type': 'm_baidu'
                             }
-                            self.result.append(obj)
+                            config.RESULTS.append(obj)
                             flag = True
                             break
                 else:

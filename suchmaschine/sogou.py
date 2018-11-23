@@ -12,6 +12,7 @@
 
 import re
 import download
+import config
 from lxml.etree import HTML
 from lxml import etree
 import time
@@ -54,7 +55,7 @@ class Sogou():
                                 'rank':rank,
                                 'type':'web_sogou'
                             }
-                            self.result.append(obj)
+                            config.RESULTS.append(obj)
                             flag = True
                             break
                 else:
@@ -96,7 +97,7 @@ class Sogou():
                                 'rank':rank,
                                 'type':'m_sogou'
                             }
-                            self.result.append(obj)
+                            config.RESULTS.append(obj)
                             flag = True
                             break
                 else:

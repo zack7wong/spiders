@@ -12,6 +12,9 @@ IP = ''
 
 START_URL = 'https://m.baidu.com/s?tn=zbios&bd_page_type=1&word={kw}'
 
+
+RESULTS = []
+
 #是否开启代理
 PROXY_SWITCH = False
 #是否使用cookies

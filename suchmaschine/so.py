@@ -12,6 +12,7 @@
 
 import re
 import download
+import config
 from lxml.etree import HTML
 from lxml import etree
 
@@ -48,7 +49,7 @@ class So():
                                 'rank':rank,
                                 'type':'web_so'
                             }
-                            self.result.append(obj)
+                            config.RESULTS.append(obj)
                             flag = True
                             break
                 else:
@@ -91,7 +92,7 @@ class So():
                                 'rank':rank,
                                 'type':'m_so'
                             }
-                            self.result.append(obj)
+                            config.RESULTS.append(obj)
                             flag = True
                             break
                 else:
