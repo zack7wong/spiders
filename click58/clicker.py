@@ -79,7 +79,7 @@ def start(ip,not_click_tilte_list):
                 click_xpath = '//div[@id="infolist"]/table[1]//tr[@class="ac_item"][{num}]/td[2]//div[@class="tdiv"]/a'.format(num=num)
                 driver.find_element_by_xpath(click_xpath).click()
                 print('等待2分钟。。。')
-                time.sleep(100)
+                time.sleep(130)
         print('该IP浏览完毕')
         driver.close()
         driver.quit()
