@@ -28,7 +28,7 @@ class Shenhua(object):
         pass
 
     def login(self):
-        url = 'http://api.shjmpt.com:9002/pubApi/uLogin?uName=shenhuak&pWord=qwerasdf748'
+        url = 'http://api.shjmpt.com:9002/pubApi/uLogin?uName=&pWord='
         response = requests.get(url,timeout=40)
         token = response.text.split('&')[0]
         return token
