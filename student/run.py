@@ -14,7 +14,7 @@ def read():
     obj_list = []
     with open('student.csv') as f:
         results = f.readlines()
-        flag = 0
+        # flag = 0
         for ress in results:
             res = ress.split(',')
             stu = student.Student()
@@ -30,9 +30,9 @@ def read():
             # print(stu.name)
             obj_list.append(stu)
 
-            flag+=1
-            if flag>2:
-                break
+            # flag+=1
+            # if flag>2:
+            #     break
 
     return obj_list
 
