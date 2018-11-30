@@ -52,7 +52,7 @@ async def get_url(url,thislist):
 
             aiohtml = await fetch(session, url)
             html = HTML(aiohtml)
-            detail_urls = html.xpath('//ul[@class="a-unordered-list a-nostyle a-vertical s-ref-indent-two"]//div[@aria-live="polite"]/li/span/a/@href')
+            detail_urls = html.xpath('//ul[@class="a-unordered-list a-nostyle a-vertical s-ref-indent-one"]//div[@aria-live="polite"]/li/span/a/@href|//ul[@class="a-unordered-list a-nostyle a-vertical s-ref-indent-two"]//div[@aria-live="polite"]/li/span/a/@href')
             for detail in detail_urls:
                 if detail == '':
                     continue
@@ -104,6 +104,7 @@ async def get_detail(url):
 async def main():
     async with aiohttp.ClientSession() as session:
         try:
+            # url_list=['https://www.amazon.com/s/ref=lp_166359011_ex_n_1?rh=n%3A165793011&bbn=165793011&ie=UTF8&qid=1543571789']
             for url in url_list:
                 await get_url(url,detail_url_list)
 
@@ -122,8 +123,6 @@ loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
 
 
-
-# '//*[@id="leftNav"]/ul[1]/ul/div/li//a/@href'
 
 
 
