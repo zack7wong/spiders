@@ -39,7 +39,7 @@ async def fetch(session, url):
     try:
         proxy_auth_name = '' + str(random.randint(1, 20))
         proxy_auth = aiohttp.BasicAuth(proxy_auth_name, '')
-        async with session.get(url,headers=headers,timeout=10,proxy = "",proxy_auth=proxy_auth) as response:
+        async with session.get(url,headers=headers,timeout=10) as response:
             return await response.text()
     except:
         return None
