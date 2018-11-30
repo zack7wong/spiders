@@ -11,11 +11,15 @@ from matplotlib.font_manager import FontProperties
 grades = {'优秀':{"min":90,"max":100},'良好':{"min":80,"max":90},'中等':{"min":70,"max":80},'及格':{"min":60,"max":70},'不及格':{"min":0,"max":60}}
 
 def read():
+    #数据列表
     obj_list = []
+    #读取csv文件
     with open('student.csv') as f:
+        #按行读取
         results = f.readlines()
-        # flag = 0
-        for ress in results:
+        # 循环遍历
+        for ress in results[:3]:
+            #对每一个学生对象进行赋值
             res = ress.split(',')
             stu = student.Student()
             stu.num = res[0]
@@ -27,12 +31,8 @@ def read():
             stu.sheji = res[6]
             stu.tiaoshi = res[7]
             stu.zhuanxie = res[8]
-            # print(stu.name)
+            print(stu.num,stu.name,stu.className,stu.usualGrades,stu.practiceGrades,stu.jianmo)
             obj_list.append(stu)
-
-            # flag+=1
-            # if flag>2:
-            #     break
 
     return obj_list
 
