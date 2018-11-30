@@ -37,9 +37,9 @@ headers ={
 
 async def fetch(session, url):
     try:
-        proxy_auth_name = 'JIANYIHTT' + str(random.randint(1, 20))
-        proxy_auth = aiohttp.BasicAuth(proxy_auth_name, 'KIFKOYY84J')
-        async with session.get(url,headers=headers,timeout=10,proxy = "http://http-proxy-sg1.dobel.cn:9180",proxy_auth=proxy_auth) as response:
+        proxy_auth_name = '' + str(random.randint(1, 20))
+        proxy_auth = aiohttp.BasicAuth(proxy_auth_name, '')
+        async with session.get(url,headers=headers,timeout=10,proxy = "",proxy_auth=proxy_auth) as response:
             return await response.text()
     except:
         return None
