@@ -16,6 +16,11 @@ import config
 import json
 import math
 from lxml.etree import HTML
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 def start(kw):
     try:
@@ -57,9 +62,35 @@ if __name__ == '__main__':
         f.write('')
     with open('failed.txt','w') as f:
         f.write('')
-    with open('cookie.txt') as f:
-        cookie = f.read()
-    config.HEADERS['cookie'] = cookie
+
+    driver = webdriver.Chrome()
+    url = 'https://sz.jd.com/login.html?ReturnUrl=http%3A%2F%2Fsz.jd.com%2FindustryKeyWord%2FkeywordQuerys.html'
+    driver.get(url)
+    # c_s = 'body > div.normal-body > div.header > div'
+    # WebDriverWait(driver, 15, 0.5).until(ec.presence_of_all_elements_located((By.CSS_SELECTOR, c_s)))
+    # driver.find_element_by_css_selector('body > div.normal-body > div.header > div').click()
+    #
+    # login = 'body > div.login-form > div.login-tab.login-tab-r > a'
+    # WebDriverWait(driver, 15, 0.5).until(ec.presence_of_all_elements_located((By.CSS_SELECTOR, login)))
+    # driver.find_element_by_css_selector('body > div.login-form > div.login-tab.login-tab-r > a').click()
+    # time.sleep(1)
+    # driver.find_element_by_css_selector('#loginname').send_keys('爱心软件')
+    # driver.find_element_by_css_selector('#nloginpwd').send_keys('rj7866') #爱厘觅 dg8821
+    print('请登录')
+    flag = False
+    while True:
+        cookies = driver.get_cookies()
+        for cookie in cookies:
+            if cookie['name'] == 'thor':
+                config.HEADERS['cookie'] = 'thor=' + cookie['value']
+                print('已登录...')
+                flag = True
+                break
+        if flag:
+            break
+        print('未检测到登录cookie。。')
+        time.sleep(3)
+
     while True:
         kw = input('请输入要查询的关键词(如需批量请输入  all)：')
         if kw == 'all':
