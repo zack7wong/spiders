@@ -45,9 +45,21 @@ def start(kw):
         html = HTML(jd_response.text)
         jd = html.xpath('string(//span[@id="J_resCount"])')
 
-        print(kw +' 的平均指数是：'+str(avg)+' 成交转化率是：'+chengjiao+' 京东商品数：'+jd)
+        #占比
+        zhanbi_url = 'https://sz.jd.com/industryKeyWord/getCategoryDistribution.ajax?channel=2&date={startDate}&endDate={endDate}&kw={kw}&startDate={startDate}'.format(startDate=startDate,endDate=endDate,kw=kw)
+        zhanbi_response = requests.get(zhanbi_url, headers=config.HEADERS, timeout=10)
+        zhanbi_json_obj = json.loads(zhanbi_response.text)
+        item_list = ""
+        for data in zhanbi_json_obj['content']['data']:
+            name = data[0]
+            value = data[1]
+            value = str("%.2f" % (float(value) * 100)) + '%'
+            item_list += name+':'+value+','
+
+
+        print(kw +' 的平均指数是：'+str(avg)+' 成交转化率是：'+chengjiao+' 京东商品数：'+jd+' 分布：'+item_list)
         with open('results.csv','a') as f:
-            write_res = kw+','+str(avg)+','+chengjiao+','+jd+'\n'
+            write_res = kw+','+str(avg)+','+chengjiao+','+jd+','+item_list+'\n'
             f.write(write_res)
     except:
         print(kw+' 未知错误')
@@ -66,6 +78,7 @@ if __name__ == '__main__':
     driver = webdriver.Chrome()
     url = 'https://sz.jd.com/login.html?ReturnUrl=http%3A%2F%2Fsz.jd.com%2FindustryKeyWord%2FkeywordQuerys.html'
     driver.get(url)
+
     # c_s = 'body > div.normal-body > div.header > div'
     # WebDriverWait(driver, 15, 0.5).until(ec.presence_of_all_elements_located((By.CSS_SELECTOR, c_s)))
     # driver.find_element_by_css_selector('body > div.normal-body > div.header > div').click()
@@ -76,6 +89,7 @@ if __name__ == '__main__':
     # time.sleep(1)
     # driver.find_element_by_css_selector('#loginname').send_keys('爱心软件')
     # driver.find_element_by_css_selector('#nloginpwd').send_keys('rj7866') #爱厘觅 dg8821
+
     print('请登录')
     flag = False
     while True:
