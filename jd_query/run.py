@@ -49,17 +49,28 @@ def start(kw):
         zhanbi_url = 'https://sz.jd.com/industryKeyWord/getCategoryDistribution.ajax?channel=2&date={startDate}&endDate={endDate}&kw={kw}&startDate={startDate}'.format(startDate=startDate,endDate=endDate,kw=kw)
         zhanbi_response = requests.get(zhanbi_url, headers=config.HEADERS, timeout=10)
         zhanbi_json_obj = json.loads(zhanbi_response.text)
-        item_list = ""
+        item_list = []
         for data in zhanbi_json_obj['content']['data']:
             name = data[0]
             value = data[1]
+            obj = {
+                'name':name,
+                'value':value
+            }
+            item_list.append(obj)
+
+        item_list = sorted(item_list, key=lambda x: x['value'],reverse=True)
+        item_str = ''
+        for item in item_list:
+            name = item['name']
+            value = item['value']
             value = str("%.2f" % (float(value) * 100)) + '%'
-            item_list += name+':'+value+','
+            item_str += name+':'+value+','
 
 
-        print(kw +' 的平均指数是：'+str(avg)+' 成交转化率是：'+chengjiao+' 京东商品数：'+jd+' 分布：'+item_list)
+        print(kw +' 的平均指数是：'+str(avg)+' 成交转化率是：'+chengjiao+' 京东商品数：'+jd+' 分布：'+item_str)
         with open('results.csv','a') as f:
-            write_res = kw+','+str(avg)+','+chengjiao+','+jd+','+item_list+'\n'
+            write_res = kw+','+str(avg)+','+chengjiao+','+jd+','+item_str+'\n'
             f.write(write_res)
     except:
         print(kw+' 未知错误')
