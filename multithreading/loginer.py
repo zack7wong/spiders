@@ -67,17 +67,17 @@ def get_res(account_list,num):
             json_obj = json.loads(resposne.text)
             if json_obj['errorCode'] == 0:
                 print('登录成功')
-                with open('success.csv','a') as f:
+                with open('密码正确.txt','a') as f:
                     save_res = name + ',' + password + '\n'
                     f.write(save_res)
             else:
                 print('登录失败')
-                with open('error.csv', 'a') as f:
+                with open('密码错误.txt', 'a') as f:
                     save_res = name + ',' + password + '\n'
                     f.write(save_res)
         except:
             print('未知错误')
-            with open('failed.csv', 'a') as f:
+            with open('请求失败.txt', 'a') as f:
                 save_res = name + ',' + password + '\n'
                 f.write(save_res)
 
