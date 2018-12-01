@@ -82,20 +82,19 @@ def get_res(account_list,num):
                 f.write(save_res)
 
 if __name__ == '__main__':
-    # num = input('请输入进程个数')
-    num = '5'
+    num = input('请输入进程个数')
+    # num = '5'
     account_list = read_txt()
-    a = int(len(account_list) / int(num))
-    b = a * 2
-    c = a * 3
-    d = a * 4
-    args = (
-        (account_list[:a],1,),
-        (account_list[a:b],2,),
-        (account_list[b:c],3,),
-        (account_list[c:d],4,),
-        (account_list[d:],5,)
-    )
+    zhu_num = int(len(account_list)/int(num))
+    all_list = [account_list[i:i + zhu_num] for i in range(0, len(account_list), zhu_num)]
+
+    item_list = []
+    for each in all_list:
+        tuple_each =(each,all_list.index(each))
+        item_list.append(tuple_each)
+
+    # print(item_list)
+    args = tuple(item_list)
 
     p = multiprocessing.Pool(int(num))
     for arg in args:
