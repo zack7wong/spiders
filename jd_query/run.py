@@ -22,8 +22,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+
+requeey_list = []
+kw_list = []
+
 def start(kw):
-    try:
+    # try:
+        global requeey_list,kw_list
+
         oldone_date = time.time() - 86400*30
         startDate = time.strftime('%Y-%m-%d', time.localtime(oldone_date))
         oldmonth_date = time.time() - 86400
@@ -39,14 +45,15 @@ def start(kw):
         chengjiao = chengjiao_json_obj['content']['ConvertRate']['value']
         chengjiao =  str("%.2f"%(float(chengjiao)*100))+'%'
 
+        #京东网页版
         jd_url = 'https://search.jd.com/Search?keyword={kw}&enc=utf-8&qrst=1&rt=1&stop=1&vt=2&suggest=1.his.0.0&psort=3&click=0'.format(kw=kw)
         jd_response = requests.get(jd_url,timeout=10)
         jd_response.encoding = 'utf8'
         html = HTML(jd_response.text)
         jd = html.xpath('string(//span[@id="J_resCount"])')
 
-        #占比
-        zhanbi_url = 'https://sz.jd.com/industryKeyWord/getCategoryDistribution.ajax?channel=2&date={startDate}&endDate={endDate}&kw={kw}&startDate={startDate}'.format(startDate=startDate,endDate=endDate,kw=kw)
+        #类目分布占比
+        zhanbi_url = 'https://sz.jd.com/industryKeyWord/getCategoryDistribution.ajax?channel=2&date=30{endDate}&endDate={endDate}&kw={kw}&startDate={startDate}'.format(startDate=startDate,endDate=endDate,kw=kw)
         zhanbi_response = requests.get(zhanbi_url, headers=config.HEADERS, timeout=10)
         zhanbi_json_obj = json.loads(zhanbi_response.text)
         item_list = []
@@ -67,16 +74,28 @@ def start(kw):
             value = str("%.2f" % (float(value) * 100)) + '%'
             item_str += name+':'+value+','
 
+        #长尾词
+        changwei_url = 'https://sz.jd.com/industryKeyWord/getRelatedWordAnalysis.ajax?channel=2&date=30{endDate}&endDate={endDate}&kw={kw}&startDate={startDate}'.format(startDate=startDate,endDate=endDate,kw=kw)
+        changwei_response = requests.get(changwei_url, headers=config.HEADERS, timeout=10)
+        changwei_json_obj = json.loads(changwei_response.text)
+        changwei_list = []
+        for data in changwei_json_obj['content']['data']:
+            name = data[0]
+            changwei_list.append(name)
+            requeey_list.append(name)
 
-        print(kw +' 的平均指数是：'+str(avg)+' 成交转化率是：'+chengjiao+' 京东商品数：'+jd+' 分布：'+item_str)
-        with open('results.csv','a') as f:
-            write_res = kw+','+str(avg)+','+chengjiao+','+jd+','+item_str+'\n'
-            f.write(write_res)
-    except:
-        print(kw+' 未知错误')
-        with open('failed.txt','a') as f:
-            write_res = kw+'\n'
-            f.write(write_res)
+
+        print(kw +' 的平均指数是：'+str(avg)+' 成交转化率是：'+chengjiao+' 京东商品数：'+jd+'  长尾词：'+str(changwei_list)+'  分布：'+item_str)
+        if kw not in kw_list:
+            with open('results.csv','a') as f:
+                write_res = kw+','+str(avg)+','+chengjiao+','+jd+','+str(changwei_list).replace(',','，')+','+item_str+'\n'
+                f.write(write_res)
+            kw_list.append(kw)
+    # except:
+    #     print(kw+' 未知错误')
+    #     with open('failed.txt','a') as f:
+    #         write_res = kw+'\n'
+    #         f.write(write_res)
 
 
 if __name__ == '__main__':
@@ -118,6 +137,8 @@ if __name__ == '__main__':
 
     while True:
         kw = input('请输入要查询的关键词(如需批量请输入  all)：')
+        input_num = input('请输入遍历层数：')
+        input_num = int(input_num)
         if kw == 'all':
             with open('keyword.txt') as f:
                 results = f.readlines()
@@ -126,3 +147,19 @@ if __name__ == '__main__':
                     start(kw)
         else:
             start(kw)
+
+        #遍历层数
+        requeey_num = 0
+        while True:
+            requeey_num +=1
+            if requeey_num >= input_num:
+                break
+
+            thislist = requeey_list
+            requeey_list = []
+            print('mylist : '+ str(thislist))
+            for queey in thislist:
+                start(queey)
+
+        requeey_list = []
+        kw_list = []
