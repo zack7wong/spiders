@@ -42,9 +42,8 @@ def func_creator():
         return item
     return parse_item
 
-jiaqi_list = []
-kongqi_list = []
-qiwen_list = []
+all_list = []
+exist_id = []
 
 async def example():
     # for typeid in type_list:
@@ -52,44 +51,46 @@ async def example():
     #     print(URL.format(typeid=typeid))
     #     URL_OBJ_LIST.append(url_obj)
 
-    jiaqi_config = GetterConfig.RCSVConfig('jiaqi.csv')
-    jiaqi_getter = ProcessFactory.create_getter(jiaqi_config)
+    one = GetterConfig.RXLSXConfig('hainan.xlsx')
+    one_getter = ProcessFactory.create_getter(one)
 
-    kongqi_config = GetterConfig.RCSVConfig('kongqi_all.csv')
-    kongqi_getter = ProcessFactory.create_getter(kongqi_config)
+    two_config = GetterConfig.RXLSXConfig('hainan2.xlsx')
+    two_getter = ProcessFactory.create_getter(two_config)
 
-    qiwen_config = GetterConfig.RCSVConfig('qiwen.csv')
-    qiwen_getter = ProcessFactory.create_getter(qiwen_config)
+    three_config = GetterConfig.RXLSXConfig('hainan3.xlsx')
+    three_getter = ProcessFactory.create_getter(three_config)
 
-    async for items in jiaqi_getter:
+    four_config = GetterConfig.RXLSXConfig('hainan4.xlsx')
+    four_getter = ProcessFactory.create_getter(four_config)
+
+    async for items in one_getter:
         for item in items:
-            jiaqi_list.append(item)
+            all_list.append(item)
 
-    async for items in kongqi_getter:
+    async for items in two_getter:
         for item in items:
-            kongqi_list.append(item)
+            all_list.append(item)
 
-    async for items in qiwen_getter:
+    async for items in three_getter:
         for item in items:
-            qiwen_list.append(item)
+            all_list.append(item)
 
-    print(len(jiaqi_list))
-    print(len(kongqi_list))
-    print(len(qiwen_list))
+    async for items in four_getter:
+        for item in items:
+            all_list.append(item)
 
-    all_res_list = []
-    xlsx_config = WriterConfig.WXLSXConfig("./all_results.xlsx")
+
+    xlsx_config = WriterConfig.WXLSXConfig("./hainan_all2.xlsx")
     with ProcessFactory.create_writer(xlsx_config) as xlsx_writer:
-        for kongqi in kongqi_list:
-            for qiwen in qiwen_list:
-                if qiwen['城市'] == kongqi['城市'] and qiwen['日期'] == kongqi['日期']:
-                    for jiaqi in jiaqi_list:
-                        if jiaqi['日期'] == kongqi['日期']:
-                            save_res = {**kongqi, **qiwen,**jiaqi}
-                            # print(save_res)
-                            all_res_list.append(save_res)
-
-        xlsx_writer.write(all_res_list)
+        item_copy = copy.copy(all_list)
+        for item in all_list:
+            if item['id'] in exist_id:
+                print('del:' + str(item_copy[item_copy.index(item)]))
+                del item_copy[item_copy.index(item)]
+            else:
+                exist_id.append(item['id'])
+        # print(item_copy)
+        xlsx_writer.write(item_copy)
 
 
 
