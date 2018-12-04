@@ -21,7 +21,7 @@ def read_txt():
         with open('success.txt') as f:
             results = f.readlines()
             for res in results:
-                name = res.split(',')[0]
+                name = res.split('----')[0]
                 success_list.append(name)
     except:
         pass
@@ -30,8 +30,8 @@ def read_txt():
         results = f.readlines()
         for res in results:
             try:
-                name = res.split(',')[0]
-                password = res.split(',')[1].strip()
+                name = res.split('----')[0]
+                password = res.split('----')[1].strip()
                 account_obj = {
                     'name': name,
                     'password': password,
@@ -42,7 +42,7 @@ def read_txt():
             except:
                 print('该行文本格式有误')
                 print(res)
-                with open('failed.txt', 'a') as ff:
+                with open('格式错误.txt', 'a') as ff:
                     ff.write(res)
     return account_list
 
@@ -93,12 +93,12 @@ def get_res(account_list,num):
 
             #写入到测试过的文本
             with open('success.txt','a') as f:
-                save_res = name + ',' + password + '\n'
+                save_res = name + '----' + password + '\n'
                 f.write(save_res)
         except:
             print('未知错误')
             with open('failed.txt', 'a') as f:
-                save_res = name + ',' + password + '\n'
+                save_res = name + '----' + password + '\n'
                 f.write(save_res)
 
 if __name__ == '__main__':
