@@ -27,7 +27,7 @@ requeey_list = []
 kw_list = []
 
 def start(kw):
-    # try:
+    try:
         global requeey_list,kw_list
 
         oldone_date = time.time() - 86400*30
@@ -91,24 +91,33 @@ def start(kw):
                 write_res = kw+','+str(avg)+','+chengjiao+','+jd+','+str(changwei_list).replace(',','，')+','+item_str+'\n'
                 f.write(write_res)
             kw_list.append(kw)
-    # except:
-    #     print(kw+' 未知错误')
-    #     with open('failed.txt','a') as f:
-    #         write_res = kw+'\n'
-    #         f.write(write_res)
+    except:
+        print(kw+' 未知错误')
+        with open('failed.txt','a') as f:
+            write_res = kw+'\n'
+            f.write(write_res)
 
 
 if __name__ == '__main__':
     down = download.Download()
-    with open('results.csv','w') as f:
-        f.write('')
-    with open('failed.txt','w') as f:
-        f.write('')
+    try:
+        with open('results.csv','w') as f:
+            f.write('')
+        with open('failed.txt','w') as f:
+            f.write('')
+    except:
+        print('请在当前目录下新建 failed.txt, results.csv文件')
+        time.sleep(120)
+        exit()
 
-    driver = webdriver.Chrome()
-    url = 'https://sz.jd.com/login.html?ReturnUrl=http%3A%2F%2Fsz.jd.com%2FindustryKeyWord%2FkeywordQuerys.html'
-    driver.get(url)
-
+    try:
+        driver = webdriver.Chrome()
+        url = 'https://sz.jd.com/login.html?ReturnUrl=http%3A%2F%2Fsz.jd.com%2FindustryKeyWord%2FkeywordQuerys.html'
+        driver.get(url)
+    except:
+        print('启动谷歌浏览器失败')
+        time.sleep(120)
+        exit()
     # c_s = 'body > div.normal-body > div.header > div'
     # WebDriverWait(driver, 15, 0.5).until(ec.presence_of_all_elements_located((By.CSS_SELECTOR, c_s)))
     # driver.find_element_by_css_selector('body > div.normal-body > div.header > div').click()
