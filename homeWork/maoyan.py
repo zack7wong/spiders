@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
+#导入包
 import requests
 from lxml.etree import HTML
 
+#请求头
 headers = {
     'accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
     'accept-encoding': "gzip, deflate, br",
@@ -16,15 +18,21 @@ headers = {
     'user-agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36",
     }
 
+#for循环翻页
 for i in range(10):
     url = 'https://maoyan.com/board/4?offset='+str(i*10)
+    #发送请求
     response = requests.get(url,headers=headers)
+    #得到结果，用lxml解析
     html = HTML(response.text)
+    #xpath获取结果
     titles = html.xpath('//dl[@class="board-wrapper"]/dd/a/@title')
     names = html.xpath('//dl[@class="board-wrapper"]//p[@class="star"]/text()')
     times = html.xpath('//dl[@class="board-wrapper"]//p[@class="releasetime"]/text()')
+    #结果合并
     for title,name,time in zip(titles,names,times):
         res = title+','+name.strip()+','+time.strip()+'\n'
         print(res)
+        #写文件
         with open('maoyan.csv','a') as f:
             f.write(res)
