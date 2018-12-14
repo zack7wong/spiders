@@ -36,5 +36,5 @@ for i in range(5):
         avgPrice = data['avgPrice']
         res = title+','+address+','+str(avgScore)+','+str(allCommentNum)+','+str(avgPrice)+'\n'
         print(res)
-        with open('meituan.csv','a') as f:
+        with open('meituan.csv','a',encoding='gbk',errors='ignore') as f:
             f.write(res)
