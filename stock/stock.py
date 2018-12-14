@@ -32,6 +32,7 @@ def get_html(type):
         }
         # response = requests.get(url,timeout=10,proxies=proxies)
         response = requests.get(url,timeout=10)
+        print(response.text)
         if response.status_code == 200:
             html = HTML(response.text)
             results = html.xpath('//table[@class="tablemaster"]//tr')
@@ -41,18 +42,20 @@ def get_html(type):
                 symbol = detail_html.xpath('string(//td[1]/a)')
                 if symbol == '':
                     continue
+                side = detail_html.xpath('string(//td[2])')
                 size = detail_html.xpath('string(//td[3])')
                 price = detail_html.xpath('string(//td[4])')
                 if type == '1':
-                    print(symbol,size,price)
+                    print(symbol,side,size,price)
                     with open(filename,'a') as f:
-                        save_res = symbol+','+size+','+price+'\n'
+                        save_res = symbol+','+size+','+price+','+side+'\n'
                         f.write(save_res)
                 elif type =='2':
                     obj = {
                         'symbol':symbol,
                         'size':size,
                         'price':float(price),
+                        'side':side,
                     }
                     item_list.append(obj)
             #价格分区
@@ -65,12 +68,13 @@ def get_html(type):
                 sort_res_list = sorted(item_list, key=lambda x: x['price'])
                 for sort_res in sort_res_list:
                     symbol = sort_res['symbol']
+                    side = sort_res['side']
                     size = sort_res['size']
                     price = str(sort_res['price'])
-                    print(symbol, size, price)
+                    print(symbol,side, size, price)
 
                     with open(sort_filename,'a') as f:
-                        save_res = symbol+','+size+','+price+'\n'
+                        save_res = symbol+','+size+','+price+','+side+'\n'
                         f.write(save_res)
         else:
             print('未获取到数据。。')
@@ -127,12 +131,15 @@ def jisuan():
                 symbol = detail_html.xpath('string(//td[1]/a)')
                 if symbol == '':
                     continue
+                side = detail_html.xpath('string(//td[2])')
                 size = detail_html.xpath('string(//td[3])')
                 price = detail_html.xpath('string(//td[4])')
                 obj = {
                     'key': symbol,
                     'value': int(size),
-                    'price':price
+                    'side': side,
+                    'price':price,
+
                 }
                 today_list.append(obj)
         else:
@@ -152,7 +159,7 @@ def jisuan():
     for item in item_list:
         for today in today_list:
             if today['key'] == item['key']:
-                save_res = today['key']+','+str(today['value'])+','+str(item['avg'])+','+str(today['value']/item['avg'])+','+today['price']+'\n'
+                save_res = today['key']+','+str(today['value'])+','+str(item['avg'])+','+str(today['value']/item['avg'])+','+today['price']+','+today['side']+'\n'
                 print(save_res)
                 with open('results.csv','a') as f:
                     f.write(save_res)
