@@ -3,6 +3,7 @@ import os
 from aip import AipOcr
 from wand.image import Image as wandImage
 import re
+import time
 
 def baiduOCR(picfile,file):
     filename = path.basename(picfile)
@@ -20,17 +21,18 @@ def baiduOCR(picfile,file):
     if message:
         print("识别成功！")
     i.close()
+    print(message.get('words_result'))
     for text in message.get('words_result'):
-        if re.search('请号:(\d{7})',text['words']):
-            rename_name = re.search('请号:(\d{7})',text['words']).group(1)
+        if re.search('请号:(\d{5,15})',text['words']):
+            rename_name = re.search('请号:(\d{5,15})',text['words']).group(1)
             rename_name = rename_name +'.pdf'
             print(rename_name)
             os.rename(file,rename_name)
 
 def get_img(filename):
-    jpeg_name = file.split('.')[0]+'.jpeg'
+    jpeg_name = file.split('.')[0]+'.png'
     with wandImage(filename=filename) as img:
-        with img.convert('jpeg') as converted:
+        with img.convert('png') as converted:
             converted.save(filename=jpeg_name)
     return jpeg_name
 
@@ -46,3 +48,5 @@ if __name__ == "__main__":
                     baiduOCR(img_name,file)
                 except:
                     print('处理失败')
+    print('30秒后关闭。。。')
+    time.sleep(30)
