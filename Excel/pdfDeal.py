@@ -1,17 +1,15 @@
-import glob
 from os import path
 import os
 from aip import AipOcr
 from wand.image import Image as wandImage
-from PIL import Image
 import re
 
 def baiduOCR(picfile,file):
     filename = path.basename(picfile)
 
-    APP_ID = '15106275' # 刚才获取的 ID，下同
-    API_KEY = 'TVC9eWFb6KSQ7LwXvyPmLkgW'
-    SECRECT_KEY = 'YxTEbw5o672QrfApzS7bKamNhK1zYNen'
+    APP_ID = '15158569' # 刚才获取的 ID，下同
+    API_KEY = 'ZoiSvOeob2XXilhrxOTquDx2'
+    SECRECT_KEY = 'CjxZPDfzNXIaUFX21tTKhdCYQNxC48cE'
     client = AipOcr(APP_ID, API_KEY, SECRECT_KEY)
 
     i = open(picfile, 'rb')
