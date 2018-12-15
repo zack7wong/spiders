@@ -72,7 +72,6 @@ def send_code(phone):
     url = 'http://www.topfans.cc/tupu/LoginAPI/getPhoneCode.do'
     body = 'phonenum={phone}'.format(phone=phone)
     response = requests.post(url, headers=headers, data=body,timeout=40)
-    print(response.text)
     if response.status_code == 200:
         json_boj = json.loads(response.text)
         if json_boj['resultCode'] == '1000':
@@ -103,7 +102,13 @@ def start():
         if send_res:
             message_res = shenhua.get_message(token, phone)
             if message_res:
-                reg_res = register(phone, message_res)
+                num = 1
+                while True:
+                    print('正在注册，第'+str(num)+'次')
+                    num+=1
+                    reg_res = register(phone, message_res)
+                    if num >15 or reg_res:
+                        break
                 if reg_res:
                     print('注册成功')
                     global success_num
