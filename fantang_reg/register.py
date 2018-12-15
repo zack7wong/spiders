@@ -89,6 +89,10 @@ def register(phone,code):
         if json_boj['resultCode'] == '1000':
             return True
 
+        if json_boj['resultCode'] == '1005':
+            return 'exist'
+
+
     return None
 
 def start():
@@ -107,6 +111,9 @@ def start():
                     print('正在注册，第'+str(num)+'次')
                     num+=1
                     reg_res = register(phone, message_res)
+                    if reg_res == 'exist':
+                        print('该账号存在，注册失败')
+                        return None
                     if num >15 or reg_res:
                         break
                 if reg_res:
