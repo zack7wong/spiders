@@ -72,6 +72,7 @@ def send_code(phone):
     url = 'http://www.topfans.cc/tupu/LoginAPI/getPhoneCode.do'
     body = 'phonenum={phone}'.format(phone=phone)
     response = requests.post(url, headers=headers, data=body,timeout=40)
+    print(response.text)
     if response.status_code == 200:
         json_boj = json.loads(response.text)
         if json_boj['resultCode'] == '1000':
@@ -81,7 +82,7 @@ def send_code(phone):
 
 def register(phone,code):
     url = 'http://www.topfans.cc/tupu/LoginAPI/oAuthLoginNew.do'
-    body = 'checkcode={code}&clientType=android&inviteuserid=412222&latitude=30.31&longitude=120.20&openid={phone}&password=e10adc3949ba59abbe56e057f20f883e&phonenum={phone}&phoneType=1'.format(phone=phone,code=code)
+    body = 'checkcode={code}&clientType=android&inviteuserid=412222&latitude=30.31&longitude=120.20&openid={phone}&password=d8578edf8458ce06fbc5bb76a58c5ca4&phonenum={phone}&phoneType=1'.format(phone=phone,code=code)
     response = requests.post(url, headers=headers, data=body,timeout=40)
     print(response.text)
     if response.status_code == 200:
