@@ -104,8 +104,8 @@ def get_ip(url):
         sleep(5)
         return get_ip(url)
 
-def start():
-    start_url = 'http://www.285200.com/Home/GetRedEnvelope?id=EhbdL7WlQNQ0x10'
+def start(start_url):
+    start_url = start_url
     start_headers = {
         'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
         'Accept-Encoding': "gzip, deflate",
@@ -186,14 +186,14 @@ def logout():
         print('退出失败')
 
 
-def main(useaname,password):
+def main(useaname,password,start_url):
     global proxies
     ip = get_ip('http://api.xdaili.cn/xdaili-api//greatRecharge/getGreatIp?spiderId=0b052d8bb1e645adb9eeb91e87502f71&orderno=YZ201812166028Tacx4Q&returnType=2&count=1')
     proxies = {
         'http': 'http://' + ip,
         'https': 'https://' + ip,
     }
-    start()
+    start(start_url)
     get_img()
         #qwer949 qq123456  118243  1ed8d3f0f613490ea9f01a85a17258a7
     rc = RClient('qwer949', 'qq123456', '118243', '1ed8d3f0f613490ea9f01a85a17258a7')
@@ -207,6 +207,8 @@ def main(useaname,password):
 
 
 if __name__ == '__main__':
+    #http://www.285200.com/Home/RedBagData?id=EhbdL7WlQNQ0x10
+    start_url = input('请输入链接：')
     account_list = []
     with open('account.txt') as f:
         results = f.readlines()
@@ -215,6 +217,6 @@ if __name__ == '__main__':
     for account in account_list:
         print('当前账号：' + account)
         try:
-            main(account,account)
+            main(account,account,start_url)
         except:
             print('未知错误')
