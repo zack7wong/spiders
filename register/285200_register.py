@@ -13,6 +13,7 @@ import requests
 from hashlib import md5
 import json
 import time
+import re
 from requests import RequestException
 from time import sleep
 
@@ -161,6 +162,28 @@ def login(username,password,code):
     else:
         print('登录失败')
 
+def click(start_url):
+    id = re.search('id=(.*?)$',start_url).group(1)
+    myheaders = {
+        'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+        'Accept-Encoding': "gzip, deflate",
+        'Accept-Language': "zh-CN,zh;q=0.9",
+        'Cache-Control': "no-cache",
+        'Connection': "keep-alive",
+        # 'Cookie': "ASP.NET_SessionId=s0lth5iln5ajtcrt5pvvvufv",
+        'Host': "www.285200.com",
+        'Pragma': "no-cache",
+        'Referer': "http://www.285200.com/Home/RedBagData?id=".format(id=id),
+        'Upgrade-Insecure-Requests': "1",
+        'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36",
+        'cache-control': "no-cache",
+    }
+    myheaders['Cookie'] = mycookies
+    url = 'http://www.285200.com/Home/GetRedEnvelope?id={id}'.format(id=id)
+    response = requests.get(url,headers=myheaders,timeout=20,proxies=proxies)
+    if re.search('color:red">(恭喜您.*?)</font>',response.text):
+        print(re.search('color:red">(恭喜您.*?)</font>',response.text).group(1))
+
 def logout():
     global mycookies
     logout_headers = {
@@ -203,6 +226,7 @@ def main(useaname,password,start_url):
     print(captcha_res)
     captcha_res = captcha_res['Result']
     login(useaname,password,captcha_res)
+    click(start_url)
     logout()
 
 
