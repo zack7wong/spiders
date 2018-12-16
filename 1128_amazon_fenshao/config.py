@@ -7,7 +7,7 @@ from time import sleep
 from requests import RequestException
 
 #是否开启代理
-proxy_on = True
+proxy_on = False
 
 #代理url
 proxy_url = 'http://api.xdaili.cn/xdaili-api//greatRecharge/getGreatIp?spiderId=c31c7f8986124188b7ef9f164aa37e5a&orderno=YZ20181219934NkS8qm&returnType=2&count=1'
