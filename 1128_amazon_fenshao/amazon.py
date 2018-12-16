@@ -119,14 +119,23 @@ async def main():
             for url in url_list:
                 await get_url(url,detail_url_list)
 
+            for detail in detail_url_list:
+                with open('all_url.txt','a') as f:
+                    f.write(detail+'\n')
+
             for url in detail_url_list:
                 await get_detail(url)
                 await get_url(url,detail_url_list2)
+
+            for detail in detail_url_list2:
+                with open('all_url.txt', 'a') as f:
+                    f.write(detail + '\n')
+
             for url in detail_url_list2:
                 await get_detail(url)
 
-            print(detail_url_list)
-            print(detail_url_list2)
+            # print(detail_url_list)
+            # print(detail_url_list2)
         except:
             print('未知错误')
 
