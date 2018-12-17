@@ -65,7 +65,7 @@ for i in range(1,53):
             except:
                 print('获取坐标失败')
 
-            save_res = XMMC_31001+','+JSDWMC_31001+','+GCDD_31001+','+ZDH_31001+','+GCLX_31001+','+GCZJ_31001+','+JZMJ_31001+','+FZRQ_31001+','+JHKGRQ_31001+','+JHJGRQ_31001+','+KCDWMC_31001+','+SJDWMC_31001+','+JLDWMC_31001+','+Label1+','+str(geo)+'\n'
+            save_res = XMMC_31001+','+JSDWMC_31001+','+GCDD_31001+','+'\t'+ZDH_31001+','+GCLX_31001+','+GCZJ_31001+','+JZMJ_31001+','+FZRQ_31001+','+JHKGRQ_31001+','+JHJGRQ_31001+','+KCDWMC_31001+','+SJDWMC_31001+','+JLDWMC_31001+','+Label1+','+str(geo)+'\n'
             print(save_res)
             with open('results.csv','a') as f:
                 f.write(save_res)
