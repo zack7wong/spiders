@@ -18,7 +18,20 @@ import requests
 from lxml.etree import HTML
 
 url = 'http://www.spic.com.cn/2018news/tthg/'
-response = requests.get(url)
+headers = {
+    'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+    'Accept-Encoding': "gzip, deflate",
+    'Accept-Language': "zh-CN,zh;q=0.9",
+    'Cache-Control': "no-cache",
+    'Connection': "keep-alive",
+    'Cookie': "JSESSIONID=abcdlW2CFnFgF4jYMC7Ew",
+    'Host': "www.spic.com.cn",
+    'Pragma': "no-cache",
+    'Upgrade-Insecure-Requests': "1",
+    'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36",
+    'cache-control': "no-cache",
+    }
+response = requests.get(url,headers=headers)
 response.encoding='gbk'
 html = HTML(response.text)
 urls = html.xpath('//ul[@class="textcontent subpagelist"]/li/a/@href')
@@ -30,7 +43,7 @@ for url in urls:
     detail_html = HTML(detail.text)
     conten = detail_html.xpath('//div[@class="TRS_Editor"]//p//text()')
     conten = ''.join(conten).replace('\n','').replace('\t','')
-    with open('新闻.txt','a') as f:
+    with open('新闻.txt','a',encoding='utf8',errors='ignore') as f:
         f.write(conten)
 
 
