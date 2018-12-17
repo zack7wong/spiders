@@ -44,6 +44,7 @@ def get_res(account_list,num):
 
 if __name__ == '__main__':
     print('程序正在运行。。。')
+    multiprocessing.freeze_support()
     with multiprocessing.Manager() as MG:
         allres_list = multiprocessing.Manager().list()
 
