@@ -33,6 +33,7 @@ for url in urls:
     with open('新闻.txt','a') as f:
         f.write(conten)
 
+
 text = open("新闻.txt", "rb").read()
 # 结巴分词
 wordlist = jieba.cut(text, cut_all=True)
@@ -48,9 +49,8 @@ wc = WordCloud(background_color="black",  # 设置背景颜色
                # stopwords = "", #设置停用词
                font_path="C:\Windows\Fonts\SimHei.ttf",
                # font_path="/System/Library/Fonts/PingFang.ttc",
-               # 设置中文字体，使得词云可以显示（词云默认字体是“DroidSansMono.ttf字体库”，不支持中文）
                max_font_size=50,  # 设置字体最大值
-               random_state=30,  # 设置有多少种随机生成状态，即有多少种配色方案
+               random_state=30,
                )
 myword = wc.generate(wl)  # 生成词云
 
