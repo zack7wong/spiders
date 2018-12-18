@@ -53,7 +53,7 @@ class Shenhua(object):
 
     def login(self):
         try:
-            url = 'http://api.shjmpt.com:9002/pubApi/uLogin?uName=点胜金手&pWord=lxf1234'
+            url = 'http://api.shjmpt.com:9002/pubApi/uLogin?uName=大叶子金融&pWord=lxf1234'
             response = requests.get(url,timeout=20)
             token = response.text.split('&')[0]
             return token
@@ -90,6 +90,17 @@ class Shenhua(object):
         except:
             print('获取手机验证码失败')
             return None
+
+    def logout(self,token):
+        try:
+            url = 'http://api.shjmpt.com:9002/pubApi/uExit?token={token}'.format(token=token)
+            response = requests.get(url,timeout=20)
+            print(response.text)
+            return response
+        except:
+            print('退出登录失败失败')
+            return None
+
 
 def read():
     mylist = []
@@ -136,11 +147,12 @@ def login(phone, code, account):
 
 def start(account):
     token = shenhua.login()
+    print(token)
     if token:
         phone = shenhua.get_phone(token)
-        if phone:
+        print(phone)
+        if phone and re.search('\d+',phone):
             print('\n' + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()))
-            print('当前手机号:' + phone)
             send_res = send_code(phone,account)
             if send_res:
                 message_res = shenhua.get_message(token, phone)
@@ -152,13 +164,17 @@ def start(account):
                         with open('成功的手机.txt', 'a') as f:
                             write_res = phone + ',' +message_res + '\n'
                             f.write(write_res)
+                            shenhua.logout(token)
                             return
 
                 print('升级电子券失败')
+                shenhua.logout(token)
                 return
             else:
                 print('发送验证码失败')
+                shenhua.logout(token)
                 return
+    shenhua.logout(token)
 
 if __name__ == '__main__':
     shenhua = Shenhua()
