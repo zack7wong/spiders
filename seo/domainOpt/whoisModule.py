@@ -69,5 +69,5 @@ class WhoisClass():
             f.write(self.domain_obj['url']+'\n')
 
     def write_error(self):
-        with open('网络请求失败.txt', 'a') as f:
+        with open('未知错误.txt', 'a') as f:
             f.write(self.domain_obj['url']+'\n')
