@@ -52,14 +52,14 @@ class Chrome(object):
         )
         self.driver.set_page_load_timeout(15)
 
-    def search(self, url_obj):
+    def search(self, url_obj,pageToken):
         # WebDriverWait(self.driver, 15, 0.5).until(ec.presence_of_all_elements_located((By.CSS_SELECTOR, config.c_s)))
         # self.driver.find_element_by_css_selector('#kw').send_keys(url_obj['keyword'])
         # self.driver.find_element_by_css_selector('#su').click()
         time.sleep(2)
-        self.parse_html(url_obj)
+        self.parse_html(url_obj,pageToken)
 
-    def parse_html(self, url_obj):
+    def parse_html(self, url_obj,pageToken):
 
         # if pageToken == 1:
         #      cssToken = pageToken + 1
@@ -90,9 +90,12 @@ class Chrome(object):
                         clickToken = id_str.group(1)[0] + ' '
                     else:
                         rank = id_str.group(1)[1]
-                        clickToken = id_str.group(1)[0] + ' ' + id_str.group(1)[1]
+                        clickToken = id_str.group(1)[0] + ' ' + id_str.group(1)[1:]
                     # print('已找到该网站，第' + str(pageToken) + '页,第' + rank +'条')
                     selecter_str = '#\\3{clickToken} > h3 > a'.format(clickToken=clickToken)
+                    print(selecter_str)
+                    ##\31 21 > h3 > a
+
                     try:
                         WebDriverWait(self.driver, 5, 0.5).until(ec.presence_of_all_elements_located((By.CSS_SELECTOR, selecter_str)))
                         self.driver.find_element_by_css_selector(selecter_str).click()

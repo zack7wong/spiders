@@ -13,7 +13,7 @@ if __name__ == '__main__':
     spider.get_urlobj()
     for url_obj in spider.urls:
         print(url_obj)
-        for i in range(2):
+        for i in range(0,14):
             print('当前页为：'+str(i+1))
             spider.get_driver()
             keyword = url_obj['keyword']
@@ -22,6 +22,6 @@ if __name__ == '__main__':
             print(start_url)
             try:
                 spider.driver.get(start_url)
-                spider.search(url_obj)
+                spider.search(url_obj,i)
             except:
                 continue
