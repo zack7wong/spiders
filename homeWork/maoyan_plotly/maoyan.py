@@ -4,6 +4,9 @@
 #导入包
 import requests
 from lxml.etree import HTML
+import plotly.plotly
+import plotly.graph_objs as go
+
 
 #请求头
 headers = {
@@ -23,6 +26,9 @@ with open('maoyan.csv','w') as f:
 
 #for循环翻页
 
+name_list = []
+score_list = []
+
 num =1
 for i in range(10):
     url = 'https://maoyan.com/board/4?offset='+str(i*10)
@@ -41,9 +47,19 @@ for i in range(10):
     for title,url,name,ge,shi,time in zip(titles,urls,names,ges,shis,times):
         url = 'https://maoyan.com'+url
         score = ge+shi
+        name_list.append(name)
+        score_list.append(float(score))
         res = str(num)+','+title+','+url+','+name.strip().replace(',','，')+','+score+','+time.strip()+'\n'
         print(res)
         #写文件
         with open('maoyan.csv','a') as f:
             f.write(res)
         num+=1
+
+
+data = [go.Bar(
+    x=name_list,
+    y=score_list
+)]
+
+plotly.offline.plot(data, filename='maoyan.html')
