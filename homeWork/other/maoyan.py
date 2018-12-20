@@ -18,21 +18,32 @@ headers = {
     'user-agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36",
     }
 
+with open('maoyan.csv','w') as f:
+    f.write('排名,电影名,链接,演员,评分,上映时间\n')
+
 #for循环翻页
+
+num =1
 for i in range(10):
     url = 'https://maoyan.com/board/4?offset='+str(i*10)
     #发送请求
-    response = requests.get(url,headers=headers)
+    response = requests.get(url,headers=headers,verify=False)
     #得到结果，用lxml解析
     html = HTML(response.text)
     #xpath获取结果
     titles = html.xpath('//dl[@class="board-wrapper"]/dd/a/@title')
+    urls = html.xpath('//dl[@class="board-wrapper"]/dd/a/@href')
     names = html.xpath('//dl[@class="board-wrapper"]//p[@class="star"]/text()')
+    ges = html.xpath('//dl[@class="board-wrapper"]//p[@class="score"]/i[1]/text()')
+    shis = html.xpath('//dl[@class="board-wrapper"]//p[@class="score"]/i[2]/text()')
     times = html.xpath('//dl[@class="board-wrapper"]//p[@class="releasetime"]/text()')
     #结果合并
-    for title,name,time in zip(titles,names,times):
-        res = title+','+name.strip()+','+time.strip()+'\n'
+    for title,url,name,ge,shi,time in zip(titles,urls,names,ges,shis,times):
+        url = 'https://maoyan.com'+url
+        score = ge+shi
+        res = str(num)+','+title+','+url+','+name.strip().replace(',','，')+','+score+','+time.strip()+'\n'
         print(res)
         #写文件
         with open('maoyan.csv','a') as f:
             f.write(res)
+        num+=1
