@@ -217,8 +217,8 @@ def read():
     shihua1Date = table.cell(4, 0).value
     print(data)
 
-def save_old(i):
-    print('存储原来的数据。。')
+def save_old(name,i):
+    print(name + ' 暂无新数据，使用上一次的数据显示')
     sheet.write(4+i, 0, table.cell(4+i, 0).value, styleRes)
     sheet.write(4+i, 1, table.cell(4+i, 1).value, styleRes)
     sheet.write(4+i, 2, table.cell(4+i, 2).value, styleRes)
@@ -235,8 +235,8 @@ def save_old(i):
     sheet.write(8+i, 5, table.cell(8+i, 5).value, styleRes)
     sheet.write(8+i, 6, table.cell(8+i, 6).value, styleRes)
 
-def save_old_feishui():
-    print('存储原来的数据。。')
+def save_old_feishui(name):
+    print(name+' 暂无新数据，使用上一次的数据显示')
     sheet.write(31, 0, table.cell(31, 0).value, styleRes)
     sheet.write(31, 1, table.cell(31, 1).value, styleRes)
     sheet.write(31, 2, table.cell(31, 2).value, styleRes)
@@ -374,9 +374,11 @@ def start():
                 # with open('结果.csv','a') as f:
                 #     f.write(save_res)
             else:
-                save_old(i)
+                save_old(city['city'],i)
+                i += 9
         else:
-            save_old(i)
+            save_old(city['city'],i)
+            i += 9
 
     #废水
     # with open('结果.csv', 'a') as f:
@@ -409,9 +411,9 @@ def start():
             sheet.write(31, 4, flow_311, styleRes)
             sheet.write(31, 5, val_494, styleRes)
         else:
-            save_old_feishui()
+            save_old_feishui('东明石化集团（废水总排口）')
     else:
-        save_old_feishui()
+        save_old_feishui('东明石化集团（废水总排口）')
 
 
     # 保存
@@ -483,7 +485,7 @@ if __name__ == '__main__':
         except:
             start_res = False
 
-        timeNum = 5
+        timeNum = 29
         if start_res:
             print('本时段数据获取完毕，30分钟后获取下一时段数据')
             while True:
