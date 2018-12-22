@@ -8,6 +8,7 @@ from urllib.parse import quote
 import time
 import json
 import xlwt
+import xlrd
 import requests
 from hashlib import md5
 
@@ -85,6 +86,8 @@ def init_xls_file():
     # 写入excel
     # 参数对应 行, 列, 值
     # worksheet.write(0, 0, label='this is test')
+
+    #1
     sheet.write_merge(0, 0, 0, 6, '东明石化1',style)
     sheet.write_merge(1, 3,0,0, '时间',style)
     sheet.write_merge(1, 1, 1, 3, '二氧化硫', style)
@@ -110,13 +113,13 @@ def init_xls_file():
     sheet.write(5, 4, '氧含量', style)
     sheet.write(5, 5, '烟气温度', style)
     sheet.write(5, 6, '废气排放量', style)
-
     sheet.write(7, 1, '(mg/M3)', style)
     sheet.write(7, 2, '(mg/M3)', style)
     sheet.write(7, 3, '(kg)', style)
     sheet.write(6, 4, '（%）', style)
     sheet.write(6, 5, '（C°）', style)
     sheet.write(6, 6, '(m3/h)', style)
+
 
     #2
     sheet.write_merge(0+a, 0+a, 0, 6, '东明石化2',style)
@@ -136,6 +139,7 @@ def init_xls_file():
     sheet.write(3+a, 5, '(mg/M3)', style)
     sheet.write(3+a, 6, '(kg)', style)
 
+
     sheet.write_merge(5+a, 7+a,0,0, '时间',style)
     sheet.write_merge(5+a, 5+a, 1, 3, '颗粒物', style)
     sheet.write(6+a, 1, '实测浓度', style)
@@ -144,7 +148,6 @@ def init_xls_file():
     sheet.write(5+a, 4, '氧含量', style)
     sheet.write(5+a, 5, '烟气温度', style)
     sheet.write(5+a, 6, '废气排放量', style)
-
     sheet.write(7+a, 1, '(mg/M3)', style)
     sheet.write(7+a, 2, '(mg/M3)', style)
     sheet.write(7+a, 3, '(kg)', style)
@@ -170,6 +173,7 @@ def init_xls_file():
     sheet.write(3+b, 5, '(mg/M3)', style)
     sheet.write(3+b, 6, '(kg)', style)
 
+
     sheet.write_merge(5+b, 7+b,0,0, '时间',style)
     sheet.write_merge(5+b, 5+b, 1, 3, '颗粒物', style)
     sheet.write(6+b, 1, '实测浓度', style)
@@ -178,13 +182,13 @@ def init_xls_file():
     sheet.write(5+b, 4, '氧含量', style)
     sheet.write(5+b, 5, '烟气温度', style)
     sheet.write(5+b, 6, '废气排放量', style)
-
     sheet.write(7+b, 1, '(mg/M3)', style)
     sheet.write(7+b, 2, '(mg/M3)', style)
     sheet.write(7+b, 3, '(kg)', style)
     sheet.write(6+b, 4, '（%）', style)
     sheet.write(6+b, 5, '（C°）', style)
     sheet.write(6+b, 6, '(m3/h)', style)
+
 
     #4
     sheet.write_merge(0 + c, 0 + c, 0, 6, '东明石化集团（废水总排口）', style)
@@ -203,6 +207,43 @@ def init_xls_file():
     sheet.write(3+c, 3, '（mg/l)', style)
     sheet.write(3+c, 4, '(kg)', style)
 
+
+
+def read():
+    data = xlrd.open_workbook('res.xls')
+    table = data.sheets()[0]  # 通过索引顺序获取
+    # table = data.sheet_by_index(0)  # 通过索引顺序获取
+    # table = data.sheet_by_name(u'Sheet1')  # 通过名称获取
+    shihua1Date = table.cell(4, 0).value
+    print(data)
+
+def save_old(i):
+    print('存储原来的数据。。')
+    sheet.write(4+i, 0, table.cell(4+i, 0).value, styleRes)
+    sheet.write(4+i, 1, table.cell(4+i, 1).value, styleRes)
+    sheet.write(4+i, 2, table.cell(4+i, 2).value, styleRes)
+    sheet.write(4+i, 3, table.cell(4+i, 3).value, styleRes)
+    sheet.write(4+i, 4, table.cell(4+i, 4).value, styleRes)
+    sheet.write(4+i, 5, table.cell(4+i, 5).value, styleRes)
+    sheet.write(4+i, 6, table.cell(4+i, 6).value, styleRes)
+
+    sheet.write(8+i, 0, table.cell(8+i, 0).value, styleRes)
+    sheet.write(8+i, 1, table.cell(8+i, 1).value, styleRes)
+    sheet.write(8+i, 2, table.cell(8+i, 2).value, styleRes)
+    sheet.write(8+i, 3, table.cell(8+i, 3).value, styleRes)
+    sheet.write(8+i, 4, table.cell(8+i, 4).value, styleRes)
+    sheet.write(8+i, 5, table.cell(8+i, 5).value, styleRes)
+    sheet.write(8+i, 6, table.cell(8+i, 6).value, styleRes)
+
+def save_old_feishui():
+    print('存储原来的数据。。')
+    sheet.write(31, 0, table.cell(31, 0).value, styleRes)
+    sheet.write(31, 1, table.cell(31, 1).value, styleRes)
+    sheet.write(31, 2, table.cell(31, 2).value, styleRes)
+    sheet.write(31, 3, table.cell(31, 3).value, styleRes)
+    sheet.write(31, 4, table.cell(31, 4).value, styleRes)
+    sheet.write(31, 5, table.cell(31, 5).value, styleRes)
+    sheet.write(31, 6, table.cell(31, 6).value, styleRes)
 
 
 def get_cookie():
@@ -332,6 +373,10 @@ def start():
                 i+=9
                 # with open('结果.csv','a') as f:
                 #     f.write(save_res)
+            else:
+                save_old(i)
+        else:
+            save_old(i)
 
     #废水
     # with open('结果.csv', 'a') as f:
@@ -352,7 +397,7 @@ def start():
             val_494 = json_obj['rows'][0]['val_494']
             PH = ''
 
-            save_res = city['city'] + ',' + str(start_date) + ',' + val_316 + ',' + flow_316 + ',' + val_311 + ',' + flow_311+','+val_494+','+PH+'\n'
+            save_res = '东明石化集团（废水总排口）' + ',' + str(start_date) + ',' + val_316 + ',' + flow_316 + ',' + val_311 + ',' + flow_311+','+val_494+','+PH+'\n'
             print(save_res)
             # with open('结果.csv', 'a') as f:
             #     f.write(save_res)
@@ -363,6 +408,10 @@ def start():
             sheet.write(31, 3, val_311, styleRes)
             sheet.write(31, 4, flow_311, styleRes)
             sheet.write(31, 5, val_494, styleRes)
+        else:
+            save_old_feishui()
+    else:
+        save_old_feishui()
 
 
     # 保存
@@ -377,6 +426,9 @@ if __name__ == '__main__':
         workbook = xlwt.Workbook(encoding='utf-8')
         # 创建一个worksheet
         sheet = workbook.add_sheet('My Worksheet')
+
+        data = xlrd.open_workbook('res.xls')
+        table = data.sheets()[0]  # 通过索引顺序获取
 
         style = xlwt.XFStyle()
         font = xlwt.Font()
@@ -425,13 +477,22 @@ if __name__ == '__main__':
 
 
         init_xls_file()
+
         try:
             start_res = start()
         except:
             start_res = False
 
+        timeNum = 5
         if start_res:
-            print('该轮已经跑完,20分钟获取一次。。程序在后台运行请不要关闭')
-            time.sleep(60*20)
+            print('本时段数据获取完毕，30分钟后获取下一时段数据')
+            while True:
+                if (int(time.time()) % 60) == 0:
+                    print('本时段数据获取完毕，'+str(timeNum)+'分钟后获取下一时段数据')
+                    timeNum -=1
+                    time.sleep(2)
+                if timeNum==0:
+                    break
+            # time.sleep(60*20)
         else:
             print('当前出错，重新开始')
