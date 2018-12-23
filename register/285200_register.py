@@ -220,8 +220,15 @@ def logout():
 
 def main(useaname, password, start_url):
     global proxies
-    with open('订单.txt') as f:
+    with open('讯代理.txt') as f:
         dingdan = f.read()
+
+    with open('若快.txt') as f:
+        readRes = f.read().strip()
+        ruokuai_name = readRes.split(',')[0]
+        ruokuai_password = readRes.split(',')[1]
+        ruokuai_id = int(readRes.split(',')[2])
+        ruokuai_md5 = readRes.split(',')[3]
 
     ip = get_ip(dingdan.strip())
     proxies = {
@@ -231,7 +238,9 @@ def main(useaname, password, start_url):
     start(start_url)
     get_img()
     # qwer949 qq123456  118243  1ed8d3f0f613490ea9f01a85a17258a7
-    rc = RClient('qwer949', 'qq123456', '118243', '1ed8d3f0f613490ea9f01a85a17258a7')
+
+    # print(ruokuai_name, ruokuai_password, ruokuai_id, ruokuai_md5)
+    rc = RClient(ruokuai_name, ruokuai_password, ruokuai_id, ruokuai_md5)
     with open('captcha.png', 'rb') as f:
         im = f.read()
     captcha_res = rc.rk_create(im, 3040)
@@ -247,7 +256,7 @@ if __name__ == '__main__':
     start_url = input('请输入链接：')
     # start_url = 'http://www.285200.com/Home/RedBagData?id=EhbdL7WlQNQ0x10'
     account_list = []
-    with open('account.txt') as f:
+    with open('手机号.txt') as f:
         results = f.readlines()
         for res in results:
             account_list.append(res.strip())
