@@ -10,8 +10,9 @@ import re
 import matplotlib.pyplot as plt
 import os
 import time as ttime
-
+from pyecharts import Bar
 from pylab import *
+from pyecharts import Line,configure
 
 #中文字体显示
 # mpl.rcParams['font.sans-serif'] = ['SimHei']
@@ -107,22 +108,29 @@ for url,title,img,name,pingfen,pingjia in zip(urls,titles,imgs,time_and_names,pi
 
 
 #柱形图
+# print(title_list)
+# print(pingjia_list)
+bar = Bar("柱形图",background_color = 'white',title_text_size = 5,width=2500)
+bar.add("豆瓣",title_list,pingjia_list)
+bar.show_config()
+bar.render(path = 'a.html')
 
-x = title_list
-y = pingjia_list
-plt.bar(range(len(y)), y,tick_label=x)
-plt.show()
+# x = title_list
+# y = pingjia_list
+# plt.bar(range(len(y)), y,tick_label=x)
+# plt.show()
 
 #折线图
 
-# x=title_list
-# y=pingjia_list
+line =Line('折线图',background_color = 'white',title_text_size = 5,width=2500)
+attr = title_list
+v1 = pingjia_list
+line.add('豆瓣',attr,v1,mark_line=['average'],is_label_show = True)
+line.render(path = 'b.html')
 
-ttime.sleep(2)
-
-plt.figure()
-plt.plot(x,y)
-plt.show()
+# plt.figure()
+# plt.plot(x,y)
+# plt.show()
 
 # plt.plot([1, 2, 3], [4, 5, 6])
 # plt.xlabel("横轴",fontproperties=myfont)
