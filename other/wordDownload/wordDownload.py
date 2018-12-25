@@ -10,6 +10,7 @@
 """
 
 import requests
+import download
 import re
 
 headers = {
@@ -27,7 +28,8 @@ headers = {
 }
 
 def get_cookie():
-    response = requests.get(url, headers=headers,timeout=30)
+    response = down.get_html(url, headers=headers,timeout=30)
+    print(response.text)
     id = re.search('SetC\("id", "(.*?)"\)', response.text, re.S).group(1)
     mycookie = response.cookies.get_dict()
     mycookieStr = 'title=' + mycookie['title'] + '; '
@@ -36,7 +38,7 @@ def get_cookie():
     print(mycookieStr)
     headers['cookie'] = mycookieStr
 
-def download(url):
+def download_word(url):
     response = requests.get(url,headers=headers,timeout=30)
     res = re.search('本地下载链接：</b><a href=\\\\"(.*?)\\\\"',response.text,re.S).group(1)
     name = re.search('本地下载链接：</b><a href=\\\\"(.*?)\\\\".*?>(.*?)</a>',response.text,re.S).group(2)
@@ -58,7 +60,7 @@ def download(url):
 
     # headers['cookie'] = 'title=75j4j82f6; id=b4g5cj2i3g;'
     while True:
-        response = requests.get(link,headers=headers,allow_redirects=False,timeout=30)
+        response = down.get_html(link,headers=headers,allow_redirects=False,timeout=30)
         print(response.status_code)
         if response.status_code==302:
             get_cookie()
@@ -74,6 +76,7 @@ def download(url):
         file.write(response.content)
 
 if __name__ == '__main__':
+    down = download.Download()
     item_list = []
     with open('url.txt') as f:
         results = f.readlines()
@@ -83,9 +86,8 @@ if __name__ == '__main__':
     for url in item_list:
         try:
             print('正在下载：'+url)
-            download(url)
+            download_word(url)
         except:
             print('未知错误')
-            continue
 
 
