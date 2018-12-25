@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 
 
+#导入包
 import requests
 from lxml.etree import HTML
 import urllib
@@ -11,13 +12,19 @@ import os
 import time as ttime
 
 from pylab import *
+
+#中文字体显示
 # mpl.rcParams['font.sans-serif'] = ['SimHei']
 # mpl.rcParams['font.sans-serif'] = ['PingFang']
 # myfont = matplotlib.font_manager.FontProperties(fname=r'/System/Library/Fonts/PingFang.ttc')
 # myfont = matplotlib.font_manager.FontProperties(fname=r'C:\Windows\Fonts\SimHei.ttf')
 
+#起始url
+
 url = 'https://movie.douban.com/chart'
 response = requests.get(url)
+
+#lxml解析结果
 
 html = HTML(response.text)
 urls = html.xpath('//html//div[1]/table//td[@valign="top"]/a/@href')
@@ -27,38 +34,60 @@ time_and_names = html.xpath('//html//div[1]/table//td[@valign="top"]/div/p/text(
 pingfens = html.xpath('//html//div[1]/table//td[@valign="top"]/div/div/span[2]/text()')
 pingjias = html.xpath('//html//div[1]/table//td[@valign="top"]/div/div/span[3]/text()')
 
+#debug测试
+
 # print(response.text)
 # print(urls)
+
 # print(titles)
 # print(time_and_names)
 # print(pingfens)
 # print(pingjias)
 
+#结果集
+
 title_list = []
 img_obj_list = []
 pingjia_list = []
 
+#初始化写文件
+
 with open('results.csv', 'w') as f:
     f.write('')
 
+#数据拼接
+
 for url,title,img,name,pingfen,pingjia in zip(urls,titles,imgs,time_and_names,pingfens,pingjias):
+
+    #id 正则匹配
 
     id = re.search('https://movie.douban.com/subject/(\d+)/',url)
     if id:
         id = id.group(1)
 
+    #时间的数据清洗
     time = name.split('/')[0]
     time = time.split('(')[0]
+
+    #演员表的数据清洗
+
     myname = name.split('/')[1:]
     myname = '/'.join(myname)
     myname = myname.replace(',','，')
+
+    #标题去除逗号分隔符
+
     title = title.replace(',','，')
 
     pingjia = pingjia.split('(')[1]
     pingjia = pingjia.split('人')[0]
 
+    #添加到要图表展示的数据
+
     title_list.append(title)
     pingjia_list.append(int(pingjia))
+
+    #图片下载对象
 
     obj = {
         'url':img,
@@ -71,20 +100,26 @@ for url,title,img,name,pingfen,pingjia in zip(urls,titles,imgs,time_and_names,pi
     save_res = id+','+url+','+title+','+time+','+myname+','+pingfen+','+ pingjia+'\n'
     print(save_res)
 
+    #写文件
+
     with open('results.csv','a') as f:
         f.write(save_res)
 
 
 #柱形图
+
 x = title_list
 y = pingjia_list
 plt.bar(range(len(y)), y,tick_label=x)
 plt.show()
 
 #折线图
+
 # x=title_list
 # y=pingjia_list
-time.sleep(2)
+
+ttime.sleep(2)
+
 plt.figure()
 plt.plot(x,y)
 plt.show()
@@ -101,9 +136,15 @@ plt.show()
 
 for imgobj in img_obj_list:
     print(imgobj)
+
+    #获取路劲
     thisPath = os.getcwd()
     thisPath = os.path.join(thisPath+'/img/')
     filename = str(imgobj['id'])+'.jpg'
+
+    #路径拼接
     thisPath = thisPath + filename
     # print(thisPath)
+
+    #下载图片
     urllib.request.urlretrieve(imgobj['url'],filename=thisPath)
