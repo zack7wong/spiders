@@ -18,26 +18,26 @@ text = open("results.txt", "rb").read()
 wordlist = jieba.cut(text, cut_all=True)
 wl = " ".join(wordlist)
 #
-# d = path.dirname(__file__)
-#
-# alice_mask = np.array(Image.open(path.join(d, "tupian.jpg")))
-# # 设置词云
-# wc = WordCloud(background_color="white",  # 设置背景颜色
-#                mask = alice_mask,  #设置背景图片
-#                max_words=2000,  # 设置最大显示的字数
-#                # stopwords = "", #设置停用词
-#                # font_path="C:\Windows\Fonts\SimHei.ttf",
-#                font_path="/System/Library/Fonts/PingFang.ttc",
-#                max_font_size=50,  # 设置字体最大值
-#                random_state=30,
-#                )
-# myword = wc.generate(wl)  # 生成词云
-#
-#
-# # 展示词云图
-# plt.imshow(myword)
-# plt.axis("off")
-# plt.show()
+d = path.dirname(__file__)
+
+alice_mask = np.array(Image.open(path.join(d, "tupian.jpg")))
+# 设置词云
+wc = WordCloud(background_color="white",  # 设置背景颜色
+               mask = alice_mask,  #设置背景图片
+               max_words=2000,  # 设置最大显示的字数
+               # stopwords = "", #设置停用词
+                font_path="C:\Windows\Fonts\SimHei.ttf",
+               #font_path="/System/Library/Fonts/PingFang.ttc",
+               max_font_size=50,  # 设置字体最大值
+               random_state=30,
+               )
+myword = wc.generate(wl)  # 生成词云
+
+
+# 展示词云图
+plt.imshow(myword)
+plt.axis("off")
+plt.show()
 
 
 mysplit_res = wl.split(' ')
@@ -45,7 +45,7 @@ mysplit_res = wl.split(' ')
 item_list = []
 account_list = []
 for res in mysplit_res:
-    if res == '':
+    if res == '' or len(res)==1:
         continue
     if res not in account_list:
         account_list.append(res)
@@ -70,7 +70,8 @@ for item in item_list:
 # bar.show_config()
 # bar.render()
 line =Line('折线图',background_color = 'white',title_text_size = 5,width=2500)
-attr = x_list[:50]
-v1 = y_list[:50]
+
+attr = x_list
+v1 = y_list
 line.add('词频',attr,v1,mark_line=['average'],is_label_show = True)
 line.render(path = 'render.html')
