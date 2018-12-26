@@ -28,6 +28,6 @@ for i in range(0,5):
         # print(music,singer,mytime)
         myres = str(mynum)+','+music+','+singer+','+mytime+'\n'
         print(myres)
-        with open('结果.csv','a') as f:
+        with open('结果.csv','a',encoding='gbk',errors='ignore') as f:
             f.write(myres)
         mynum+=1
