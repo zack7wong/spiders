@@ -5,6 +5,10 @@
 import requests
 from lxml.etree import HTML
 
+with open('results.csv', 'a') as f:
+    save_res = '序号,电影名,评论者,时间,标题,内容,点赞,踩,回复\n'
+    f.write(save_res)
+
 
 num = 1
 for i in range(0,3):
