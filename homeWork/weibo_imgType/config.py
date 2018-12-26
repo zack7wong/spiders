@@ -7,6 +7,12 @@ CHANGE_IP = 0
 #代理IP
 IP = ''
 
+#暂停时间
+sleepTime = 3
+
+gsid = '_2A252l9wGDeRxGeBI7VoY8izKyz2IHXVTBWjOrDV6PUJbkdANLXGjkWpNRm0hpm4-79PKFi9KhFjsQMZsgp-6Vzzd'
+s = '6f4aaaaa'
+
 #是否开启代理
 PROXY_SWITCH = False
 #是否使用cookies
