@@ -7,6 +7,12 @@ CHANGE_IP = 0
 #代理IP
 IP = ''
 
+#大于该评论数则不获取时间
+commentsNum = 50
+
+#大于该转发数则不获取时间
+repostsNum = 50
+
 #暂停时间
 sleepTime = 3
 

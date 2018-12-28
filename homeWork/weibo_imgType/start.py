@@ -28,7 +28,7 @@ def getTimeStamp(dateStr):
 
 def parse_comment(json_obj,userId):
     comment_time_Str = ''
-    if 'datas' in json_obj and len(json_obj['datas']) > 0:
+    if 'datas' in json_obj and json_obj['datas'] and len(json_obj['datas']) > 0:
         for data in json_obj['datas']:
             if data['type'] == 0:
                 if str(data['data']['user']['id']) != userId:
@@ -52,10 +52,14 @@ def get_commentTime(id,userId):
     if response:
         json_obj = json.loads(response.text)
         # print(response.text)
-        comment_time_AllStr = parse_comment(json_obj,userId)
 
         totalNum = json_obj['total_number']
         pageNum = math.ceil(totalNum / 6)
+        if int(totalNum) > config.commentsNum:
+            return ''
+
+        comment_time_AllStr = parse_comment(json_obj,userId)
+
 
         # 翻页
         for i in range(2, pageNum + 1):
@@ -76,7 +80,7 @@ def get_commentTime(id,userId):
 
 def parse_reposts(json_obj,userId):
     reposts_time_Str = ''
-    if 'reposts' in json_obj and len(json_obj['reposts']) > 0:
+    if 'reposts' in json_obj and json_obj['reposts'] and len(json_obj['reposts']) > 0:
         for data in json_obj['reposts']:
             if str(data['user']['id']) != userId:
                 reposts_time = getTimeStamp(data['created_at'])
@@ -91,10 +95,12 @@ def get_repostsTime(id,userId):
     if response:
         json_obj = json.loads(response.text)
         # print(response.text)
-        reposts_time_AllStr = parse_reposts(json_obj, userId)
-
         totalNum = json_obj['total_number']
         pageNum = math.ceil(totalNum / 16)
+        if int(totalNum) > config.repostsNum:
+            return ''
+
+        reposts_time_AllStr = parse_reposts(json_obj, userId)
 
         # 翻页
         for i in range(2, pageNum + 1):
@@ -161,9 +167,9 @@ def main(keyword):
         json_obj = json.loads(response.text)
         totalNum = json_obj['cardlistInfo']['total']
         pageNum = math.ceil(totalNum/20)
-
-        for data in json_obj['cards'][1]['card_group']:
-            parse(data)
+        if 'cards' in json_obj and len(json_obj['cards'])>0:
+            for data in json_obj['cards'][1]['card_group']:
+                parse(data)
 
         #翻页
         for i in range(2,pageNum+1):
