@@ -26,7 +26,7 @@ class Sexagenary(object):
         # 初始化干支数字链表，过程中判断插入的字符是否在60个干支数字中
         # 打印结果
         if input_str[0] == '0':
-            print('ValuError: init ' + input_str)
+            print('ValuError: 初始化错误 ' + input_str)
             return None
 
         #input_str切割最多4个数字
@@ -38,7 +38,7 @@ class Sexagenary(object):
                 pass
                 # print(input_str[i:i+2]+'在60个干支数字中，对应的数字是：'+str(self.sexagenary2int[input_str[i:i+2]]))
             else:
-                print('ValuError: init '+input_str)
+                print('ValuError: 初始化错误 '+input_str)
                 # print(input_str[i:i+2] + '不在60个干支数字中')
                 return None
             #
@@ -70,7 +70,6 @@ class Sexagenary(object):
     #链表判空
     def isEmpty(self):
         if self.head.next == 0:
-            print("Empty List!")
             return 1
         else:
             return 0
@@ -79,8 +78,8 @@ class Sexagenary(object):
         '''
         :return: 返回干支序列大数字的长度
         '''
-        if self.isEmpty():
-            exit(0)
+        # if self.isEmpty():
+        #     exit(0)
 
         p = self.head
         len = 0
@@ -101,11 +100,15 @@ class Sexagenary(object):
         # 判断index是否合法，input_str是否不为空
         # 判断结果是否合法，是否在开头插入0
         # 判断插入的字符是否为合法数字，在适当位置插入字符串
+        if input_str[0:2] == '甲子' and index == 0:
+            print('ValuError: 插入错误 ' + input_str)
+            return
 
         for i in range(0, len(input_str), 2):
             if input_str[i:i + 2] not in self.sexagenary2int.keys():
-                print('ValuError: insert ' + input_str)
+                print('ValuError: 插入错误 ' + input_str)
                 return
+
         myinput_str = input_str
         myflag = index
         for i in range(0, len(myinput_str), 2):
@@ -126,9 +129,10 @@ class Sexagenary(object):
 
             index = index -1
             if self.isEmpty():
-                exit(0)
+                return
             if index > self.get_length() - 1 or index <= -2:
                 # print("超出链表长度")
+                print('ValuError: 插入错误 ' + input_str)
                 return
             p = self.head
             i = 0
@@ -166,7 +170,7 @@ class Sexagenary(object):
         try:
             int(index)
         except:
-            print('ValuError: remove ' + index)
+            print('ValuError: 删除错误 ' + str(index))
             return
 
         myindex = index
@@ -176,14 +180,20 @@ class Sexagenary(object):
 
         if myindex > self.get_length() - 1:
             # print("删除时超出链表长度")
+            print('ValuError: 删除错误 ' + str(index))
             return
         for index in range(myindex,myindex+rm_len):
             if self.isEmpty():
+                print('ValuError: 删除错误 ' + str(index))
                 return
 
             if index == 0:
                 data = self.get_sexagenary_string()
                 input_str = data[2:]
+
+                if data[rm_len*2:rm_len*2+2] == '甲子':
+                    print('ValuError: 删除错误 ' + str(index))
+                    return
 
                 data = []
                 for i in range(0, len(input_str), 2):
@@ -193,23 +203,28 @@ class Sexagenary(object):
                 return
 
             if index<0 or index>self.get_length()-1:
-                print("链表长度错误")
+                print('ValuError: 删除错误 ' + str(index))
                 return
 
             i = 0
             p = self.head
+            index = myindex
             #遍历找到索引值为 index 的结点
             while p.next:
                 pre = p
                 p = p.next
                 i += 1
+                # print(index)
+                # print(p.data)
                 if i==index:
                     pre.next = p.next
                     p = None
-                    return 1
+
+                    break
 
             #p的下一个结点为空说明到了最后一个结点, 删除之即可
-            pre.next = None
+            #pre.next = None
+
 
     def toDecimal(self):
         '''
@@ -286,7 +301,7 @@ class Sexagenary(object):
         # print(item_Str)
         return item_Str
 
-    def toChinese(self):
+    def toChinese(self, traditional=True):
         '''
         对一个等价10进制数值小于一万亿的干支数字，输出其十进制票据格式，如 "乙丑丙寅" 转为"陆拾贰"
         壹、贰、叁、肆、伍、陆、柒、捌、玖、拾、佰、仟、万、亿、零、整
@@ -302,21 +317,126 @@ class Sexagenary(object):
             item_Str += res
             p = p.next
 
-        num_dict = {'1': '壹', '2': '贰', '3': '叁', '4': '肆', '5': '伍', '6': '陆', '7': '柒', '8': '捌', '9': '玖','0': '零', }
-        index_dict = {1: '', 2: '拾', 3: '佰', 4: '仟', 5: '万', 6: '拾', 7: '佰', 8: '仟', 9: '亿'}
-        nums = list(str(item_Str))
-        nums_index = [x for x in range(1, len(nums) + 1)][-1::-1]
+        number = int(item_Str)
+        chinese_num = {
+            'Simplified': ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'],
+            'Traditional': ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖']
+        }
+        chinese_unit = {
+            'Simplified': ['个', '十', '百', '千'],
+            'Traditional': ['个', '拾', '佰', '仟']
+        }
+        extra_unit = ['', '万', '亿']
 
-        mystr = ''
-        for index, item in enumerate(nums):
-            mystr = "".join((mystr, num_dict[item], index_dict[nums_index[index]]))
+        if traditional:
+            chinese_num = chinese_num['Traditional']
+            chinese_unit = chinese_unit['Traditional']
+        else:
+            chinese_num = chinese_num['Simplified']
+            chinese_unit = chinese_unit['Simplified']
 
-        # str = re.sub("零[十百千零]*", "零", str)
-        # str = re.sub("零万", "万", str)
-        # str = re.sub("亿万", "亿零", str)
-        # str = re.sub("零零", "零", str)
-        # str = re.sub("零\\b", "", str)
-        return mystr
+        num_cn = []
+
+        # 数字转换成字符列表
+        num_list = list(str(number))
+
+        # 反转列表，个位在前
+        num_list.reverse()
+
+        # 数字替换成汉字
+        for num in num_list:
+            num_list[num_list.index(num)] = chinese_num[int(num)]
+
+        # 每四位进行拆分，第二个四位加“万”，第三个四位加“亿”
+        for loop in range(int(len(num_list) / 4 + 1)):
+            sub_num = num_list[(loop * 4):((loop + 1) * 4)]
+            if not sub_num:
+                continue
+
+            # 是否增加额外单位“万”、“亿”
+            if loop > 0 and 4 == len(sub_num) and chinese_num[0] == sub_num[0] == sub_num[1] == sub_num[2] == sub_num[
+                3]:
+                use_unit = False
+            else:
+                use_unit = True
+
+            # 合并数字和单位，单位在每个数字之后
+            # from itertools import chain
+            # sub_num = list(chain.from_iterable(zip(chinese_unit, sub_num)))
+            sub_num = [j for i in zip(chinese_unit, sub_num) for j in i]
+
+            # 删除第一个单位 '个'
+            del sub_num[0]
+
+            # “万”、“亿”中如果第一位为0则需加“零”: 101000，十万零一千
+            use_zero = True if loop > 0 and chinese_num[0] == sub_num[0] else False
+
+            if len(sub_num) >= 7 and chinese_num[0] == sub_num[6]:
+                del sub_num[5]  # 零千 -> 零
+            if len(sub_num) >= 5 and chinese_num[0] == sub_num[4]:
+                del sub_num[3]  # 零百 -> 零
+            if len(sub_num) >= 3 and chinese_num[0] == sub_num[2]:
+                del sub_num[1]  # 零十 -> 零
+            if len(sub_num) == 3 and chinese_num[1] == sub_num[2]:
+                del sub_num[2]  # 一十开头的数 -> 十
+
+            # 删除末位的零
+            while len(num_list) > 1 and len(sub_num) and chinese_num[0] == sub_num[0]:
+                del sub_num[0]
+
+            # 增加额外的“零”
+            if use_zero and len(sub_num) > 0:
+                num_cn.append(chinese_num[0])
+
+            # 增加额外单位“万”、“亿”
+            if use_unit:
+                num_cn.append(extra_unit[loop])
+
+            num_cn += sub_num
+
+        # 删除连续重复数据：零，只有零会重复
+        num_cn = [j for i, j in enumerate(num_cn) if i == 0 or j != num_cn[i - 1]]
+        # 删除末位的零，最后一位为 extra_unit 的 ''
+        if len(num_list) > 1 and len(num_cn) > 1 and chinese_num[0] == num_cn[1]:
+            del num_cn[1]
+
+        # 反转并连接成字符串
+        num_cn.reverse()
+        num_cn = ''.join(num_cn)
+        return num_cn
+
+        # item_Str = 0
+        # p = self.head
+        # num_len = self.get_length() - 1
+        # while p:
+        #     res = self.sexagenary2int[p.data] * pow(60, num_len)
+        #     num_len -= 1
+        #     item_Str += res
+        #     p = p.next
+        #
+        # num_dict = {'1': '壹', '2': '贰', '3': '叁', '4': '肆', '5': '伍', '6': '陆', '7': '柒', '8': '捌', '9': '玖','0': '零', }
+        # index_dict = {1: '', 2: '拾', 3: '佰', 4: '仟', 5: '万', 6: '拾', 7: '佰', 8: '仟', 9: '亿'}
+        # nums = list(str(item_Str))
+        # nums_index = [x for x in range(1, len(nums) + 1)][-1::-1]
+        #
+        # mystr = ''
+        # for index, item in enumerate(nums):
+        #     mystr = "".join((mystr, num_dict[item], index_dict[nums_index[index]]))
+        #
+        # # str = re.sub("零[十百千零]*", "零", str)
+        # # str = re.sub("零万", "万", str)
+        # # str = re.sub("亿万", "亿零", str)
+        # # str = re.sub("零零", "零", str)
+        # # str = re.sub("零\\b", "", str)
+        # if mystr[:2] == '壹拾':
+        #     return mystr[1:]
+        # if mystr[-7:] == '零仟零佰零拾零':
+        #     return mystr[:-7]
+        # if mystr[-5:] == '零佰零拾零':
+        #     return mystr[:-5]
+        # if mystr[-3:] == '零拾零':
+        #     return mystr[:-3]
+        # return mystr
 
     def tick(self):
         '''
@@ -332,6 +452,8 @@ class Sexagenary(object):
         :return: 输出干支纪年的字符串
         '''
         res = year%60 - 4
+        if res < 0:
+            res = 60 - abs(res)
         return self.int2sexagenary[res]
 
     def add(self, other):
@@ -357,9 +479,9 @@ class Sexagenary(object):
         otherNum = other.toDecimal()
         myNum = self.toDecimal()
 
+
         # 3659 + 119 = 3778
         myres = self.Decimalint_to_sexagenary(abs(int(otherNum) - int(myNum)))
-
         return Sexagenary(myres)
 
     def multiply(self, other):
@@ -394,13 +516,10 @@ class Sexagenary(object):
 def mytest():
     test1 = ["戊戌甲子乙丑丙寅", "甲子乙丑丙寅乙子", "甲子", "庚午", "庚", "甲乙", "丙寅庚", "甲子甲子甲子乙丑", "己寅",
              "乙寅"]  # test function __init__初始化，设置bug: 没有对应的干支串
-    # for test_case in test1:
-    #    test_obj = Sexagenary(test_case)
+    for test_case in test1:
+       test_obj = Sexagenary(test_case)
 
     # test2 测试插入删除操作
-    test1 = Sexagenary("11")
-    test1 = Sexagenary("test")
-    # test1 = Sexagenary("11")
     test2 = Sexagenary("戊戌甲子乙丑丙寅")
     if test2.get_sexagenary_string() != "戊戌甲子乙丑丙寅":
         print("Error")
@@ -419,6 +538,9 @@ def mytest():
     test2.insert(0, "乙丑")
     if test2.get_sexagenary_string() != "乙丑戊戌甲寅甲子乙丑丙戌乙未戊子丙寅癸巳己巳":
         print("Error")
+    test2.insert(0, "甲子甲子乙丑")
+    if test2.get_sexagenary_string() != "乙丑戊戌甲寅甲子乙丑丙戌乙未戊子丙寅癸巳己巳":
+        print("Error")
     test2.insert(1, "丁卯戊辰庚寅")
     if test2.get_sexagenary_string() != "乙丑丁卯戊辰庚寅戊戌甲寅甲子乙丑丙戌乙未戊子丙寅癸巳己巳":
         print("Error")
@@ -431,8 +553,6 @@ def mytest():
     test2.insert(-100, "癸未")
     if test2.get_sexagenary_string() != "乙丑丁卯戊辰庚寅戊戌甲寅甲子乙丑丙戌乙未戊子丙寅癸巳己巳":
         print("Error")
-
-    test1.remove('haha', 1)
     test2.remove(0, 1)
     if test2.get_sexagenary_string() != "丁卯戊辰庚寅戊戌甲寅甲子乙丑丙戌乙未戊子丙寅癸巳己巳":
         print("Error")
@@ -451,8 +571,12 @@ def mytest():
     test2.insert(1, "甲子")
     if test2.get_sexagenary_string() != "丁卯甲子戊辰庚寅戊戌甲寅甲子乙丑丙戌乙未丙寅":
         print("Error")
+    test2.remove(0, 1)
 
+    if test2.get_sexagenary_string() != "丁卯甲子戊辰庚寅戊戌甲寅甲子乙丑丙戌乙未丙寅":
+        print("Error")
     test2.insert(1, "己未丁亥甲辰癸亥己丑壬子戊戌乙酉癸卯丙寅庚子甲戌辛酉丙辰丙申己卯戊申壬辰丁丑甲申庚午辛酉甲申戊寅戊申壬午丙申丙戌庚寅庚子")
+
     if test2.get_sexagenary_string() != "丁卯己未丁亥甲辰癸亥己丑壬子戊戌乙酉癸卯丙寅庚子甲戌辛酉丙辰丙申己卯戊申壬辰丁丑甲申庚午辛酉甲申戊寅戊申壬午丙申丙戌庚寅庚子甲子戊辰庚寅戊戌甲寅甲子乙丑丙戌乙未丙寅":
         print("Error")
     test2.insert(21, "甲戌庚午辛酉丁亥丙子辛巳丁巳己巳庚子戊子")
@@ -467,44 +591,164 @@ def mytest():
     test2.insert(7, "甲戌壬寅")
     if test2.get_sexagenary_string() != "丁卯己未丁亥甲辰癸亥戊午辛未甲戌壬寅己丑壬子戊戌乙酉癸卯丙寅庚子甲戌辛酉丙辰丙申己卯戊申壬辰丁丑甲申甲戌庚午辛酉丁亥丙子辛巳丁巳己巳庚子戊子庚午戊午辛未甲戌壬寅丙午壬辰丁巳乙亥戊辰癸酉辛酉甲申戊寅戊申壬午丙申丙戌庚寅庚子甲子戊辰庚寅戊戌甲寅甲子乙丑丙戌乙未丙寅":
         print("Error")
+    test2.insert(6, "丁卯己未丁亥甲辰癸亥戊午")
 
-
-
-    # 测试toDecimal函数和toChinese函数以及yearToSgnr函数
-    test6 = Sexagenary("乙丑丙寅")
-    if test6.toDecimal() != "62":
+    if test2.get_sexagenary_string() != "丁卯己未丁亥甲辰癸亥戊午丁卯己未丁亥甲辰癸亥戊午辛未甲戌壬寅己丑壬子戊戌乙酉癸卯丙寅庚子甲戌辛酉丙辰丙申己卯戊申壬辰丁丑甲申甲戌庚午辛酉丁亥丙子辛巳丁巳己巳庚子戊子庚午戊午辛未甲戌壬寅丙午壬辰丁巳乙亥戊辰癸酉辛酉甲申戊寅戊申壬午丙申丙戌庚寅庚子甲子戊辰庚寅戊戌甲寅甲子乙丑丙戌乙未丙寅":
         print("Error")
-    if test6.toChinese() != "陆拾贰":
-        print("Error")
-    if test6.yearToSgnr(2018) != "戊戌":
-        print("Erroe")
 
-    # 加法操作检查
+    test2.remove(5, 10)
+
+    if test2.get_sexagenary_string() != "丁卯己未丁亥甲辰癸亥己丑壬子戊戌乙酉癸卯丙寅庚子甲戌辛酉丙辰丙申己卯戊申壬辰丁丑甲申甲戌庚午辛酉丁亥丙子辛巳丁巳己巳庚子戊子庚午戊午辛未甲戌壬寅丙午壬辰丁巳乙亥戊辰癸酉辛酉甲申戊寅戊申壬午丙申丙戌庚寅庚子甲子戊辰庚寅戊戌甲寅甲子乙丑丙戌乙未丙寅":
+        print("Error")
+    test2.remove(3, 4)
+
+    if test2.get_sexagenary_string() != "丁卯己未丁亥戊戌乙酉癸卯丙寅庚子甲戌辛酉丙辰丙申己卯戊申壬辰丁丑甲申甲戌庚午辛酉丁亥丙子辛巳丁巳己巳庚子戊子庚午戊午辛未甲戌壬寅丙午壬辰丁巳乙亥戊辰癸酉辛酉甲申戊寅戊申壬午丙申丙戌庚寅庚子甲子戊辰庚寅戊戌甲寅甲子乙丑丙戌乙未丙寅":
+        print("Error")
+    test2.remove(11, 6)
+    if test2.get_sexagenary_string() != "丁卯己未丁亥戊戌乙酉癸卯丙寅庚子甲戌辛酉丙辰甲戌庚午辛酉丁亥丙子辛巳丁巳己巳庚子戊子庚午戊午辛未甲戌壬寅丙午壬辰丁巳乙亥戊辰癸酉辛酉甲申戊寅戊申壬午丙申丙戌庚寅庚子甲子戊辰庚寅戊戌甲寅甲子乙丑丙戌乙未丙寅":
+        print("Error")
+    test2.remove(14, 2)
+    if test2.get_sexagenary_string() != "丁卯己未丁亥戊戌乙酉癸卯丙寅庚子甲戌辛酉丙辰甲戌庚午辛酉辛巳丁巳己巳庚子戊子庚午戊午辛未甲戌壬寅丙午壬辰丁巳乙亥戊辰癸酉辛酉甲申戊寅戊申壬午丙申丙戌庚寅庚子甲子戊辰庚寅戊戌甲寅甲子乙丑丙戌乙未丙寅":
+        print("Error")
+    test2.remove(-5, 3)
+    if test2.get_sexagenary_string() != "丁卯己未丁亥戊戌乙酉癸卯丙寅庚子甲戌辛酉丙辰甲戌庚午辛酉辛巳丁巳己巳庚子戊子庚午戊午辛未甲戌壬寅丙午壬辰丁巳乙亥戊辰癸酉辛酉甲申戊寅戊申壬午丙申丙戌庚寅庚子甲子戊辰庚寅戊戌甲寅乙未丙寅":
+        print("Error")
+
+
+
+
+
+    #加法操作检查
+
     test3 = Sexagenary("乙丑甲子癸亥")
     test4 = Sexagenary("乙丑癸亥")
-    #3659 + 119 = 3778
     test5 = test4.add(test3)
     if test5.get_sexagenary_string() != "乙丑丙寅壬戌":
         print("Error")
-
-    # 减法操作检查
+    test3 = Sexagenary("乙丑癸亥癸亥")
+    test4 = Sexagenary("壬戌癸亥")
+    test5 = test4.add(test3)
+    if test5.get_sexagenary_string() != "丙寅壬戌壬戌":
+        print("Error")
+    test3 = Sexagenary("癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥")
+    test4 = Sexagenary("癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥")
+    test5 = test4.add(test3)
+    if test5.get_sexagenary_string() != "乙丑甲子甲子癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥壬戌":
+        print("Error")
+    '''
+    '''
+    #减法操作检查
     test3 = Sexagenary("乙丑甲子癸亥")
     test4 = Sexagenary("乙丑癸亥")
     test5 = test3.minus(test4)
     if test5.get_sexagenary_string() != "癸亥甲子":
         print("Error")
-
-    # 乘法操作检查
+    test3 = Sexagenary("乙丑癸亥")
+    test4 = Sexagenary("乙丑癸亥")
+    test5 = test3.minus(test4)
+    if test5.get_sexagenary_string() != "甲子":
+        print("Error")
+    test3 = Sexagenary("丙寅壬戌壬戌")
+    test4 = Sexagenary("壬戌癸亥")
+    test5 = test3.minus(test4)
+    if test5.get_sexagenary_string() != "乙丑癸亥癸亥":
+        print("Error")
+    test3 = Sexagenary("辛酉庚申乙丑癸亥")
+    test4 = Sexagenary("壬午己卯甲子戊申")
+    test5 = test3.minus(test4)
+    if test5.get_sexagenary_string() != "癸卯乙巳乙丑己卯":
+        print("Error")
+    test3 = Sexagenary("乙丑甲子甲子癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥壬戌")
+    test4 = Sexagenary("癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥")
+    test5 = test3.minus(test4)
+    if test5.get_sexagenary_string() != "癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥":
+        print("Error")
+    test3 = Sexagenary("辛巳")
+    test4 = Sexagenary("庚申")
+    test5 = test3.minus(test4)
+    test3 = Sexagenary("辛巳")
+    test4 = Sexagenary("乙丑庚申")
+    test5 = test3.minus(test4)
+    test3 = Sexagenary("辛巳")
+    test4 = Sexagenary("庚丑")
+    test5 = test3.minus(test4)
+    '''
+    '''
+    #乘法操作检查
     test3 = Sexagenary("乙丑甲子癸亥")
     test4 = Sexagenary("乙丑癸亥")
     test5 = test4.multiply(test3)
     if test5.get_sexagenary_string() != "丙寅甲子辛酉乙丑":
         print("Error")
+    test3 = Sexagenary("乙丑癸亥癸亥")
+    test4 = Sexagenary("壬戌癸亥")
+    test5 = test4.multiply(test3)
 
-
-
-
+    if test5.get_sexagenary_string() != "乙丑辛酉辛酉乙丑乙丑":
+        print("Error")
+    test3 = Sexagenary("癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥")
+    test4 = Sexagenary("癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥")
+    test5 = test4.multiply(test3)
+    if test5.get_sexagenary_string() != "癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥壬戌癸亥癸亥甲子甲子甲子甲子甲子甲子甲子甲子甲子甲子甲子甲子甲子甲子甲子甲子甲子甲子甲子甲子甲子甲子甲子甲子甲子甲子甲子乙丑":
+        print("Error")
     '''
+    '''
+    #测试toDecimal函数和toChinese函数以及yearToSgnr函数
+    test6 = Sexagenary("乙丑丙寅")
+    if test6.toDecimal() != "62":
+        print("Error")
+    if test6.toChinese() != "陆拾贰":
+        print("Error")
+    test6 = Sexagenary("壬寅癸未庚申戊辰")
+    if test6.toDecimal() != "8279764":
+        print("Error")
+    if test6.toChinese() != "捌佰贰拾柒万玖仟柒佰陆拾肆":
+        print("Error")
+    test6 = Sexagenary("己巳壬午辛丑")
+    if test6.toDecimal() != "19117":
+        print("Error")
+    if test6.toChinese() != "壹万玖仟壹佰壹拾柒":
+        print("Error")
+    test6 = Sexagenary("甲子")
+
+    if test6.toDecimal() != "0":
+        print("Error")
+    if test6.toChinese() != "零":
+        print("Error")
+    test6 = Sexagenary("丙子")
+
+    if test6.toDecimal() != "12":
+        print("Error")
+    if test6.toChinese() != "拾贰":
+        print("Error")
+    test6 = Sexagenary("乙丑丁卯丁巳甲申")
+    if test6.toDecimal() != "230000":
+        print("Error")
+
+    if test6.toChinese() != "贰拾叁万":
+        print("Error")
+
+    test6 = Sexagenary("辛亥乙酉丁未甲申")
+    if test6.toDecimal() != "10230200":
+        print("Error")
+    if test6.toChinese() != "壹仟零贰拾叁万零贰佰":
+        print("Error")
+    test6 = Sexagenary("庚午丙午丙辰丁丑丁酉")
+    if test6.toDecimal() != "87020013":
+        print("Error")
+
+    if test6.toChinese() != "捌仟柒佰零贰万零壹拾叁":
+        print("Error")
+    test6 = Sexagenary("戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅戊寅")
+    if test6.toDecimal() != "528657976112464059180067355005830508474576271186440677966101694915254":
+        print("Error")
+    if test6.yearToSgnr(1022) != "壬戌":
+        print("Erroe")
+    if test6.yearToSgnr(2018) != "戊戌":
+        print("Erroe")
+
+
+
     #加法操作检查
     test3 = Sexagenary("乙丑甲子癸亥")
     test4 = Sexagenary("乙丑癸亥")
@@ -542,7 +786,7 @@ def mytest():
     test3 = Sexagenary("辛酉庚申乙丑癸亥")
     test4 = Sexagenary("壬午己卯甲子戊申")
     test5 = test3.minus(test4)
-    if test5.get_sexagenary_string() != "癸卯乙巳乙丑己卯 ":
+    if test5.get_sexagenary_string() != "癸卯乙巳乙丑己卯":
         print("Error")
     test3 = Sexagenary("乙丑甲子甲子癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥壬戌")
     test4 = Sexagenary("癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥癸亥")
@@ -564,7 +808,7 @@ def mytest():
     test3 = Sexagenary("乙丑甲子癸亥")
     test4 = Sexagenary("乙丑癸亥")
     test5 = test4.multiply(test3)
-    if test5.get_sexagenary_string() != "乙丑甲子辛酉乙丑":
+    if test5.get_sexagenary_string() != "丙寅甲子辛酉乙丑":
         print("Error")
     test3 = Sexagenary("乙丑癸亥癸亥")
     test4 = Sexagenary("壬戌癸亥")
@@ -626,7 +870,9 @@ def mytest():
         print("Erroe")
     if test6.yearToSgnr(2018) != "戊戌":
         print("Erroe")
-    '''
+
+
+
     print("success")
 
 
