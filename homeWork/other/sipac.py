@@ -1,13 +1,7 @@
-#!/usr/bin/env python
-# -*- coding:utf-8 -*-
 
 import requests
-from lxml.etree import HTML
-import json
 
-#请求url
 start_url = 'http://pcb.sipac.gov.cn/EnterPriceManage/Pages/SGZ/ghjswyh_SGZ_list.aspx'
-#请求响应头
 headers = {
     'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
     'Accept-Encoding': "gzip, deflate",
@@ -25,62 +19,38 @@ headers = {
     'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36",
     'cache-control': "no-cache",
 }
-#post请求的body
 body = '__CSRFTOKEN=%2FwEFJGY1ODM0NzVjLTI2NGEtNGNmNS04ZjQ1LTIwYzA2NWI0OGE3ZQ%3D%3D&__VIEWSTATE=%2FwEPDwUJNzkwNjgwNzA1D2QWAgIDD2QWBAIFDzwrAAsBAA8WCB4LXyFJdGVtQ291bnQCFB4IRGF0YUtleXMWFAUkNTQ2YmRlMGQtMGQ2My00MTAxLThmZTUtZTMwYzQxMzliNjNhBSRjZDAzNWM3YS0yZTFlLTQ5ODEtODNjMC01YWIyMTA5ODk3ZTEFJDFlNzY4NDZiLWRhNTgtNGNmYS04M2Y2LTEzODI0M2I0YzYzYQUkOGE3ZmU4ODYtZDJlZS00YWY3LWJkMmQtNzEzOTYwNGM5M2ZhBSRiMDZmNTI5My02Njg2LTRlNDAtYTg5My04N2U1MDYwODEwZDUFJGY3M2Y0YzMwLWUxOTMtNDE5NC05MTA3LTcyN2ExNzQ2MDMzYQUkMGFmMDYxNDAtMWY2NS00ODk1LWJkZjctYzBhN2M3YjcyMWRjBSQwYzg2OTJlNS03ZjYwLTQ1N2EtOTVmZC0xN2M5NzA1M2NjZWUFJGJmYzRmOTlmLTY3ZTYtNGM1NC05YjRjLTM1YTVlZGIxZGJhMQUkOTAwMDJiZDItNmQ1NS00MjgyLWJmMzQtZDNhM2VmY2I2YzgyBSRhNDZjNzM5NS1mZjZlLTQxNDYtYWY5Yi1mZTZjMzViY2ZlNjMFJDBhM2Y4NWYwLWNhZjgtNDE5MC1hMTEwLTAxMjMxZDk2OWM4ZQUkYWQ3ZWNhN2UtYjk3ZS00N2Q2LTg0MjQtNjZjM2MzMjBkNjk4BSQ0YjNmYTMzMC02OGIwLTRjOWQtODcwOS1jMTE1OGEwYjAzNmYFJGVhMTI5NTJkLWQ4ZDQtNDk2Ny05MTMyLWUwYmY3NzFiNWNhOQUkNTg0MTU4M2UtNzJmNC00YWM1LWJmYmQtYjllYjMzMDM2YjE4BSQ0NTY0MmU1Yi0wNDc0LTQ0NGItYjRlNC0yMjkwOWZmM2ZiNjQFJGZkN2VmYTQzLTM3NmUtNGJjMy1iNWY0LWQwZjExNDY0MDc3YwUkZjc5YjEzZjItZDlmOC00MDgzLTliM2MtMWViNDcyNmFmNDY2BSQwZjNlY2RlYi05ZmE4LTQ5MWItYmE4MC0wY2U0YzEwMjUxZDYeCVBhZ2VDb3VudAIBHhVfIURhdGFTb3VyY2VJdGVtQ291bnQCFGQWAmYPZBYoAgIPZBYMZg9kFgJmDxUB7wE8YSBocmVmPSJnaGpzd3loX1NHWl9EZXRhaWwuYXNweD9Sb3dHdWlkPTU0NmJkZTBkLTBkNjMtNDEwMS04ZmU1LWUzMGM0MTM5YjYzYSIgIHRpdGxlPSLmmJ%2FloZjljLvpmaLvvIhESzIwMTYwMDgz77yJ77yI5pif5aGY5Yy76Zmi77yJ5Zyf5bu65pa95bel77yI5ZCr5bmV5aKZ77yJIj7mmJ%2FloZjljLvpmaLvvIhESzIwMTYwMDgz77yJ77yI5pif5aGY5Yy76Zmi77yJ5Zyf5bu65pa95bel77yI5ZCr5bmV5aKZLi4uPC9hPmQCAQ9kFgJmDxUBIeiLj%2BW3nuW3peS4muWbreWMuuekvuS8muS6i%2BS4muWxgGQCAg9kFgJmDxUBCUwyMDE2MDAxOGQCAw9kFgJmDxUBEjMyMDU5NDIwMTgxMjA2MDMwMWQCBA9kFgJmDxUBAGQCBQ9kFgJmDxUBCTIwMTgtMTItNmQCAw9kFgxmD2QWAmYPFQGSAjxhIGhyZWY9ImdoanN3eWhfU0daX0RldGFpbC5hc3B4P1Jvd0d1aWQ9Y2QwMzVjN2EtMmUxZS00OTgxLTgzYzAtNWFiMjEwOTg5N2UxIiAgdGl0bGU9IuaWsOW5s%2Bilv%2Bi3r%2BS4nOOAgeiLpeawtOi3r%2BWNl%2BWcsOWdl%2B%2B8iERLMjAwODAxODDvvInvvIjloZTmpbxDLTJG77yJ5rGf6IuP5pmu55Ge5bq356CU5Y%2BR5Yqe5YWs5a6k5pS55bu65bel56iLIj7mlrDlubPopb%2Fot6%2FkuJzjgIHoi6XmsLTot6%2FljZflnLDlnZfvvIhESzIwMDgwMTgw77yJ77yI5aGU5qW8Qy0yRu%2B8iS4uLjwvYT5kAgEPZBYCZg8VAS3msZ%2Foi4%2Fmma7nkZ7lurfnlJ%2FnianljLvoja%2Fnp5HmioDmnInpmZDlhazlj7hkAgIPZBYCZg8VAQlYMjAwODAwMjBkAgMPZBYCZg8VARIzMjA1OTQyMDE4MTIwNjAxMDFkAgQPZBYCZg8VAQBkAgUPZBYCZg8VAQkyMDE4LTEyLTZkAgQPZBYMZg9kFgJmDxUBuAI8YSBocmVmPSJnaGpzd3loX1NHWl9EZXRhaWwuYXNweD9Sb3dHdWlkPTFlNzY4NDZiLWRhNTgtNGNmYS04M2Y2LTEzODI0M2I0YzYzYSIgIHRpdGxlPSJESzIwMTEwMTAy5Zyw5Z2X77yIQTAyLEIwMixCMDMsQjA0LEIwNe%2B8iSjkuJzmspnmuZbln7rph5HlsI%2FplYflu7rorr7pobnnm67lip7lhaznlKjmiL%2FlrqTlhoXoo4XppbApKEIwNCg2IynjgIFCMDIoOCMp44CBQjAzKDkjKeOAgUEwMigxMiMp44CBQjA1KDcj5bGA6YOoKSkiPkRLMjAxMTAxMDLlnLDlnZfvvIhBMDIsQjAyLEIwMyxCMDQsQjA177yJKOS4nOaymea5luWfuumHkeWwjy4uLjwvYT5kAgEPZBYCZg8VATDoi4%2Flt57lt6XkuJrlm63ljLrpk7bnkZ7otYTkuqfnrqHnkIbmnInpmZDlhazlj7hkAgIPZBYCZg8VAQlDMjAxMTAwMDNkAgMPZBYCZg8VARIzMjA1OTQyMDE4MTIwNTA1MDFkAgQPZBYCZg8VAQBkAgUPZBYCZg8VAQkyMDE4LTEyLTVkAgUPZBYMZg9kFgJmDxUBhQI8YSBocmVmPSJnaGpzd3loX1NHWl9EZXRhaWwuYXNweD9Sb3dHdWlkPThhN2ZlODg2LWQyZWUtNGFmNy1iZDJkLTcxMzk2MDRjOTNmYSIgIHRpdGxlPSLlm63ljLrnlJ%2FniannurPnsbPlm63vvIhDLTHnoJTlj5HmpbzvvInmiLTpm4XotJ3mo67vvIjoi4%2Flt57vvInnp5HmioDmnInpmZDlhazlj7joo4Xkv67lt6XnqIsiPuWbreWMuueUn%2BeJqee6s%2Bexs%2BWbre%2B8iEMtMeeglOWPkealvO%2B8ieaItOmbhei0neajru%2B8iOiLj%2BW3nu%2B8ieenkeaKgOaciS4uLjwvYT5kAgEPZBYCZg8VASrmiLTpm4XotJ3mo67vvIjoi4%2Flt57vvInnp5HmioDmnInpmZDlhazlj7hkAgIPZBYCZg8VAQlYMjAwNTAwMzNkAgMPZBYCZg8VARIzMjA1OTQyMDE4MTIwNTA0MDFkAgQPZBYCZg8VAQBkAgUPZBYCZg8VAQkyMDE4LTEyLTVkAgYPZBYMZg9kFgJmDxUB3wI8YSBocmVmPSJnaGpzd3loX1NHWl9EZXRhaWwuYXNweD9Sb3dHdWlkPWIwNmY1MjkzLTY2ODYtNGU0MC1hODkzLTg3ZTUwNjA4MTBkNSIgIHRpdGxlPSLoi4%2Flt57lt6XkuJrlm63ljLrpnZLliZHmuZblrabmoKHvvIhESzIwMDkwMTI55Zyw5Z2X77yJ77yI6Im65L2T5qW877yI5omp5bu65ZCO77yJ77yJ5a6k5YaF6KOF6aWw5bel56iLLeiJuuS9k%2BalvO%2B8iOaJqeW7uuWQju%2B8ieaJqeW7uumDqOWIhjEtNuWxguWPiuWcsOS4i%2BWupOWxgOmDqO%2B8jOWPiuaZuuiDveWMluW3peeoiyI%2B6IuP5bee5bel5Lia5Zut5Yy66Z2S5YmR5rmW5a2m5qCh77yIREsyMDA5MDEyOeWcsOWdl%2B%2B8ie%2B8iOiJuuS9k%2BalvO%2B8iC4uLjwvYT5kAgEPZBYCZg8VARvoi4%2Flt57lt6XkuJrlm63ljLrmlZnogrLlsYBkAgIPZBYCZg8VAQlLMjAwOTAwMTdkAgMPZBYCZg8VARIzMjA1OTQyMDE4MTIwNTAzMDFkAgQPZBYCZg8VAQBkAgUPZBYCZg8VAQkyMDE4LTEyLTVkAgcPZBYMZg9kFgJmDxUBzAI8YSBocmVmPSJnaGpzd3loX1NHWl9EZXRhaWwuYXNweD9Sb3dHdWlkPWY3M2Y0YzMwLWUxOTMtNDE5NC05MTA3LTcyN2ExNzQ2MDMzYSIgIHRpdGxlPSLph5HlooXlm73pmYXlhazlr5PvvIhDU1NE5YyX5Yy677yJLemHkeWiheWbvemZheWFrOWvk%2B%2B8iENTU0TljJfljLrvvInvvIgzOe%2B8ie%2B8iOiLj%2BW3nuW3peS4muWbreWMuuS4h%2BWutueBr%2BeBq%2BiKseWbremFkuW6l%2BijheS%2Frua2iOmYsuaUueW7uuW3peeoi%2BS4gOOAgeS6jOalvOWxgOmDqO%2B8iSI%2B6YeR5aKF5Zu96ZmF5YWs5a%2BT77yIQ1NTROWMl%2BWMuu%2B8iS3ph5HlooXlm73pmYXlhazlr5PvvIhDU1NE5YyX5Yy677yJLi4uPC9hPmQCAQ9kFgJmDxUBNuiLj%2BW3nuW3peS4muWbreWMuuS4h%2BWutueBr%2BeBq%2BiKseWbremFkuW6l%2BaciemZkOWFrOWPuGQCAg9kFgJmDxUBCUEyMDA0MDAwNGQCAw9kFgJmDxUBEjMyMDU5NDIwMTgxMjA1MDIwMWQCBA9kFgJmDxUBAGQCBQ9kFgJmDxUBCTIwMTgtMTItNWQCCA9kFgxmD2QWAmYPFQHuATxhIGhyZWY9ImdoanN3eWhfU0daX0RldGFpbC5hc3B4P1Jvd0d1aWQ9MGFmMDYxNDAtMWY2NS00ODk1LWJkZjctYzBhN2M3YjcyMWRjIiAgdGl0bGU9IkRLMjAxNTAwMjXlnLDlnZfvvIjnvZfmsI%2For4rmlq3kuqflk4Hpobnnm67vvIktMTMx5YyF6KOF6L2m6Ze05bmV5aKZ5bel56iLIj5ESzIwMTUwMDI15Zyw5Z2X77yI572X5rCP6K%2BK5pat5Lqn5ZOB6aG555uu77yJLTEzMeWMheijhei9pumXtOW5leWimS4uLjwvYT5kAgEPZBYCZg8VASrnvZfmsI%2For4rmlq3kuqflk4HvvIjoi4%2Flt57vvInmnInpmZDlhazlj7hkAgIPZBYCZg8VAQlDMjAxNTAwMDZkAgMPZBYCZg8VARIzMjA1OTQyMDE4MTIwNTAxMDFkAgQPZBYCZg8VAQBkAgUPZBYCZg8VAQkyMDE4LTEyLTVkAgkPZBYMZg9kFgJmDxUBwwI8YSBocmVmPSJnaGpzd3loX1NHWl9EZXRhaWwuYXNweD9Sb3dHdWlkPTBjODY5MmU1LTdmNjAtNDU3YS05NWZkLTE3Yzk3MDUzY2NlZSIgIHRpdGxlPSJDU1NE5qCH5YeG5Y6C5oi%2F6aG555uu77yIREsyMDA2MDcyN%2BWcsOWdl%2B%2B8iTItMeaJqeW7uumXqOWNq%2BWPiua2iOmYsuazteaIv%2BOAgTTljoLmiL%2FvvIjkuozvvInjgIE25Y6C5oi%2F77yI5LiJ77yJ44CBN%2Ba2iOmYsuawtOaxoOOAgTPoh6rooYzovabmo5rlnJ%2Flu7rlronoo4Xlt6XnqIsiPkNTU0TmoIflh4bljoLmiL%2Fpobnnm67vvIhESzIwMDYwNzI35Zyw5Z2X77yJMi0x5omp5bu66Zeo5Y2r5Y%2BK5raILi4uPC9hPmQCAQ9kFgJmDxUBNuS4reaWsOiLj%2BW3nuW3peS4muWbreWMuuW8gOWPkembhuWbouiCoeS7veaciemZkOWFrOWPuGQCAg9kFgJmDxUBCVMyMDA2MDAzNWQCAw9kFgJmDxUBEjMyMDU5NDIwMTgxMjA0MDEwMWQCBA9kFgJmDxUBAGQCBQ9kFgJmDxUBCTIwMTgtMTItNGQCCg9kFgxmD2QWAmYPFQGkAjxhIGhyZWY9ImdoanN3eWhfU0daX0RldGFpbC5hc3B4P1Jvd0d1aWQ9YmZjNGY5OWYtNjdlNi00YzU0LTliNGMtMzVhNWVkYjFkYmExIiAgdGl0bGU9IuWkmueOm%2BmXqOaOp%2B%2B8iOS6jOacn%2BWOguaIv%2B%2B8jDEj77yJ77yI5Yqb5aOr5YWL5o6n5Yi256eR5oqA77yI6IuP5bee77yJ5pyJ6ZmQ5YWs5Y%2B46KOF5L%2Bu5bel56iL77yJ77yI5LiA5bGC5bGA6YOo5LqM5bGC77yJIj7lpJrnjpvpl6jmjqfvvIjkuozmnJ%2FljoLmiL%2FvvIwxI%2B%2B8ie%2B8iOWKm%2BWjq%2BWFi%2BaOp%2BWItuenkeaKgO%2B8iOiLj%2BW3nu%2B8ieaciS4uLjwvYT5kAgEPZBYCZg8VAS3lipvlo6vlhYvmjqfliLbnp5HmioDvvIjoi4%2Flt57vvInmnInpmZDlhazlj7hkAgIPZBYCZg8VAQZBOTcwMDNkAgMPZBYCZg8VARIzMjA1OTQyMDE4MTIwMzAyMDFkAgQPZBYCZg8VAQBkAgUPZBYCZg8VAQkyMDE4LTEyLTNkAgsPZBYMZg9kFgJmDxUBrgI8YSBocmVmPSJnaGpzd3loX1NHWl9EZXRhaWwuYXNweD9Sb3dHdWlkPTkwMDAyYmQyLTZkNTUtNDI4Mi1iZjM0LWQzYTNlZmNiNmM4MiIgIHRpdGxlPSLluILlnLrlpKfljqbkuJzkvqfvvIjkvIHkuJrlj5HlsZXmnI3liqHkuK3lv4PvvIkt5biC5Zy65aSn5Y6m77yI5LyB5Lia5Y%2BR5bGV5pyN5Yqh5Lit5b%2BD6aG555uu5a6k5YaF6KOF6aWw5bel56iL77yJ77yI5LqM5bGC5bGA6YOo77yJIj7luILlnLrlpKfljqbkuJzkvqfvvIjkvIHkuJrlj5HlsZXmnI3liqHkuK3lv4PvvIkt5biC5Zy65aSn5Y6m77yI5LyB5Lia5Y%2BRLi4uPC9hPmQCAQ9kFgJmDxUBKuiLj%2BW3nuW3peS4muWbreWMuuS8geS4muWPkeWxleacjeWKoeS4reW%2Fg2QCAg9kFgJmDxUBCEIyMDAzMDE5ZAIDD2QWAmYPFQESMzIwNTk0MjAxODEyMDMwMTAxZAIED2QWAmYPFQEAZAIFD2QWAmYPFQEJMjAxOC0xMi0zZAIMD2QWDGYPZBYCZg8VAcQCPGEgaHJlZj0iZ2hqc3d5aF9TR1pfRGV0YWlsLmFzcHg%2FUm93R3VpZD1hNDZjNzM5NS1mZjZlLTQxNDYtYWY5Yi1mZTZjMzViY2ZlNjMiICB0aXRsZT0i5LiJ5Yy66L6%2B5Lqu55S15a2Q77yIREsyMDEwMDAzN%2BWcsOWdl%2B%2B8ie%2B8iOWOguaIv%2B%2B8iEHvvInvvInml6XkuJzmlrDog73mupDvvIjoi4%2Flt57vvInmnInpmZDlhazlj7jljoLmiL9B5LiA5Y2K55qE6KOF5L%2Bu5bel56iL44CB5Y6C5oi%2F77yIQe%2B8ieS6jOWxguWxgOmDqOijheS%2FriI%2B5LiJ5Yy66L6%2B5Lqu55S15a2Q77yIREsyMDEwMDAzN%2BWcsOWdl%2B%2B8ie%2B8iOWOguaIv%2B%2B8iEHvvInvvInml6XkuJzmlrAuLi48L2E%2BZAIBD2QWAmYPFQEn5pel5Lic5paw6IO95rqQ77yI6IuP5bee77yJ5pyJ6ZmQ5YWs5Y%2B4ZAICD2QWAmYPFQEJQzIwMTAwMDAxZAIDD2QWAmYPFQESMzIwNTk0MjAxODExMzAwMzAxZAIED2QWAmYPFQEAZAIFD2QWAmYPFQEKMjAxOC0xMS0zMGQCDQ9kFgxmD2QWAmYPFQGSAjxhIGhyZWY9ImdoanN3eWhfU0daX0RldGFpbC5hc3B4P1Jvd0d1aWQ9MGEzZjg1ZjAtY2FmOC00MTkwLWExMTAtMDEyMzFkOTY5YzhlIiAgdGl0bGU9IkRLMjAxNTAwNTTlnLDlnZfmoZHnlLDlspvnlJ%2Fniannp5HmioDlm60xM%2BalvOiLj%2BW3nuWHr%2BeIseWBpeW6t%2BenkeaKgOaciemZkOWFrOWPuOijhemlsCgxM%2BWPt%2BalvDPmpbzlsYDpg6jvvIkiPkRLMjAxNTAwNTTlnLDlnZfmoZHnlLDlspvnlJ%2Fniannp5HmioDlm60xM%2BalvOiLj%2BW3nuWHr%2BeIseWBpeW6t%2BenkeaKgC4uLjwvYT5kAgEPZBYCZg8VASToi4%2Flt57lh6%2FniLHlgaXlurfnp5HmioDmnInpmZDlhazlj7hkAgIPZBYCZg8VAQlMMjAxMjAwMjhkAgMPZBYCZg8VARIzMjA1OTQyMDE4MTEzMDAyMDFkAgQPZBYCZg8VAQBkAgUPZBYCZg8VAQoyMDE4LTExLTMwZAIOD2QWDGYPZBYCZg8VAYACPGEgaHJlZj0iZ2hqc3d5aF9TR1pfRGV0YWlsLmFzcHg%2FUm93R3VpZD1hZDdlY2E3ZS1iOTdlLTQ3ZDYtODQyNC02NmMzYzMyMGQ2OTgiICB0aXRsZT0i5Zut5Yy6566h5aeU5Lya5aSn5qW877yI5Zu96ZmF5aSn5Y6m77yJ77yI6IuP5bee5Zu96ZmF5aSn5Y6mMTjlsYLlrqTlhoXkv67nvK7lt6XnqIvvvIkiPuWbreWMuueuoeWnlOS8muWkp%2BalvO%2B8iOWbvemZheWkp%2BWOpu%2B8ie%2B8iOiLj%2BW3nuWbvemZheWkp%2BWOpjE45bGC5a6k5YaF5L%2BuLi4uPC9hPmQCAQ9kFgJmDxUBNuiLj%2BW3nuW3peS4muWbreWMuuWFhua2puaKlei1hOaOp%2BiCoembhuWbouaciemZkOWFrOWPuGQCAg9kFgJmDxUBBkE5NzAxOGQCAw9kFgJmDxUBEjMyMDU5NDIwMTgxMTMwMDEwMWQCBA9kFgJmDxUBAGQCBQ9kFgJmDxUBCjIwMTgtMTEtMzBkAg8PZBYMZg9kFgJmDxUBmQI8YSBocmVmPSJnaGpzd3loX1NHWl9EZXRhaWwuYXNweD9Sb3dHdWlkPTRiM2ZhMzMwLTY4YjAtNGM5ZC04NzA5LWMxMTU4YTBiMDM2ZiIgIHRpdGxlPSLlhbTmtabot6%2Fopb%2FjgIHmlrDog5zot6%2FljJflnLDlnZfvvIg377yJ77yI5Lit5Zu96ZO26KGM6IKh5Lu95pyJ6ZmQ5YWs5Y%2B46IuP5bee6IOc5rWm5pSv6KGM6KOF6aWw5pS56YCg5bel56iL77yJIj7lhbTmtabot6%2Fopb%2FjgIHmlrDog5zot6%2FljJflnLDlnZfvvIg377yJ77yI5Lit5Zu96ZO26KGM6IKh5Lu95pyJ6ZmQ5YWs5Y%2B4Li4uPC9hPmQCAQ9kFgJmDxUBNuS4reWbvemTtuihjOiCoeS7veaciemZkOWFrOWPuOiLj%2BW3nuW3peS4muWbreWMuuWIhuihjGQCAg9kFgJmDxUBCVMyMDA2MDA0OGQCAw9kFgJmDxUBEjMyMDU5NDIwMTgxMTI5MDEwMWQCBA9kFgJmDxUBAGQCBQ9kFgJmDxUBCjIwMTgtMTEtMjlkAhAPZBYMZg9kFgJmDxUBqAI8YSBocmVmPSJnaGpzd3loX1NHWl9EZXRhaWwuYXNweD9Sb3dHdWlkPWVhMTI5NTJkLWQ4ZDQtNDk2Ny05MTMyLWUwYmY3NzFiNWNhOSIgIHRpdGxlPSLlqITokZHkuJzljLrnlJ%2FniannurPnsbPnp5HmioDlm60o57u85ZCI5a6e6aqM5qW8QTMp77yI6IuP5bee6LaF5LqR55Sf5ZG95pm66IO95Lqn5Lia56CU56m26Zmi5a6k5YaF6KOF5L%2Bu5bel56iL77yJ5LiA5bGC5bGA6YOoIj7lqITokZHkuJzljLrnlJ%2FniannurPnsbPnp5HmioDlm60o57u85ZCI5a6e6aqM5qW8QTMp77yI6IuP5bee6LaF5LqR55Sf5ZG9Li4uPC9hPmQCAQ9kFgJmDxUBM%2BiLj%2BW3nui2heS6keeUn%2BWRveaZuuiDveS6p%2BS4mueglOeptumZouaciemZkOWFrOWPuGQCAg9kFgJmDxUBCVgyMDA1MDAzM2QCAw9kFgJmDxUBEjMyMDU5NDIwMTgxMTI4MDEwMWQCBA9kFgJmDxUBAGQCBQ9kFgJmDxUBCjIwMTgtMTEtMjhkAhEPZBYMZg9kFgJmDxUBxQI8YSBocmVmPSJnaGpzd3loX1NHWl9EZXRhaWwuYXNweD9Sb3dHdWlkPTU4NDE1ODNlLTcyZjQtNGFjNS1iZmJkLWI5ZWIzMzAzNmIxOCIgIHRpdGxlPSJESzIwMTEwNTE35Zyw5Z2X77yIRO%2B8iSjoi4%2FlnLAyMDExLUItNzPlj7flnLDlnZdE5qW85LiA5bGC5aSn5aCC5Y%2BK5Zub5bGC6aSQ6aWu5YaF6KOF5L%2BuKSBENSPkuIDlsYLpl6jljoXjgIFEMiPlm5vlsYLppJDljoXjgIFENSPlm5vlsYLmjqXlvoXljoXjgIHljIXpl7TjgIHljavnlJ%2Fpl7QiPkRLMjAxMTA1MTflnLDlnZfvvIhE77yJKOiLj%2BWcsDIwMTEtQi03M%2BWPt%2BWcsOWdl0TmpbzkuIDlsYLlpKfloIIuLi48L2E%2BZAIBD2QWAmYPFQEt6IuP5bee5bel5Lia5Zut5Yy66Z2S5YmR5rmW572u5Lia5pyJ6ZmQ5YWs5Y%2B4ZAICD2QWAmYPFQEJVzIwMTEwMDM3ZAIDD2QWAmYPFQESMzIwNTk0MjAxODExMjcwMjAxZAIED2QWAmYPFQEAZAIFD2QWAmYPFQEKMjAxOC0xMS0yN2QCEg9kFgxmD2QWAmYPFQGkAjxhIGhyZWY9ImdoanN3eWhfU0daX0RldGFpbC5hc3B4P1Jvd0d1aWQ9NDU2NDJlNWItMDQ3NC00NDRiLWI0ZTQtMjI5MDlmZjNmYjY0IiAgdGl0bGU9IuiLj%2BaYpeW3peS4muWdiuS6jOacn%2B%2B8iDE15Y%2B35qCH5YeG5Y6C5oi%2F77yJ77yI6IuP5bee5Y2T57Gz5pm66IO95Yi26YCg56eR5oqA5pyJ6ZmQ5YWs5Y%2B45a6k5YaF6KOF5L%2Bu5bel56iL77yJ5LqM5bGC5bGA6YOoIj7oi4%2FmmKXlt6XkuJrlnYrkuozmnJ%2FvvIgxNeWPt%2Bagh%2BWHhuWOguaIv%2B%2B8ie%2B8iOiLj%2BW3nuWNk%2Bexs%2BaZuuiDveWItumAoOenkS4uLjwvYT5kAgEPZBYCZg8VASroi4%2Flt57ljZPnsbPmmbrog73liLbpgKDnp5HmioDmnInpmZDlhazlj7hkAgIPZBYCZg8VAQhDMjAwMTAwMWQCAw9kFgJmDxUBEjMyMDU5NDIwMTgxMTI3MDEwMWQCBA9kFgJmDxUBAGQCBQ9kFgJmDxUBCjIwMTgtMTEtMjdkAhMPZBYMZg9kFgJmDxUByQI8YSBocmVmPSJnaGpzd3loX1NHWl9EZXRhaWwuYXNweD9Sb3dHdWlkPWZkN2VmYTQzLTM3NmUtNGJjMy1iNWY0LWQwZjExNDY0MDc3YyIgIHRpdGxlPSJESzIwMTMwMTky5Zyw5Z2X77yI5Zyw5bqT77yM5Y%2BR5biD5aSn5Y6F77yM5rKI5aiB5bOw576O5pyv6aaG77yM6IuP5bee55S76Zmi5bm85YS%2F5Zut5Lmm55S75bGV6KeI77yM6IuP5bee55S76Zmi5bGV6aaG77yM5bm85YS%2F5Zut5pWZ5a2m5qW877yJ5Zyf5bu644CB5a6J6KOF5bel56iLIj5ESzIwMTMwMTky5Zyw5Z2X77yI5Zyw5bqT77yM5Y%2BR5biD5aSn5Y6F77yM5rKI5aiB5bOw576O5pyv6aaG77yM6IuP5beeLi4uPC9hPmQCAQ9kFgJmDxUBJ%2BiLj%2BW3nueUu%2BmZouaWh%2BWMluS6p%2BS4muWbreaciemZkOWFrOWPuGQCAg9kFgJmDxUBCUwyMDE0MDAyMGQCAw9kFgJmDxUBEjMyMDU5NDIwMTgxMTIzMDMwMWQCBA9kFgJmDxUBAGQCBQ9kFgJmDxUBCjIwMTgtMTEtMjNkAhQPZBYMZg9kFgJmDxUB%2BQI8YSBocmVmPSJnaGpzd3loX1NHWl9EZXRhaWwuYXNweD9Sb3dHdWlkPWY3OWIxM2YyLWQ5ZjgtNDA4My05YjNjLTFlYjQ3MjZhZjQ2NiIgIHRpdGxlPSJESzIwMTMwMzA25Zyw5Z2XKOWVhuS4mue7vOWQiOS9k%2B%2B8ieawuOi%2Biei2heW4guWupOWGheijheS%2Fri1ESzIwMTMwMzA25Zyw5Z2X77yI5ZWG5Lia57u85ZCI5L2T77yJ77yI5rGf6IuP5rC46L6J6LaF5biC6IuP5bee5bel5Lia5Zut5Yy65ZKM5LyX6KGX5bqX6KOF5L%2Bu77yJ5Zyw5LiL5Y%2BK5Zyw5LiK5LiA5bGC5bGA6YOoOuWimeS9k%2BWIt%2BaWsO%2B8jOWQiumhtu%2B8jOWcsOmdoiI%2BREsyMDEzMDMwNuWcsOWdlyjllYbkuJrnu7zlkIjkvZPvvInmsLjovonotoXluILlrqTlhoXoo4Xkv64tREsyMDEzLi4uPC9hPmQCAQ9kFgJmDxUBNuaxn%2BiLj%2BawuOi%2Biei2heW4guaciemZkOWFrOWPuOiLj%2BW3nuWSjOS8l%2Bihl%2BWIhuWFrOWPuGQCAg9kFgJmDxUBCUIyMDE0MDAwMmQCAw9kFgJmDxUBEjMyMDU5NDIwMTgxMTIzMDIwMWQCBA9kFgJmDxUBAGQCBQ9kFgJmDxUBCjIwMTgtMTEtMjNkAhUPZBYMZg9kFgJmDxUBhwI8YSBocmVmPSJnaGpzd3loX1NHWl9EZXRhaWwuYXNweD9Sb3dHdWlkPTBmM2VjZGViLTlmYTgtNDkxYi1iYTgwLTBjZTRjMTAyNTFkNiIgIHRpdGxlPSJESzIwMTEwMTU35Zyw5Z2X77yIRO%2B8ie%2B8iOiLj%2BW3nuW9vOWyuOS5i%2BaYn%2BWfueiureaciemZkOWFrOWPuOWupOWGheijheS%2FruW3peeoi%2B%2B8iSjkuInlsYLlsYDpg6jvvIkiPkRLMjAxMTAxNTflnLDlnZfvvIhE77yJ77yI6IuP5bee5b285bK45LmL5pif5Z%2B56K6t5pyJ6ZmQ5YWs5Y%2B45a6k5YaFLi4uPC9hPmQCAQ9kFgJmDxUBJOiLj%2BW3nuW9vOWyuOS5i%2BaYn%2BWfueiureaciemZkOWFrOWPuGQCAg9kFgJmDxUBCVcyMDExMDAzN2QCAw9kFgJmDxUBEjMyMDU5NDIwMTgxMTIzMDEwMWQCBA9kFgJmDxUBAGQCBQ9kFgJmDxUBCjIwMTgtMTEtMjNkAgcPDxYGHg5DdXN0b21JbmZvVGV4dAWSAemhueebruaAu%2BaVsO%2B8mjxmb250IGNvbG9yPSJibHVlIj48Yj4xMDMyPC9iPjwvZm9udD4g5oC76aG15pWw77yaPGZvbnQgY29sb3I9ImJsdWUiPjxiPjUyPC9iPjwvZm9udD4g5b2T5YmN6aG177yaPGZvbnQgY29sb3I9InJlZCI%2BPGI%2BMjwvYj48L2ZvbnQ%2BHgtSZWNvcmRjb3VudAKICB4QQ3VycmVudFBhZ2VJbmRleAICZGRkWyY0hPgY%2B%2B%2F6KDUwMnPC%2BlnJK%2Bk%3D&__VIEWSTATEGENERATOR=B5C2A60E&__EVENTTARGET=Pager&__EVENTARGUMENT={pageToken}&__EVENTVALIDATION=%2FwEWAwL80%2F%2BlDwLQsI2GDQLdkpmPARdTbB6GrD4DcXCEGDNNbPWvmRsG&txtDWMC='
 
-#详情页的url前半部分
-HOST = 'http://pcb.sipac.gov.cn/EnterPriceManage/Pages/SGZ/'
-#百度地图获取坐标的url
-baidu_url = 'http://api.map.baidu.com/geocoder?address={address}&output=json&key=37492c0ee6f924cb5e934fa08c6b1676&city=江苏省'
+from lxml.etree import HTML
 
-#遍历页数
+HOST = 'http://pcb.sipac.gov.cn/EnterPriceManage/Pages/SGZ/'
+
 for i in range(1,53):
-    print('当前页：'+str(i))
-    #body的页数进行修改
     data = body.format(pageToken=str(i))
-    #发送请求
     response = requests.post(start_url,headers=headers,data=data)
-    #解析返回的结果
     html = HTML(response.text)
-    #xpath匹配
     urls = html.xpath('//table[@id="Datagrid1"]//tr/td[1]/a/@href')
     for url in urls:
-        try:
-            link = HOST+url
-            print(link)
-            detail_response = requests.get(link)
-            detail_html = HTML(detail_response.text)
+        link = HOST+url
+        detail_response = requests.get(link)
+        detail_html = HTML(detail_response.text)
+        aa = detail_html.xpath('string(//span[@id="XMMC_31001"])').replace(',','，')
+        bb = detail_html.xpath('string(//span[@id="JSDWMC_31001"])').replace(',','，')
+        cc = detail_html.xpath('string(//span[@id="GCDD_31001"])').replace(',','，')
+        dd = detail_html.xpath('string(//span[@id="ZDH_31001"])').replace(',','，')
+        ee = detail_html.xpath('string(//span[@id="GCLX_31001"])').replace(',','，')
+        ff = detail_html.xpath('string(//span[@id="GCZJ_31001"])').replace(',','，')
+        gg = detail_html.xpath('string(//span[@id="JZMJ_31001"])').replace(',','，')
+        hh = detail_html.xpath('string(//span[@id="FZRQ_31001"])').replace(',','，')
+        ii = detail_html.xpath('string(//span[@id="JHKGRQ_31001"])').replace(',','，')
+        jj = detail_html.xpath('string(//span[@id="JHJGRQ_31001"])').replace(',','，')
+        kk = detail_html.xpath('string(//span[@id="KCDWMC_31001"])').replace(',','，')
+        ll = detail_html.xpath('string(//span[@id="SJDWMC_31001"])').replace(',','，')
+        mm = detail_html.xpath('string(//span[@id="JLDWMC_31001"])').replace(',','，')
+        nn = detail_html.xpath('string(//span[@id="Label1"])').replace(',','，')
 
-            #对具体字段进行匹配并清洗
-            XMMC_31001 = detail_html.xpath('string(//span[@id="XMMC_31001"])').replace(',','，').replace('\n','').replace('\r','')
-            JSDWMC_31001 = detail_html.xpath('string(//span[@id="JSDWMC_31001"])').replace(',','，').replace('\n','').replace('\r','')
-            GCDD_31001 = detail_html.xpath('string(//span[@id="GCDD_31001"])').replace(',','，').replace('\n','').replace('\r','')
-            ZDH_31001 = detail_html.xpath('string(//span[@id="ZDH_31001"])').replace(',','，').replace('\n','').replace('\r','')
-            GCLX_31001 = detail_html.xpath('string(//span[@id="GCLX_31001"])').replace(',','，').replace('\n','').replace('\r','')
-            GCZJ_31001 = detail_html.xpath('string(//span[@id="GCZJ_31001"])').replace(',','，').replace('\n','').replace('\r','')
-            JZMJ_31001 = detail_html.xpath('string(//span[@id="JZMJ_31001"])').replace(',','，').replace('\n','').replace('\r','')
-            FZRQ_31001 = detail_html.xpath('string(//span[@id="FZRQ_31001"])').replace(',','，').replace('\n','').replace('\r','')
-            JHKGRQ_31001 = detail_html.xpath('string(//span[@id="JHKGRQ_31001"])').replace(',','，').replace('\n','').replace('\r','')
-            JHJGRQ_31001 = detail_html.xpath('string(//span[@id="JHJGRQ_31001"])').replace(',','，').replace('\n','').replace('\r','')
-            KCDWMC_31001 = detail_html.xpath('string(//span[@id="KCDWMC_31001"])').replace(',','，').replace('\n','').replace('\r','')
-            SJDWMC_31001 = detail_html.xpath('string(//span[@id="SJDWMC_31001"])').replace(',','，').replace('\n','').replace('\r','')
-            JLDWMC_31001 = detail_html.xpath('string(//span[@id="JLDWMC_31001"])').replace(',','，').replace('\n','').replace('\r','')
-            Label1 = detail_html.xpath('string(//span[@id="Label1"])').replace(',','，').replace('\n','').replace('\r','')
-            geo = ''
-            #获取坐标
-            try:
-                geo_url = baidu_url.format(address=GCDD_31001.replace('#',''))
-                geo_response = requests.get(geo_url)
-                json_obj = json.loads(geo_response.text)
-                if 'location' in json_obj['result']:
-                    geo = json_obj['result']['location']
-            except:
-                print('获取坐标失败')
-
-            save_res = XMMC_31001+','+JSDWMC_31001+','+GCDD_31001+','+'\t'+ZDH_31001+','+GCLX_31001+','+GCZJ_31001+','+JZMJ_31001+','+FZRQ_31001+','+JHKGRQ_31001+','+JHJGRQ_31001+','+KCDWMC_31001+','+SJDWMC_31001+','+JLDWMC_31001+','+Label1+','+str(geo)+'\n'
-            print(save_res)
-            #写文件
-            with open('results.csv','a') as f:
-                f.write(save_res)
-        except:
-            print('未知错误')
+        save_res = aa+','+bb+','+cc+','+'\t'+dd+','+ee+','+ff+','+gg+','+hh+','+ii+','+jj+','+kk+','+ll+','+mm+','+nn+'\n'
+        save_res = save_res.replace('\r','')
+        print(save_res)
+        with open('结果.csv','a') as f:
+            f.write(save_res)
