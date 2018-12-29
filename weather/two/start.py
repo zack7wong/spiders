@@ -40,7 +40,7 @@ def read():
     filename = str(now_date)+'national.csv'
 
     try:
-        with open(filename) as f:
+        with open(filename, encoding='utf-8-sig') as f:
             resutls = f.read()
     except:
         print('__init__ file...')
@@ -49,7 +49,7 @@ def read():
             f.write(biaotou)
 
     try:
-        with open(filename) as f:
+        with open(filename, encoding='utf-8-sig') as f:
             resutls = f.readlines()
             for res in resutls:
                 cityname = res.split(',')[0]
