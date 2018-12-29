@@ -131,7 +131,7 @@ def start():
 
 
 def login():
-    rc = RClient('18853011144', 'cui885210.0', '118600', 'c82240332c0d42bb84c770c68dbc5686')
+    rc = RClient('u3002019', 'YamPak2859', '119125', 'bd78afebc5f3417390dc481bda615067')
 
     url = 'http://data.cma.cn/site/captcha/v/5c24bfc2115b2.html'
     response = down.get_html(url, method='get')
