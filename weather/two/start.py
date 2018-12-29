@@ -47,7 +47,7 @@ def read():
         with open(filename, 'w', encoding='utf-8-sig') as f:
             biaotou = '地区,年,月,日,时次,lng,lat,气压,海平面气压,最高气压,最低气压,最大风速,极大风速,极大风速的风向(角度),2分钟平均风向(角度),2分钟平均风速,最大风速的风向(角度),温度/气温,最高气温,最低气温,相对湿度,水汽压,最小相对湿度,降水量,水平能见度(人工),现在天气,总云量,云量(低云或中云),低云量,风力,体感温度\n'
             f.write(biaotou)
-            
+
     try:
         with open(filename) as f:
             resutls = f.readlines()
