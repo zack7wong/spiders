@@ -66,14 +66,16 @@ def start():
     filename = str(now_date) + 'national.csv'
     for city_obj in city_list:
         for dataquxian in city_obj['quxian']:
-            print(dataquxian['name'])
+            print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime()))
+            print(dataquxian['quid'])
             try:
                 station_ids = dataquxian['quid']
                 data = body.format(nowDate=now_date,station_ids=station_ids)
                 response = down.get_html(url,method='post',headers=headers,data=data)
                 response.encoding ='utf8'
                 if '海平面气压' not in response.text:
-                    print('登录失效，正在重新登录。。')
+                    # print('登录失效，正在重新登录。。')
+                    print('login Failer, retry...')
                     login()
                     return False
                 if response:
@@ -119,14 +121,17 @@ def start():
                         tiganwendu = detail_html.xpath('string(//td[30])').strip()
 
                         save_res=cityname+','+year+','+month+','+day+','+hour+','+dataquxian['lng']+','+dataquxian['lat']+','+qiya+','+haiqiya+','+maxqiya+','+minqiya+','+maxfengsu+','+jidafengsu+','+jidafengxiang+','+twofenxiang+','+twofengsu+','+maxfengsufengxiang+','+wendu+','+maxwendu+','+minwendu+','+shidu+','+shuiqiya+','+minshidu+','+jiangshuiliang+','+shuipingnengjiandu+','+nowweather+','+zongyunliang+','+yunliang+','+diyunliang+','+fengli+','+tiganwendu
-                        print(save_res)
+                        # print(save_res)
+
 
                         thisdata = cityname+hour
                         if thisdata not in item_list:
                             with open(filename,'a',encoding='utf-8-sig') as f:
                                 f.write(save_res+'\n')
+                    print('success!')
             except:
-                print('未知错误')
+                # print('未知错误')
+                print('failed')
                 continue
     return True
 
@@ -207,10 +212,11 @@ if __name__ == '__main__':
         down = download.Download()
         start_res = start()
         if start_res:
-            print('该轮已经跑完，30分钟后重新获取')
+            # print('该轮已经跑完，30分钟后重新获取')
+            print('sleep...,30min start')
             time.sleep(60*30)
         else:
-            print('当前出错，重新开始')
+            print('retry')
 
     #u3002019 YamPak2859
 
