@@ -217,6 +217,7 @@ class RClient(object):
 if __name__ == '__main__':
     # 83680936@qq.com
     # hy83680936
+    #http://data.cma.cn/data/online/t/1
     while True:
         down = download.Download()
         start_res = start()
