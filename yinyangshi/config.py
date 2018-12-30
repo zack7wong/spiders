@@ -12,9 +12,14 @@ TYPE1_YUHUNSHU15_3 = 300
 TYPE1_PRICE_3 = 800
 
 
+
 ### 公示期条件修改 ###
+#时间（多少个小时后）
+TYPE2_TIME = 23
+
+#收藏数
+TYPE2_collect_num = 70
 #条件1
-TYPE2_SHOUCANG_1 = 70
 TYPE2_START_1 = 1300
 TYPE2_END_1 = 2000
 

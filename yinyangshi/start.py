@@ -6,15 +6,33 @@ import download
 import config
 import time
 import math
+import redis
+import time
+
+HOST = 'localhost'
+PORT = 6379
+db = 1
 
 url = 'https://yys.cbg.163.com/cgi/mweb/pl/role?view_loc=all_list&order_by=selling_time%20DESC'
 
 detail_url = 'https://yys.cbg.163.com/cgi/mweb/equip/11/201812011201616-11-LWVZNO4LTDIQQ?view_loc=all_list%EF%BC%9B1'
 
+
+def read_redis():
+    r = redis.Redis(host=HOST, port=PORT, decode_responses=True, db=db)
+    all_list = []
+    for i in range(r.llen('yinyangshi_task_list')):
+        all_list.append(r.lindex('yinyangshi_task_list', i))
+
+    return all_list
+
 def parse_detail(json_obj):
     #先判断是否已经出售
     if json_obj['equip']['status_desc'] =='上架中':
         # 非公示期，可以立即购买，根据fair_show_end_time时间来判断
+        serverid = str(json_obj['equip']['serverid'])
+        game_ordersn = json_obj['equip']['game_ordersn']
+
         thisTime = json_obj['equip']['fair_show_end_time']
         ts = time.strptime(thisTime, "%Y-%m-%d %H:%M:%S")
         thisTimestamp = int(time.mktime(ts))
@@ -25,7 +43,7 @@ def parse_detail(json_obj):
         equip_desc_obj = json.loads(json_obj['equip']['equip_desc'])
         level_15 = equip_desc_obj['level_15']
 
-        #当前时间大于这个，即可以购买
+        #当前时间大于这个，即可以购买，非公示期
         if int(time.time()) > thisTimestamp:
             # +15御魂数大于500，价格<=2000
             # +15御魂数大于400，价格<=1500
@@ -35,16 +53,33 @@ def parse_detail(json_obj):
                 save_URL = 'https://yys.cbg.163.com/cgi/mweb/equip/{serverid}/{game_ordersn}?view_loc=all_list'
                 save_url = save_URL.format(serverid=str(json_obj['equip']['serverid']),game_ordersn=json_obj['equip']['game_ordersn'])
                 print(save_url)
+                filename = '非公示期'+time.strftime('%Y-%m-%d/%H/%M',time.localtime())+'.csv'
+                with open(filename,'a') as f:
+                    f.write(save_url+'\n')
 
         # 当前时间小于这个，还在公示期
         else:
-            #存储下来，23小时后爬取
+            #存储下来，自定义小时后爬取
+            type2_Timestamp = thisTimestamp - ((24 - config.TYPE2_TIME) * 3600)
             save_obj = {
+                'serverid':serverid,
+                'game_ordersn':game_ordersn,
                 'startPrice':price,
                 'level_15':level_15,
                 'thisTime':thisTime,
                 'thisTimestamp':thisTimestamp,
+                'TYPE2_TIMESTAMP':type2_Timestamp,
             }
+            print(save_obj)
+            flag = True
+            for redisStr in all_list:
+                redisObj = json.loads(redisStr)
+                if (redisObj['game_ordersn'] == save_obj['game_ordersn']) and (redisObj['serverid'] == save_obj['serverid']):
+                    flag = False
+                    break
+            if flag:
+                print('saveing...'+str(save_obj))
+                redis_client.rpush('yinyangshi_task_list', json.dumps(save_obj))
 
 
 def parse_index(json_obj):
@@ -78,6 +113,7 @@ def parse_index(json_obj):
             json_obj = json.loads(response.text)
             parse_detail(json_obj)
 
+
 def start():
     url = 'https://yys.cbg.163.com/cgi/api/role_search?view_loc=all_list&order_by=selling_time%20DESC&page={pageToken}'
     start_url = url.format(pageToken=1)
@@ -85,7 +121,7 @@ def start():
     response = down.get_html(start_url)
     if response:
         json_obj = json.loads(response.text)
-        print(response.text)
+        # print(response.text)
         totalNum = json_obj['total_num']
         pageNum = math.ceil(totalNum / 15)
         parse_index(json_obj)
@@ -101,5 +137,15 @@ def start():
 
 
 if __name__ == '__main__':
-    down = download.Download()
-    start()
+    while True:
+        try:
+            print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime()))
+            down = download.Download()
+            all_list = read_redis()
+            redis_client = redis.Redis(host=HOST, port=PORT, decode_responses=True, db=db)
+            start()
+            print('本次已经完成，30秒后重新请求。。')
+            time.sleep(30)
+        except:
+            print('未知错误，10秒后重新请求')
+            time.sleep(10)
