@@ -23,4 +23,4 @@ for x in range(9,10):
             for_qianwanwei = int(str(qianwanwei)[1:-1])
             # print(wanwei)
             if res and get_huiwen(wanwei) and get_huiwen(for_qianwanwei):
-                print('初始里程表的值是：'+qianwanwei-2)
+                print('初始里程表的值是：'+str(qianwanwei-2))
