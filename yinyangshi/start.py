@@ -108,11 +108,13 @@ def parse_index(json_obj):
 
         data = 'serverid={serverid}&ordersn={game_ordersn}&view_loc=all_list%EF%BC%9B1'
         body = data.format(game_ordersn=game_ordersn,serverid=serverid)
-        response = down.get_html(detail_url,method='post',data=body,headers=headers)
-        if response:
-            json_obj = json.loads(response.text)
-            parse_detail(json_obj)
-
+        try:
+            response = down.get_html(detail_url,method='post',data=body,headers=headers)
+            if response:
+                json_obj = json.loads(response.text)
+                parse_detail(json_obj)
+        except:
+            print('请求详情页出错'+str(game_ordersn))
 
 def start():
     url = 'https://yys.cbg.163.com/cgi/api/role_search?view_loc=all_list&order_by=selling_time%20DESC&page={pageToken}'
@@ -127,16 +129,21 @@ def start():
         parse_index(json_obj)
 
         # 翻页
-        # for i in range(2, pageNum + 1):
-        #     time.sleep(config.sleepTime)
-        #     pageToken = str(i)
-        #     response = down.get_html(url.format(pageToken=pageToken))
-        #     if response:
-        #         json_obj = json.loads(response.text)
-                # print(response.text)
+        for i in range(2, 6):
+            try:
+                print('当前页：'+str(i))
+                pageToken = str(i)
+                response = down.get_html(url.format(pageToken=pageToken))
+                if response:
+                    json_obj = json.loads(response.text)
+                    # print(response.text)
+                    parse_index(json_obj)
+            except:
+                print('当前页：' + str(i)+' 出错')
 
 
 if __name__ == '__main__':
+    #zhima4837415  123bai
     while True:
         try:
             print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime()))

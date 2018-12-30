@@ -36,18 +36,18 @@ TYPE2_YUHUNSHU15_4 = 300
 TYPE2_PRICE_4 = 800
 
 
+#是否开启代理
+PROXY_SWITCH = True
+
+#代理IP链接
+IP_URL = 'http://api.xdaili.cn/xdaili-api//greatRecharge/getGreatIp?spiderId=4b9467e2a19a466d99fa01d69e499922&orderno=YZ201812307392LkIY6d&returnType=2&count=1'
+
+#请求多少次后换IP配置
+CHANGE_IP = 8
 
 #当前请求次数
 REQUEST_NUM = 0
 
-#请求多少次后换IP配置
-CHANGE_IP = 0
-
-#代理IP
-IP = ''
-
-#是否开启代理
-PROXY_SWITCH = False
 #是否使用cookies
 COOKIES_SWITCH = False
 #请求最大出错次数
