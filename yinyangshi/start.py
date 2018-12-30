@@ -53,7 +53,7 @@ def parse_detail(json_obj):
                 save_URL = 'https://yys.cbg.163.com/cgi/mweb/equip/{serverid}/{game_ordersn}?view_loc=all_list'
                 save_url = save_URL.format(serverid=str(json_obj['equip']['serverid']),game_ordersn=json_obj['equip']['game_ordersn'])
                 print(save_url)
-                filename = '非公示期'+time.strftime('%Y-%m-%d/%H/%M',time.localtime())+'.csv'
+                filename = '非公示期'+time.strftime('%Y%m%d-%H%M',time.localtime())+'.csv'
                 with open(filename,'a') as f:
                     f.write(save_url+'\n')
 

@@ -1,6 +1,6 @@
 ### 非公示期条件修改 ###
 #条件1
-TYPE1_YUHUNSHU15_1 = 500
+TYPE1_YUHUNSHU15_1 = 100
 TYPE1_PRICE_1 = 2000
 
 #条件2
