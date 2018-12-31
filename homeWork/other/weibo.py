@@ -1,4 +1,4 @@
-
+#请求头
 headers = {
     'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
     'Accept-Encoding': "gzip, deflate, br",
@@ -12,7 +12,7 @@ headers = {
     'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36",
     'cache-control': "no-cache",
 }
-
+#请求url
 URL = 'https://weibo.com/a/aj/transform/loadingmoreunlogin?category=1760&page='
 
 
@@ -20,18 +20,20 @@ import requests
 import json
 from lxml.etree import HTML
 
-
+#表头
 save = '序号,标题,链接,作者,时间,点赞数,评论数,转发数\n'
 with open('res.csv','w') as f:
     f.write(save)
 
 account=1
+#翻页
 for page in range(1,14):
     url = URL+str(page)
     response = requests.get(url,headers=headers)
     json_obj = json.loads(response.text)
     html_str = json_obj['data']
     html = HTML(html_str)
+    #lxml 的 xpath解析
     titles = html.xpath('//div[@class="UG_list_b"]//h3[@class="list_title_b"]/a/text()')
     hrefs = html.xpath('//div[@class="UG_list_b"]//h3[@class="list_title_b"]/a/@href')
     authors = html.xpath('//div[@class="UG_list_b"]//div[@class="subinfo_box clearfix"]/a[2]/span[1]/text()')
