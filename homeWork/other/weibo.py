@@ -1,11 +1,4 @@
-#导入requests，json,lxml包
-import requests
-import json
-from lxml.etree import HTML
 
-URL = 'https://weibo.com/a/aj/transform/loadingmoreunlogin?category=1760&page='
-
-#请求头
 headers = {
     'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
     'Accept-Encoding': "gzip, deflate, br",
@@ -20,26 +13,25 @@ headers = {
     'cache-control': "no-cache",
 }
 
-#初始化文件信息
+URL = 'https://weibo.com/a/aj/transform/loadingmoreunlogin?category=1760&page='
+
+
+import requests
+import json
+from lxml.etree import HTML
+
+
 save = '序号,标题,链接,作者,时间,点赞数,评论数,转发数\n'
-#写文件
-with open('results.csv','w') as f:
+with open('res.csv','w') as f:
     f.write(save)
 
-num=1
-#for循环遍历，取14页的内容
+account=1
 for page in range(1,14):
-    #每一页的请求url
     url = URL+str(page)
-    #发送请求
     response = requests.get(url,headers=headers)
-    #解析返回的json数据
     json_obj = json.loads(response.text)
-    #获取html标签数据
     html_str = json_obj['data']
-    #lxml解析
     html = HTML(html_str)
-
     titles = html.xpath('//div[@class="UG_list_b"]//h3[@class="list_title_b"]/a/text()')
     hrefs = html.xpath('//div[@class="UG_list_b"]//h3[@class="list_title_b"]/a/@href')
     authors = html.xpath('//div[@class="UG_list_b"]//div[@class="subinfo_box clearfix"]/a[2]/span[1]/text()')
@@ -48,10 +40,8 @@ for page in range(1,14):
     comments = html.xpath('//div[@class="UG_list_b"]//div[@class="subinfo_box clearfix"]/span[4]/em[2]/text()')
     zhufas = html.xpath('//div[@class="UG_list_b"]//div[@class="subinfo_box clearfix"]/span[6]/em[2]/text()')
     for title,url,author,time,like,comment,zhufa in zip(titles,hrefs,authors,times,likes,comments,zhufas):
-        #存储的结果拼接
-        save = str(num)+','+title+','+url+','+author+','+time+','+like+','+comment+','+zhufa+'\n'
+        save = str(account)+','+title+','+url+','+author+','+time+','+like+','+comment+','+zhufa+'\n'
         print(save)
-        #写文件
-        with open('结果.csv','a') as f:
+        with open('res.csv','a') as f:
             f.write(save)
-        num+=1
+        account+=1
