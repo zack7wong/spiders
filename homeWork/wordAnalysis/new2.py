@@ -34,8 +34,11 @@ def deal(filename):
             }
             item_list.append(obj)
 
+    allnum = 0
     for item in item_list:
+        allnum +=item['value']
         print('4字词语为 ' + str(item['key']) + ' 的有 ' + str(item['value']) + '个')
+    print('总数有：'+str(allnum))
 
 deal('武动乾坤.txt')
 deal('红楼梦.txt')

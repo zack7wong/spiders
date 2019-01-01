@@ -16,10 +16,28 @@ def deal(filename):
     wudong = re.findall(pattern_all_zh, results, re.S)
     wudong = ''.join(wudong)
     words = pseg.cut(wudong)
+    item_list = []
+    account_list = []
     for w in words:
         if str(w.flag)[0] in cixing_dic.keys():
             print(w.word, cixing_dic[str(w.flag)[0]])
 
+            if str(w.flag)[0] in account_list:
+                for item in item_list:
+                    if item['key'] == str(w.flag)[0]:
+                        item['value'] +=1
+                        break
+            else:
+                account_list.append(str(w.flag)[0])
+                obj = {
+                    'key':str(w.flag)[0],
+                    'value':1,
+                    'name':cixing_dic[str(w.flag)[0]]
+                }
+                item_list.append(obj)
+
+    for item in item_list:
+        print(item['name']+' 有 '+ str(item['value'])+' 个')
 
 deal('武动乾坤.txt')
 deal('红楼梦.txt')
