@@ -8,6 +8,9 @@ import os
 from lxml.etree import HTML
 import db
 import re
+import time
+from selenium import webdriver
+from lxml.etree import HTML
 
 def get_weapon():
     url = 'https://pvp.qq.com/web201605/js/item.json'
@@ -87,6 +90,18 @@ def get_video(results):
 
                     mysqlClient.save(sql)
 
+def get_video_url(results):
+    driver = webdriver.Chrome()
+    for res in results:
+        videoID = res[2]
+        url = res[3]
+        driver.get(url)
+        time.sleep(5)
+        html = HTML(driver.page_source)
+        videoUrl = html.xpath('string(//div[@class="tvp_video"]/video/@src)')
+        print(videoUrl)
+        sql = "update heroVideo set videoUrl='%s' where iVideoId='%s'"%(videoUrl,videoID)
+        mysqlClient.save(sql)
 
 
 def get_hero_detail(hero_id,hero_url):
@@ -225,9 +240,13 @@ def main():
     #     print(res)
     #     get_hero_detail(res[1],res[7])
 
-    sql = 'select * from hero'
+    # sql = 'select * from hero'
+    # results = mysqlClient.find_all(sql)
+    # get_video(results)
+
+    sql = 'select * from heroVideo'
     results = mysqlClient.find_all(sql)
-    get_video(results)
+    get_video_url(results)
 
 if __name__ == '__main__':
     mysqlClient = db.MysqlClient()
