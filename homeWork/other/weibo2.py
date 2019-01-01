@@ -18,6 +18,8 @@ driver.get('https://weibo.com/?category=1760')
 time.sleep(5)
 num = 1
 for i in range(1,14):
+    if num==101:
+        exit(0)
     soup = BeautifulSoup(driver.page_source)
     # print(driver.page_source)
     titles = soup.select('h3[class="list_title_b"]')[((i-1)*8):]
