@@ -1,0 +1,100 @@
+arms 装备表
+arms_id 装备id
+arms_name 装备名称
+arms_type 装备类型
+arms_price 装备价格
+arms_total_price 装备总价
+arms_des 装备描述
+arms_img_path 装备图片路径
+
+armsType 装备类型表
+type_id 装备类型id
+type_name 装备类型名称
+
+hero 英雄表
+hero_id 英雄id
+hero_name 英雄名称
+hero_type 英雄类型
+hero_skin_name 英雄皮肤名称
+hero_title 英雄默认皮肤名称
+hero_img_path 英雄头像路径
+hero_url 英雄链接
+shengcun 生存
+gongji 攻击
+jineng 技能
+shangshou 上手难度
+yingxiong_story 英雄故事
+lishi_story 历史故事
+jiadian1 主加技能
+jiadian2 副加技能
+jiadian3 召唤师技能
+
+heroGuanxin 英雄关系表
+hero_id 英雄id
+zuijia1 最佳搭档1
+zuijia2 最佳搭档2
+yazhi1 压制英雄1
+yazhi2 压制英雄2
+beiyazhi1 被压制英雄1
+beiyazhi2 被压制英雄2
+
+heroJineng 英雄技能表
+hero_id 英雄id
+jineng_id 技能id
+jineng_name 技能名称
+jineng_lengque 技能冷却
+jineng_xiaohao 技能消耗
+jineng_desc 技能描述
+jineng_tips 技能提示
+jineng_img_path 技能图片路径
+
+
+heroType 英雄类型类型表
+type_id 英雄类型id
+type_name 英雄类型名称
+
+heroVideo 视频信息表
+hero_id 英雄id
+iVideoId 视频id
+url 网站链接
+title 标题
+publishDateStr 发布时间
+viewCount 浏览数
+videoUrl 视频链接
+
+jineng 召唤师技能表
+jineng_id 技能id
+jineng_name 技能名称
+jineng_rank 技能等级
+jineng_des 技能描述
+jineng_img_path 技能图片路径
+
+
+文件有db.py 数据存储模块，和wzry.py 数据采集模块
+在main函数里有获取每一个列表的函数的调用方法，启动不同函数，获取想对应的内容
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
