@@ -30,13 +30,13 @@ headers = {
 
 url = 'http://data.cma.cn/data/search.html?dataCode=A.0012.0001'
 
-body = 'dateS={nowDate}+00&dateE={nowDate}+23&hidden_limit_timeRange=7&hidden_limit_timeRangeUnit=Day&isRequiredHidden%5B%5D=dateS&isRequiredHidden%5B%5D=dateE&chooseType=Station&isRequiredHidden%5B%5D=station_ids%5B%5D&station_ids%5B%5D={station_ids}&station_maps=&select=on&elements%5B%5D=PRS&elements%5B%5D=PRS_Sea&elements%5B%5D=PRS_Max&elements%5B%5D=PRS_Min&elements%5B%5D=WIN_S_Max&elements%5B%5D=WIN_S_Inst_Max&elements%5B%5D=WIN_D_INST_Max&elements%5B%5D=WIN_D_Avg_2mi&elements%5B%5D=WIN_S_Avg_2mi&elements%5B%5D=WIN_D_S_Max&elements%5B%5D=TEM&elements%5B%5D=TEM_Max&elements%5B%5D=TEM_Min&elements%5B%5D=RHU&elements%5B%5D=VAP&elements%5B%5D=RHU_Min&elements%5B%5D=PRE_1h&elements%5B%5D=VIS&elements%5B%5D=WEP_Now&elements%5B%5D=CLO_Cov&elements%5B%5D=CLO_COV_LM&elements%5B%5D=CLO_Cov_Low&elements%5B%5D=windpower&elements%5B%5D=tigan&isRequiredHidden%5B%5D=elements%5B%5D&dataCode=A.0012.0001&dataCodeInit=A.0012.0001&show_value=normal'
+body = 'dateS={nowDate}+{myhourStart}&dateE={nowDate}+{myhourEnd}&hidden_limit_timeRange=7&hidden_limit_timeRangeUnit=Day&isRequiredHidden%5B%5D=dateS&isRequiredHidden%5B%5D=dateE&chooseType=Station&isRequiredHidden%5B%5D=station_ids%5B%5D&station_ids%5B%5D={station_ids}&station_maps=&select=on&elements%5B%5D=PRS&elements%5B%5D=PRS_Sea&elements%5B%5D=PRS_Max&elements%5B%5D=PRS_Min&elements%5B%5D=WIN_S_Max&elements%5B%5D=WIN_S_Inst_Max&elements%5B%5D=WIN_D_INST_Max&elements%5B%5D=WIN_D_Avg_2mi&elements%5B%5D=WIN_S_Avg_2mi&elements%5B%5D=WIN_D_S_Max&elements%5B%5D=TEM&elements%5B%5D=TEM_Max&elements%5B%5D=TEM_Min&elements%5B%5D=RHU&elements%5B%5D=VAP&elements%5B%5D=RHU_Min&elements%5B%5D=PRE_1h&elements%5B%5D=VIS&elements%5B%5D=WEP_Now&elements%5B%5D=CLO_Cov&elements%5B%5D=CLO_COV_LM&elements%5B%5D=CLO_Cov_Low&elements%5B%5D=windpower&elements%5B%5D=tigan&isRequiredHidden%5B%5D=elements%5B%5D&dataCode=A.0012.0001&dataCodeInit=A.0012.0001&show_value=normal'
 
 def read():
     #2018-12-18national
 
     item_list = []
-    now_date = time.strftime('%Y-%m-%d',time.localtime())
+    now_date = time.strftime('%Y-%m-%d',time.localtime(time.time() - 3600*24))
     filename = str(now_date)+'national.csv'
 
     try:
@@ -71,73 +71,78 @@ def start():
         cookieStr = f.read().strip()
     headers['Cookie'] = cookieStr
     item_list = read()
-    now_date = time.strftime('%Y-%m-%d', time.localtime())
+    now_date = time.strftime('%Y-%m-%d', time.localtime(time.time() - 3600*24))
     filename = str(now_date) + 'national.csv'
     for city_obj in city_list:
         for dataquxian in city_obj['quxian']:
-            print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime()))
+            print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time() - 3600*24)))
             print(dataquxian['quid'])
             try:
-                station_ids = dataquxian['quid']
-                data = body.format(nowDate=now_date,station_ids=station_ids)
-                response = down.get_html(url,method='post',headers=headers,data=data)
-                response.encoding ='utf8'
-                if '海平面气压' not in response.text:
-                    # print('登录失效，正在重新登录。。')
-                    print('login Failer, retry...')
-                    login()
-                    return False
-                if response:
-                    response.encoding = 'utf8'
-                    html = HTML(response.text)
-                    tr_list = html.xpath('//div[@id="divSearchData"]/table[@id="data-list-table"]//tr')
-                    for tr in tr_list:
-                        detail_str = etree.tostring(tr)
-                        detail_html = HTML(detail_str.decode())
+                for i in range(2):
+                    myhourStart = i*12
+                    myhourEnd = myhourStart +11
+                    if myhourStart == 0:
+                        myhourStart = '00'
+                    station_ids = dataquxian['quid']
+                    data = body.format(nowDate=now_date,station_ids=station_ids,myhourStart=myhourStart,myhourEnd=myhourEnd)
+                    response = down.get_html(url,method='post',headers=headers,data=data)
+                    response.encoding ='utf8'
+                    if '海平面气压' not in response.text:
+                        # print('登录失效，正在重新登录。。')
+                        print('login Failer, retry...')
+                        login()
+                        return False
+                    if response:
+                        response.encoding = 'utf8'
+                        html = HTML(response.text)
+                        tr_list = html.xpath('//div[@id="divSearchData"]/table[@id="data-list-table"]//tr')
+                        for tr in tr_list:
+                            detail_str = etree.tostring(tr)
+                            detail_html = HTML(detail_str.decode())
 
-                        cityid = detail_html.xpath('string(//td[2])').strip()
-                        if cityid == '':
-                            continue
+                            cityid = detail_html.xpath('string(//td[2])').strip()
+                            if cityid == '':
+                                continue
 
-                        cityname = dataquxian['name']
-                        year = detail_html.xpath('string(//td[3])').strip()
-                        month = detail_html.xpath('string(//td[4])').strip()
-                        day = detail_html.xpath('string(//td[5])').strip()
-                        hour = detail_html.xpath('string(//td[6])').strip()
-                        qiya = detail_html.xpath('string(//td[7])').strip()
-                        haiqiya = detail_html.xpath('string(//td[8])').strip()
-                        maxqiya = detail_html.xpath('string(//td[9])').strip()
-                        minqiya = detail_html.xpath('string(//td[10])').strip()
-                        maxfengsu = detail_html.xpath('string(//td[11])').strip()
-                        jidafengsu = detail_html.xpath('string(//td[12])').strip()
-                        jidafengxiang = detail_html.xpath('string(//td[13])').strip()
-                        twofenxiang = detail_html.xpath('string(//td[14])').strip()
-                        twofengsu = detail_html.xpath('string(//td[15])').strip()
-                        maxfengsufengxiang = detail_html.xpath('string(//td[16])').strip()
-                        wendu = detail_html.xpath('string(//td[17])').strip()
-                        maxwendu = detail_html.xpath('string(//td[18])').strip()
-                        minwendu = detail_html.xpath('string(//td[19])').strip()
-                        shidu = detail_html.xpath('string(//td[20])').strip()
-                        shuiqiya = detail_html.xpath('string(//td[21])').strip()
-                        minshidu = detail_html.xpath('string(//td[22])').strip()
-                        jiangshuiliang = detail_html.xpath('string(//td[23])').strip()
-                        shuipingnengjiandu = detail_html.xpath('string(//td[24])').strip()
-                        nowweather = detail_html.xpath('string(//td[25])').strip()
-                        zongyunliang = detail_html.xpath('string(//td[26])').strip()
-                        yunliang = detail_html.xpath('string(//td[27])').strip()
-                        diyunliang = detail_html.xpath('string(//td[28])').strip()
-                        fengli = detail_html.xpath('string(//td[29])').strip()
-                        tiganwendu = detail_html.xpath('string(//td[30])').strip()
+                            cityname = dataquxian['name']
+                            year = detail_html.xpath('string(//td[3])').strip()
+                            month = detail_html.xpath('string(//td[4])').strip()
+                            day = detail_html.xpath('string(//td[5])').strip()
+                            hour = detail_html.xpath('string(//td[6])').strip()
+                            qiya = detail_html.xpath('string(//td[7])').strip()
+                            haiqiya = detail_html.xpath('string(//td[8])').strip()
+                            maxqiya = detail_html.xpath('string(//td[9])').strip()
+                            minqiya = detail_html.xpath('string(//td[10])').strip()
+                            maxfengsu = detail_html.xpath('string(//td[11])').strip()
+                            jidafengsu = detail_html.xpath('string(//td[12])').strip()
+                            jidafengxiang = detail_html.xpath('string(//td[13])').strip()
+                            twofenxiang = detail_html.xpath('string(//td[14])').strip()
+                            twofengsu = detail_html.xpath('string(//td[15])').strip()
+                            maxfengsufengxiang = detail_html.xpath('string(//td[16])').strip()
+                            wendu = detail_html.xpath('string(//td[17])').strip()
+                            maxwendu = detail_html.xpath('string(//td[18])').strip()
+                            minwendu = detail_html.xpath('string(//td[19])').strip()
+                            shidu = detail_html.xpath('string(//td[20])').strip()
+                            shuiqiya = detail_html.xpath('string(//td[21])').strip()
+                            minshidu = detail_html.xpath('string(//td[22])').strip()
+                            jiangshuiliang = detail_html.xpath('string(//td[23])').strip()
+                            shuipingnengjiandu = detail_html.xpath('string(//td[24])').strip()
+                            nowweather = detail_html.xpath('string(//td[25])').strip()
+                            zongyunliang = detail_html.xpath('string(//td[26])').strip()
+                            yunliang = detail_html.xpath('string(//td[27])').strip()
+                            diyunliang = detail_html.xpath('string(//td[28])').strip()
+                            fengli = detail_html.xpath('string(//td[29])').strip()
+                            tiganwendu = detail_html.xpath('string(//td[30])').strip()
 
-                        save_res=cityname+','+year+','+month+','+day+','+hour+','+dataquxian['lng']+','+dataquxian['lat']+','+qiya+','+haiqiya+','+maxqiya+','+minqiya+','+maxfengsu+','+jidafengsu+','+jidafengxiang+','+twofenxiang+','+twofengsu+','+maxfengsufengxiang+','+wendu+','+maxwendu+','+minwendu+','+shidu+','+shuiqiya+','+minshidu+','+jiangshuiliang+','+shuipingnengjiandu+','+nowweather+','+zongyunliang+','+yunliang+','+diyunliang+','+fengli+','+tiganwendu
-                        # print(save_res)
+                            save_res=cityname+','+year+','+month+','+day+','+hour+','+dataquxian['lng']+','+dataquxian['lat']+','+qiya+','+haiqiya+','+maxqiya+','+minqiya+','+maxfengsu+','+jidafengsu+','+jidafengxiang+','+twofenxiang+','+twofengsu+','+maxfengsufengxiang+','+wendu+','+maxwendu+','+minwendu+','+shidu+','+shuiqiya+','+minshidu+','+jiangshuiliang+','+shuipingnengjiandu+','+nowweather+','+zongyunliang+','+yunliang+','+diyunliang+','+fengli+','+tiganwendu
+                            # print(save_res)
 
 
-                        thisdata = cityname+hour
-                        if thisdata not in item_list:
-                            with open(filename,'a',encoding='utf-8-sig') as f:
-                                f.write(save_res+'\n')
-                    print('success!')
+                            thisdata = cityname+hour
+                            if thisdata not in item_list:
+                                with open(filename,'a',encoding='utf-8-sig') as f:
+                                    f.write(save_res+'\n')
+                        print('success!')
             except:
                 # print('未知错误')
                 print('failed')
@@ -223,8 +228,8 @@ if __name__ == '__main__':
         start_res = start()
         if start_res:
             # print('该轮已经跑完，30分钟后重新获取')
-            print('sleep...,30min start')
-            time.sleep(60*30)
+            print('sleep...,24 hour start')
+            time.sleep(60*60*24)
             # time.sleep(2)
         else:
             print('retry')
