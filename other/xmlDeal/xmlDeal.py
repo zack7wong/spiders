@@ -13,65 +13,45 @@ import gzip
 import os
 from xml.dom.minidom import parse
 import xml.dom.minidom
+import re
 import random
 
 # filename = 'TD-LTE_MRO_HUAWEI_010217007069_409720_20181122000000.xml'
 
 def deal(filename,justfileName):
+    newFilename = os.path.join('newXml',justfileName)
+    with open(newFilename,'w') as f:
+        f.write('')
+    flag = 0
+    with open(filename) as f:
+        results = f.readlines()
+        for res in results:
+            save_res = res
+            if 'MR.LteScRSRP' in res:
+                flag = 1
+            elif 'MR.LteScPlrULQci1' in res:
+                flag = 2
+            else:
+                flag = 3
 
-    DOMTree = xml.dom.minidom.parse(filename)
-    collection = DOMTree.documentElement
+            if re.match('^<v>.*?</v>$',res):
+                split_list = res.split('<v>')[1]
+                split_list = split_list.split(' ')
+                try:
+                    first = int(split_list[0])
+                except:
+                    continue
+                if first < 31 and flag==1:
+                    replacenum = str(random.randint(35, 50))
+                elif first > 10 and flag ==2:
+                    replacenum = str(random.randint(2,8))
+                else:
+                    replacenum = str(first)
+                save_res = replacenum + ' ' + ' '.join(split_list[1:])
+                save_res = save_res.strip()
+            with open(newFilename,'a') as f:
+                f.write(save_res)
 
-    eNBList = collection.getElementsByTagName("eNB")
-    # print(eNB)
-    for myeNB in eNBList:
-        measurementList = myeNB.getElementsByTagName("measurement")
-        for mymeasurement in measurementList:
-            smrList = mymeasurement.getElementsByTagName("smr")
-            myvList = mymeasurement.getElementsByTagName("v")
-            # print(len(smrList))
-            for mysmr in smrList:
-                smrStr = mysmr.childNodes[0].data
-                print(smrStr)
-                if 'MR.LteScRSRP' in smrStr:
-                    for myv in myvList:
-                        myvData = myv.childNodes[0].data
-                        # print(myvData)
-                        split_list = myvData.split(' ')
-                        try:
-                            first = int(split_list[0])
-                        except:
-                            continue
-                        if first < 31:
-                            replacenum = str(random.randint(35,50))
-                        else:
-                            replacenum = str(first)
-                        save_res = replacenum+' '+' '.join(split_list[1:])
-                        save_res = save_res.strip()
-                        # print(save_res)
-                        myv.childNodes[0].data = save_res
-                elif 'MR.LteScPlrULQci1' in smrStr:
-                    for myv in myvList:
-                        myvData = myv.childNodes[0].data
-                        # print(myvData)
-                        split_list = myvData.split(' ')
-                        try:
-                            first = int(split_list[0])
-                        except:
-                            continue
-                        if first > 10:
-                            replacenum = str(random.randint(2,8))
-                        else:
-                            replacenum = str(first)
-                        save_res = replacenum+' '+' '.join(split_list[1:])
-                        save_res = save_res.strip()
-                        # print(save_res)
-                        myv.childNodes[0].data = save_res
-
-    mysaveFile = os.path.join('newXml', justfileName)
-    fb = open(mysaveFile,'w')
-    DOMTree.writexml(fb, encoding='utf-8')
-    fb.close()
 
 
 
