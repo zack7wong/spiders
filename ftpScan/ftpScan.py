@@ -16,6 +16,7 @@ def anonScan(hostname):                 #参数是主机名
         ftp = ftplib.FTP(hostname)    #创建Ftp对象
         ftp.login()                 #Ftp匿名登录
         print('[*] ' + str(hostname) + " 匿名登录成功") #不抛出异常则表明登录成功
+        print('您的ftp服务器没有密码，请添加强口令')
         return True
     except Exception as e:              #抛出异常则表明匿名登录失败
         print('[-] ' + str(hostname) + " 匿名登录失败!")
