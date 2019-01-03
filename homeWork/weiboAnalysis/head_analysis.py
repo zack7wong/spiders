@@ -3,13 +3,12 @@
 
 import TencentYoutuyun
 import matplotlib.pyplot as plt
+import os
 
 item_list = []
-with open('results.csv') as f:
-    results = f.readlines()
-    for res in results:
-        img_url = res.split(',')[6]
-        item_list.append(img_url)
+for root, dirs, files in os.walk("headimg", topdown=False):
+    for name in files:
+        item_list.append(os.path.join(root, name))
 # print(item_list)
 
 
@@ -28,7 +27,7 @@ woman = 0
 for item in item_list:
     try:
         print(item)
-        ret = youtu.DetectFace(image_path=item,mode = 0,data_type =1)
+        ret = youtu.DetectFace(image_path=item,mode = 0,data_type =0)
         print (ret)
         if len(ret["face"]) > 0:
             for j in ret["face"]:

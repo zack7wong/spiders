@@ -10,7 +10,7 @@ import requests
 from lxml.etree import HTML
 
 desc = ''
-with open('results.csv') as f:
+with open('weixin_results.csv') as f:
     results= f.readlines()
     for res in results:
         desc += res.split(',')[4]+'\n'

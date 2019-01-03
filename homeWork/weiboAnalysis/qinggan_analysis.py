@@ -5,24 +5,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 from snownlp import SnowNLP
 
-def showPlot(goodsStats):
-    """显示情感均值分布图"""
-    x = []
-    y = []
-    idx = 1
-    goodsSize = len(goodsStats)
-    zhfont1 = matplotlib.font_manager.FontProperties(fname='/System/Library/Fonts/PingFang.ttc')
-    for value in goodsStats.values():
-        x.append(idx)
-        y.append(value['sentimentsAvg'])
-        idx += 1
-    plt.plot(x, y, 'bo', label=(str(goodsSize) + " Goods Sentiments Average"))
-    plt.ylabel("Sentiments Avarage")
-    plt.ylim(0, 1.0)
-    plt.axis([0, goodsSize, 0, 1.0])
-    plt.title(str(goodsSize) + "个商品的情感均值分布图", fontproperties=zhfont1)
-    plt.legend()
-    plt.show()
 
 xiaoji_list = 0
 zhongxing_list = 0

@@ -9,13 +9,12 @@ import jieba
 from PIL import Image
 from os import path
 import numpy as np
+import os
 
 item_list = []
-with open('results.csv') as f:
-    results = f.readlines()
-    for res in results:
-        img_url = res.split(',')[6]
-        item_list.append(img_url)
+for root, dirs, files in os.walk("headimg", topdown=False):
+    for name in files:
+        item_list.append(os.path.join(root, name))
 
 appid = '10163570'
 secret_id = 'AKIDqUu4zefMr65pKaJNyJRKyPeeT6TaQ9Zj'
@@ -29,7 +28,7 @@ youtu = TencentYoutuyun.YouTu(appid, secret_id, secret_key, userid, end_point)
 for item in item_list:
     try:
         print(item)
-        ret = youtu.imagetag(image_path=item,data_type =1)
+        ret = youtu.imagetag(image_path=item,data_type =0)
         resStr = json.dumps(ret['tags'][0]['tag_name'])
         # print(resStr)
         # resStr = resStr.decode('utf8')
@@ -53,8 +52,8 @@ wc = WordCloud(background_color="white",  # 设置背景颜色
                mask = alice_mask,  #设置背景图片
                max_words=2000,  # 设置最大显示的字数
                # stopwords = "", #设置停用词
-               # font_path="C:\Windows\Fonts\SimHei.ttf",
-               font_path="/System/Library/Fonts/PingFang.ttc",
+               font_path="C:\Windows\Fonts\SimHei.ttf",
+               # font_path="/System/Library/Fonts/PingFang.ttc",
                max_font_size=50,  # 设置字体最大值
                random_state=30,
                )

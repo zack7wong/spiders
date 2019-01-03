@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 man = 0
 woman = 0
 unknow = 0
-with open('results.csv') as f:
+with open('weixin_results.csv') as f:
     results = f.readlines()
     for res in results:
         print(res.split(',')[5])
