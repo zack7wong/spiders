@@ -10,16 +10,6 @@
 """
 
 
-#!/usr/bin/env python
-# -*- coding:utf-8 -*-
-"""
--------------------------------------------------
-   File Name：     yidian_dianan_and_comment
-   Description :
-   Author :        hayden_huang
-   Date：          2018/11/30 13:07
--------------------------------------------------
-"""
 
 import json
 import redis
@@ -46,6 +36,10 @@ class Redis_curl(object):
 
     def rpush(self,obj):
         self.redis_client.rpush('yinyangshi_task_list',json.dumps(obj))
+
+    def get_redis_Ip(self):
+        for i in range(self.redis_client.llen('thisIp')):
+            self.redis_client.lindex('thisIp', i)
 
 
 def parse_detail(json_obj,task_obj):
@@ -108,7 +102,13 @@ def main():
             data = 'serverid={serverid}&ordersn={game_ordersn}&view_loc=all_list%EF%BC%9B1'
             body = data.format(game_ordersn=game_ordersn, serverid=serverid)
             try:
-                response = down.get_html(detail_url, method='post', data=body, headers=headers)
+                myip = redis_obj.get_redis_Ip()
+                proxies = {
+                    'http:':'http://'+myip,
+                    'https:':'http://'+myip,
+                }
+                response = requests.post(detail_url,data=body, headers=headers,proxies=proxies,timeout=10)
+                # response = down.get_html(detail_url, method='post', data=body, headers=headers)
                 print(response.text)
                 if response:
                     json_obj = json.loads(response.text)

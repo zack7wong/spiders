@@ -51,7 +51,7 @@ REQUEST_NUM = 0
 #是否使用cookies
 COOKIES_SWITCH = False
 #请求最大出错次数
-ERROR_MAX = 3
+ERROR_MAX = 1
 
 #请求头配置
 HEADERS = {

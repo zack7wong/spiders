@@ -2,13 +2,19 @@ import requests
 import json
 from time import sleep
 import config
+import redis
 from requests import RequestException
+
+HOST = 'localhost'
+PORT = 6379
+db = 1
 
 class Download(object):
     def __init__(self):
         self.retry_num = 0
         self.chang_ip_num = 0
         self.ip = ''
+        self.redis_client = redis.Redis(host=HOST, port=PORT, decode_responses=True, db=db)
 
     def get_ip(self,url):
         print('正在获取IP。。')
@@ -21,6 +27,8 @@ class Download(object):
                     port = res_json['RESULT'][0]['port']
                     ip_res = ip + ':' + port
                     print('获取IP成功，当前IP为：',str(ip_res))
+                    self.redis_client.lpop('thisIp')
+                    self.redis_client.rpush('thisIp',str(ip_res))
                     return ip_res
                 elif res_json['ERRORCODE'] == '10036' or res_json['ERRORCODE'] == '10038' or res_json['ERRORCODE'] == '10055':
                     print('提前IP过快，5秒后重新请求', res_json)

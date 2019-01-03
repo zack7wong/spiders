@@ -16,6 +16,8 @@ db = 1
 url = 'https://yys.cbg.163.com/cgi/mweb/pl/role?view_loc=all_list&order_by=selling_time%20DESC'
 
 detail_url = 'https://yys.cbg.163.com/cgi/mweb/equip/11/201812011201616-11-LWVZNO4LTDIQQ?view_loc=all_list%EF%BC%9B1'
+flag_id=''
+all_game_ordersn_list = []
 
 
 def read_redis():
@@ -84,6 +86,11 @@ def parse_detail(json_obj):
 
 def parse_index(json_obj):
     for data in json_obj['result']:
+        if data['game_ordersn'] in all_game_ordersn_list:
+            return True
+        else:
+            all_game_ordersn_list.append(data['game_ordersn'])
+
         game_ordersn = data['game_ordersn']
         serverid = data['serverid']
         detail_url = 'https://yys.cbg.163.com/cgi/api/get_equip_detail'
@@ -123,10 +130,12 @@ def start():
     response = down.get_html(start_url)
     if response:
         json_obj = json.loads(response.text)
-        # print(response.text)
+        print(response.text)
         totalNum = json_obj['total_num']
         pageNum = math.ceil(totalNum / 15)
-        parse_index(json_obj)
+        parseRes = parse_index(json_obj)
+        if parseRes:
+            return
 
         # 翻页
         for i in range(2, 6):
@@ -137,7 +146,9 @@ def start():
                 if response:
                     json_obj = json.loads(response.text)
                     # print(response.text)
-                    parse_index(json_obj)
+                    each_parseRes = parse_index(json_obj)
+                    if each_parseRes:
+                        return
             except:
                 print('当前页：' + str(i)+' 出错')
 
