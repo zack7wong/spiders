@@ -24,6 +24,6 @@ for i in  range(1,40):
         title = title.replace(',','，').replace('\n','').strip()
         save_res = str(num)+','+title+','+price+','+comment+'\n'
         print(save_res)
-        with open('results.csv','a') as f:
+        with open('results.csv','a',encoding='gbk',errors='ignore') as f:
             f.write(save_res)
         num+=1
