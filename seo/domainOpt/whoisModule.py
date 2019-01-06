@@ -17,7 +17,8 @@ import json
 class WhoisClass():
     def __init__(self):
         # self.whois_list = [{'function':'builtIn()'},{'function':'panda()'},{'function':'aizhan()'}]
-        self.whois_list = [{'function':'panda()'},{'function':'aizhan()'},{'function':'chinaz()'},{'function':'tencent()'},{'function':'baidu()'},{'function':'oneonefour()'},{'function':'twotwo()'},{'function':'whois_domain()'},{'function':'threeZeroZero()'}]
+        # self.whois_list = [{'function':'panda()'},{'function':'aizhan()'},{'function':'chinaz()'},{'function':'tencent()'},{'function':'baidu()'},{'function':'oneonefour()'},{'function':'twotwo()'},{'function':'whois_domain()'},{'function':'threeZeroZero()'}]
+        self.whois_list = [{'function':'panda()'},{'function':'aizhan()'},{'function':'chinaz()'},{'function':'tencent()'},{'function':'baidu()'},{'function':'twotwo()'},{'function':'whois_domain()'},{'function':'threeZeroZero()'}]
         self.domain_obj = {}
         self.down = download.Download()
 
