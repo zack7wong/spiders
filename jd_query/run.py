@@ -47,7 +47,7 @@ def start(kw):
 
         #京东网页版
         jd_url = 'https://search.jd.com/Search?keyword={kw}&enc=utf-8&qrst=1&rt=1&stop=1&vt=2&suggest=1.his.0.0&psort=3&click=0'.format(kw=kw)
-        jd_response = requests.get(jd_url,timeout=10)
+        jd_response = requests.get(jd_url,timeout=10,headers=config.HEADERS)
         jd_response.encoding = 'utf8'
         html = HTML(jd_response.text)
         jd = html.xpath('string(//span[@id="J_resCount"])')
@@ -129,6 +129,7 @@ if __name__ == '__main__':
     # driver.find_element_by_css_selector('#loginname').send_keys('爱心软件')
     # driver.find_element_by_css_selector('#nloginpwd').send_keys('rj7866') #爱厘觅 dg8821
 
+    #爱厘软件 rj7866
     print('请登录')
     flag = False
     while True:
