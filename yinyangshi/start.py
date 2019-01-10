@@ -146,7 +146,7 @@ def start():
     response = down.get_html(start_url)
     if response:
         json_obj = json.loads(response.text)
-        print(response.text)
+        # print(response.text)
         totalNum = json_obj['total_num']
         pageNum = math.ceil(totalNum / 15)
         parseRes = parse_index(json_obj)
@@ -159,7 +159,7 @@ def start():
                 print('当前页：'+str(i))
                 pageToken = str(i)
                 response = down.get_html(url.format(pageToken=pageToken))
-                print(response.text)
+                # print(response.text)
                 if response:
                     json_obj = json.loads(response.text)
                     # print(response.text)
