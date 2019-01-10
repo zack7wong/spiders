@@ -58,7 +58,7 @@ class Download(object):
                     if method == 'get':
                         response = requests.get(url, headers=config.HEADERS)
                     elif method == 'post':
-                        response = requests.post(url, headers=config.HEADERS, data=body)
+                        response = requests.post(url, headers=config.HEADERS, data=body,allow_redirects=False)
             if response.status_code == 200:
                 return response
             return None
