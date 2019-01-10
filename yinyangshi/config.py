@@ -39,11 +39,17 @@ TYPE2_PRICE_4 = 800
 #是否开启代理
 PROXY_SWITCH = True
 
-#代理IP链接
-IP_URL = 'http://api.xdaili.cn/xdaili-api//greatRecharge/getGreatIp?spiderId=4b9467e2a19a466d99fa01d69e499922&orderno=YZ201812307392LkIY6d&returnType=2&count=1'
-
 #请求多少次后换IP配置
-CHANGE_IP = 8
+CHANGE_IP = 10
+
+# 多贝账号密码
+proxyUser = "TONGLIANGHTTTEST1"
+proxyPass = "Thgg32bQ"
+
+
+#代理IP链接
+# IP_URL = 'http://api.xdaili.cn/xdaili-api//greatRecharge/getGreatIp?spiderId=4b9467e2a19a466d99fa01d69e499922&orderno=YZ201812307392LkIY6d&returnType=2&count=1'
+
 
 #当前请求次数
 REQUEST_NUM = 0
