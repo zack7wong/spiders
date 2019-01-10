@@ -52,11 +52,25 @@ def parse_detail(json_obj,task_obj):
     equip_desc_obj = json.loads(json_obj['equip']['equip_desc'])
     level_15 = equip_desc_obj['level_15']
     if (collect_num > config.TYPE2_collect_num and (config.TYPE2_START_1 <= price <= task_obj['startPrice'] <= config.TYPE2_END_1)) or ((level_15 > config.TYPE2_YUHUNSHU15_2 and price <= config.TYPE2_PRICE_2) or (level_15 > config.TYPE2_YUHUNSHU15_3 and price <= config.TYPE2_PRICE_3) or (level_15 > config.TYPE2_YUHUNSHU15_4 and price <= config.TYPE2_PRICE_4)):
+        flag_str = ';'
+        if (collect_num > config.TYPE2_collect_num and (config.TYPE2_START_1 <= price <= task_obj['startPrice'] <= config.TYPE2_END_1)):
+            flag_str += '1,'
+
+        if (level_15 > config.TYPE2_YUHUNSHU15_2 and price <= config.TYPE2_PRICE_2):
+            flag_str += '2,'
+
+        if (level_15 > config.TYPE2_YUHUNSHU15_3 and price <= config.TYPE2_PRICE_3):
+            flag_str += '3,'
+
+        if (level_15 > config.TYPE2_YUHUNSHU15_4 and price <= config.TYPE2_PRICE_4):
+            flag_str += '4,'
+
+
         save_URL = 'https://yys.cbg.163.com/cgi/mweb/equip/{serverid}/{game_ordersn}?view_loc=all_list'
         save_url = save_URL.format(serverid=str(json_obj['equip']['serverid']),game_ordersn=json_obj['equip']['game_ordersn'])
         print(save_url)
 
-        filename = '公示期' + time.strftime('%Y%m%d-%H%M', time.localtime()) + '.csv'
+        filename = '公示期' + time.strftime('%Y%m%d-%H%M', time.localtime()) + '.txt'
         with open(filename, 'a') as f:
             f.write(save_url + '\n')
 

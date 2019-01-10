@@ -52,10 +52,23 @@ def parse_detail(json_obj):
             # +15御魂数大于300，价格<=800
 
             if (level_15 > config.TYPE1_YUHUNSHU15_1 and price <= config.TYPE1_PRICE_1) or (level_15 > config.TYPE1_YUHUNSHU15_2 and price <= config.TYPE1_PRICE_2) or (level_15 > config.TYPE1_YUHUNSHU15_3 and price <= config.TYPE1_PRICE_3):
+                flag_str = ';'
+                if (level_15 > config.TYPE1_YUHUNSHU15_1 and price <= config.TYPE1_PRICE_1):
+                    flag_str +='1,'
+
+                if (level_15 > config.TYPE1_YUHUNSHU15_2 and price <= config.TYPE1_PRICE_2) :
+                    flag_str +='2,'
+
+                if (level_15 > config.TYPE1_YUHUNSHU15_3 and price <= config.TYPE1_PRICE_3):
+                    flag_str +='3.'
+
+
+
                 save_URL = 'https://yys.cbg.163.com/cgi/mweb/equip/{serverid}/{game_ordersn}?view_loc=all_list'
                 save_url = save_URL.format(serverid=str(json_obj['equip']['serverid']),game_ordersn=json_obj['equip']['game_ordersn'])
+                save_url  = save_url+flag_str
                 print(save_url)
-                filename = '非公示期'+time.strftime('%Y%m%d-%H%M',time.localtime())+'.csv'
+                filename = '非公示期'+time.strftime('%Y%m%d-%H%M',time.localtime())+'.txt'
                 with open(filename,'a') as f:
                     f.write(save_url+'\n')
 
