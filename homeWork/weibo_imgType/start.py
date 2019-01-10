@@ -144,10 +144,12 @@ def parse(data):
     comments_count = str(data['mblog']['comments_count'])
     attitudes_count = str(data['mblog']['attitudes_count'])
 
-    comment_time_AllStr = get_commentTime(id,userId)
-    print('commentAll:'+comment_time_AllStr)
-    repostsTime_list = get_repostsTime(id,userId)
-    print('repostsAll:'+repostsTime_list)
+    comment_time_AllStr = ''
+    repostsTime_list = ''
+    # comment_time_AllStr = get_commentTime(id,userId)
+    # print('commentAll:'+comment_time_AllStr)
+    # repostsTime_list = get_repostsTime(id,userId)
+    # print('repostsAll:'+repostsTime_list)
 
     save_res = id + ',' + reposts_count + ',' + comments_count + ',' + attitudes_count + ',' + comment_time_AllStr +',' + repostsTime_list + ',' + content + ',' + str(
         publishDate) + ',' + publishDateStr + ',' + geo + ',' + userId + ',' + userName + ',' + followers_count + ',' + friends_count + ',' + location + ',' + str(
