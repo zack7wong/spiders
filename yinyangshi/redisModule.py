@@ -22,6 +22,7 @@ import config
 HOST = 'localhost'
 PORT = 6379
 db = 1
+import os
 
 
 class Redis_curl(object):
@@ -71,6 +72,7 @@ def parse_detail(json_obj,task_obj):
         print(save_url)
 
         filename = '公示期' + time.strftime('%Y%m%d-%H%M', time.localtime()) + '.txt'
+        filename = os.path.join('公示期',filename)
         with open(filename, 'a') as f:
             f.write(save_url + '\n')
 
