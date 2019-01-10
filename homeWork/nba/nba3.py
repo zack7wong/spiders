@@ -15,7 +15,9 @@ for name_obj in name_list:
     changci_list = results[1].strip().split(',')
     mingzhonglv_list = results[2].strip().split(',')
     defen_list = results[3].strip().split(',')
-    pingjun_list = results[4].strip().split(',')
+    lanban_list = results[4].strip().split(',')
+    zhugong_list = results[5].strip().split(',')
+    pingjun_list = results[6].strip().split(',')
 
     # for i in range(0, 11):
     #     year_list[i] = int(year_list[i])
@@ -23,6 +25,10 @@ for name_obj in name_list:
         changci_list[i] = int(changci_list[i])
     for i in range(0,11):
         mingzhonglv_list[i] = float(mingzhonglv_list[i][:-1])
+    for i in range(0,11):
+        defen_list[i] = float(defen_list[i])
+    for i in range(0,11):
+        defen_list[i] = float(defen_list[i])
     for i in range(0,11):
         defen_list[i] = float(defen_list[i])
     for i in range(0,5):
@@ -39,6 +45,8 @@ for name_obj in name_list:
     line.add('场次', year_list, changci_list, mark_line=['average'], is_label_show=True)
     line.add('命中率', year_list, mingzhonglv_list, mark_line=['average'], is_label_show=True)
     line.add('得分', year_list, defen_list, mark_line=['average'], is_label_show=True)
+    line.add('篮板', year_list, lanban_list, mark_line=['average'], is_label_show=True)
+    line.add('助攻', year_list, zhugong_list, mark_line=['average'], is_label_show=True)
     line.render(path=line_name)
 
     #雷达图

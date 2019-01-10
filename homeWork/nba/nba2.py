@@ -15,7 +15,9 @@ for name_obj in name_list:
     changci_list = eval(results[1].strip())
     mingzhonglv_list = eval(results[2].strip())
     defen_list = eval(results[3].strip())
-    pingjun_list = eval(results[4].strip())
+    lanban_list = eval(results[4].strip())
+    zhugong_list = eval(results[5].strip())
+    pingjun_list = eval(results[6].strip())
     for i in range(0, 11):
         year_list[i] = int(year_list[i])
     for i in range(0,11):
@@ -24,12 +26,18 @@ for name_obj in name_list:
         mingzhonglv_list[i] = float(mingzhonglv_list[i][:-1])
     for i in range(0,11):
         defen_list[i] = float(defen_list[i])
+    for i in range(0,11):
+        lanban_list[i] = float(lanban_list[i])
+    for i in range(0,11):
+        zhugong_list[i] = float(zhugong_list[i])
     for i in range(0,5):
         pingjun_list[i] = float(pingjun_list[i])
 
     print(changci_list)
     print(mingzhonglv_list)
     print(defen_list)
+    print(lanban_list)
+    print(zhugong_list)
     print(pingjun_list)
 
     with open(filename,'a') as f:
@@ -37,4 +45,6 @@ for name_obj in name_list:
         f.write(str(changci_list).replace('[','').replace(']','')+'\n')
         f.write(str(mingzhonglv_list).replace('[','').replace(']','')+'\n')
         f.write(str(defen_list).replace('[','').replace(']','')+'\n')
+        f.write(str(lanban_list).replace('[','').replace(']','')+'\n')
+        f.write(str(zhugong_list).replace('[','').replace(']','')+'\n')
         f.write(str(pingjun_list).replace('[','').replace(']','')+'\n')

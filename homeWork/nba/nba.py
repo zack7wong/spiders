@@ -19,6 +19,8 @@ for name_obj in name_list:
     changci = html.xpath('//div[@id="in_box"]//table[@class="players_table bott bgs_table"]//tr/td[3]/text()')[1:12]
     mingzhonglv = html.xpath('//div[@id="in_box"]//table[@class="players_table bott bgs_table"]//tr/td[7]/text()')[1:12]
     defen = html.xpath('//div[@id="in_box"]//table[@class="players_table bott bgs_table"]//tr/td[18]/text()')[1:12]
+    lanban = html.xpath('//div[@id="in_box"]//table[@class="players_table bott bgs_table"]//tr/td[12]/text()')[1:12]
+    zhugong = html.xpath('//div[@id="in_box"]//table[@class="players_table bott bgs_table"]//tr/td[13]/text()')[1:12]
     pingjun_list = html.xpath('//div[@id="in_box"]//table[@class="players_table bott"]//tr[3]/td/text()')[8:13]
     print(year)
     print(changci)
@@ -35,4 +37,6 @@ for name_obj in name_list:
         f.write(str(changci)+'\n')
         f.write(str(mingzhonglv)+'\n')
         f.write(str(defen)+'\n')
+        f.write(str(lanban)+'\n')
+        f.write(str(zhugong)+'\n')
         f.write(str(pingjun_list)+'\n')
