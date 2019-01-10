@@ -102,7 +102,8 @@ def parse_detail(json_obj):
 def parse_index(json_obj):
     for data in json_obj['result']:
         if data['game_ordersn'] in all_game_ordersn_list:
-            return True
+            print(str(data['game_ordersn'])+' 已经爬取过')
+            continue
         else:
             all_game_ordersn_list.append(data['game_ordersn'])
 
@@ -158,12 +159,11 @@ def start():
                 print('当前页：'+str(i))
                 pageToken = str(i)
                 response = down.get_html(url.format(pageToken=pageToken))
+                print(response.text)
                 if response:
                     json_obj = json.loads(response.text)
                     # print(response.text)
-                    each_parseRes = parse_index(json_obj)
-                    if each_parseRes:
-                        return
+                    parse_index(json_obj)
             except:
                 print('当前页：' + str(i)+' 出错')
 
