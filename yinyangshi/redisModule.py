@@ -118,11 +118,28 @@ def main():
             data = 'serverid={serverid}&ordersn={game_ordersn}&view_loc=all_list%EF%BC%9B1'
             body = data.format(game_ordersn=game_ordersn, serverid=serverid)
             try:
-                myip = redis_obj.get_redis_Ip()
-                proxies = {
-                    'http:':'http://'+myip,
-                    'https:':'http://'+myip,
+                # myip = redis_obj.get_redis_Ip()
+                # proxies = {
+                #     'http:':'http://'+myip,
+                #     'https:':'http://'+myip,
+                # }
+
+                # http代理接入服务器地址端口
+                proxyHost = "http-proxy-t1.dobel.cn"
+                proxyPort = "9180"
+
+                proxyMeta = "http://%(user)s:%(pass)s@%(host)s:%(port)s" % {
+                    "host": proxyHost,
+                    "port": proxyPort,
+                    "user": config.proxyUser,
+                    "pass": config.proxyPass,
                 }
+
+                proxies = {
+                    "http": proxyMeta,
+                    "https": proxyMeta,
+                }
+
                 response = requests.post(detail_url,data=body, headers=headers,proxies=proxies,timeout=10)
                 # response = down.get_html(detail_url, method='post', data=body, headers=headers)
                 print(response.text)
