@@ -37,7 +37,7 @@ class Download(object):
             sleep(5)
             return self.get_ip(url)
 
-    def get_html(self, url, method='get', body=None, headers=config.HEADERS,allow_redirects=True,timeout='20'):
+    def get_html(self, url, method='get', body=None, headers=config.HEADERS,allow_redirects=True,timeout=20):
         if self.retry_num > config.ERROR_MAX:
             self.retry_num = 0
             print('请求出错次数大于最大出错次数，已终止')
