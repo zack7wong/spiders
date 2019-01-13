@@ -7,8 +7,6 @@ CHANGE_IP = 30
 #代理IP
 IP_URL = ''
 
-START_URL = 'http://www.77tj.org/tencent'
-
 
 #是否开启代理
 PROXY_SWITCH = True
@@ -26,4 +24,3 @@ HEADERS = {
     'Content-Type': 'application/x-www-form-urlencoded'
 }
 
-BODY ='PageIndex={pageToken}&__RequestVerificationToken=CfDJ8GFb1P15V9tAonTahCRuop9hvvEFAsMEgf0eSsndTVK9E2VkbpxihV4Yygxii2zD-puspgughgb44cUOkS5GpRuZGQOf7zLvfq1IrQa9jROH_EjyQuW7ZAEV6ev99WXavXLLBwKs9cbmw7g_bIBiyag'
