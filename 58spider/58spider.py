@@ -68,8 +68,8 @@ def start(item):
             end_Res = end_Res.replace('&#x','').replace(';','').replace(fourWord,jiemaRes)
         # print(end_Res)
         roomSizeEnd_list.append(end_Res)
-    print(roomSizeEnd_list)
-    print(len(roomSizeEnd_list))
+    # print(roomSizeEnd_list)
+    # print(len(roomSizeEnd_list))
 
     #价格
     price_list = re.findall('<div class="money">.*?<b class="strongbox">(.*?)</b>', response.text,re.S)
@@ -84,11 +84,21 @@ def start(item):
         # print(end_Res)
         end_Res = end_Res+'元/月'
         priceEnd_list.append(end_Res)
-    print(priceEnd_list)
-    print(len(priceEnd_list))
+    # print(priceEnd_list)
+    # print(len(priceEnd_list))
 
-    #地址
+
     html = HTML(response.text)
+    #url
+    url_list = html.xpath('//ul[@class="listUl"]/li/div[@class="des"]/h2/a[1]/@href')
+    urlEnd_list = []
+    for myurl in url_list:
+        myurl = 'http:'+myurl
+        urlEnd_list.append(myurl)
+    # print(urlEnd_list)
+    # print(len(urlEnd_list))
+
+    # 地址
     addressTree_list = html.xpath('//ul[@class="listUl"]/li//p[@class="add"]')
     addressEnd_list = []
     for addressTree in addressTree_list:
@@ -96,11 +106,11 @@ def start(item):
         address_html = HTML(addressTreeStr)
         address = address_html.xpath('string(//a[2]/text())')
         addressEnd_list.append(address)
-    print(addressEnd_list)
-    print(len(addressEnd_list))
+    # print(addressEnd_list)
+    # print(len(addressEnd_list))
 
-    for room,price,address in zip(roomSizeEnd_list,priceEnd_list,addressEnd_list):
-        save_res = room+'||'+price+'||'+address+'\n'
+    for url,room,price,address in zip(urlEnd_list,roomSizeEnd_list,priceEnd_list,addressEnd_list):
+        save_res = room+'||'+price+'||'+address+'||'+url+'\n'
         save_res = save_res.replace(',','，').replace('||',',')
         print(save_res)
         fileName = item.replace('/','_')+'.csv'
