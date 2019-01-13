@@ -24,7 +24,6 @@ headers = {
 }
 
 def start():
-    down = download.Download()
 
     item_list = []
     bookObjStr = myredisCli.lpop('bookObj_task')
@@ -56,6 +55,7 @@ def start():
             response = down.get_html(item['link'],headers=headers)
             with open(savePath, 'wb') as file:
                 file.write(response.content)
+            print('下载成功')
         except:
             print('出错。。'+str(item))
             with open('下载出错.txt','a') as f:
@@ -64,5 +64,7 @@ def start():
 if __name__ == '__main__':
     # 540529113@qq.co  xinfei123
     # 540529113@qq.co  xingqing111
-    myredisCli = redis.Redis()
-    start()
+    down = download.Download()
+    while True:
+        myredisCli = redis.Redis()
+        start()
