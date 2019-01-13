@@ -37,6 +37,70 @@ def jiema(ziti, code_str):
         result.append(x)
     return result[0]
 
+def parse(response,html):
+    code_str = re.search("fangchan-secret';src:url\('data:application/font-ttf;charset=utf-8;base64,(.*?)'\) format\(",response.text, re.S)
+    code_str = code_str.group(1)
+
+    # 几室几厅
+    roomSize_list = re.findall('<p class="room strongbox">(.*?)</p>', response.text)
+    roomSizeEnd_list = []
+    for roomSizeUnCode in roomSize_list:
+        roomSizeStr = roomSizeUnCode.replace('&nbsp;', '').replace(' ', '')
+        fourWord_list = re.findall('&#x(.*?);', roomSizeStr)
+        end_Res = roomSizeStr
+        for fourWord in fourWord_list:
+            jiemaRes = str(jiema(fourWord, code_str))
+            end_Res = end_Res.replace('&#x', '').replace(';', '').replace(fourWord, jiemaRes)
+        # print(end_Res)
+        roomSizeEnd_list.append(end_Res)
+    # print(roomSizeEnd_list)
+    # print(len(roomSizeEnd_list))
+
+    # 价格
+    price_list = re.findall('<div class="money">.*?<b class="strongbox">(.*?)</b>', response.text, re.S)
+    priceEnd_list = []
+    for priceUnCode in price_list:
+        priceStr = priceUnCode.replace('&nbsp;', '').replace(' ', '')
+        fourWord_list = re.findall('&#x(.*?);', priceStr)
+        end_Res = priceStr
+        for fourWord in fourWord_list:
+            jiemaRes = str(jiema(fourWord, code_str))
+            end_Res = end_Res.replace('&#x', '').replace(';', '').replace(fourWord, jiemaRes)
+        # print(end_Res)
+        end_Res = end_Res + '元/月'
+        priceEnd_list.append(end_Res)
+    # print(priceEnd_list)
+    # print(len(priceEnd_list))
+
+    # url
+    url_list = html.xpath('//ul[@class="listUl"]/li/div[@class="des"]/h2/a[1]/@href')
+    urlEnd_list = []
+    for myurl in url_list:
+        myurl = 'http:' + myurl
+        urlEnd_list.append(myurl)
+    # print(urlEnd_list)
+    # print(len(urlEnd_list))
+
+    # 地址
+    addressTree_list = html.xpath('//ul[@class="listUl"]/li//p[@class="add"]')
+    addressEnd_list = []
+    for addressTree in addressTree_list:
+        addressTreeStr = etree.tostring(addressTree)
+        address_html = HTML(addressTreeStr)
+        address = address_html.xpath('string(//a[2]/text())')
+        addressEnd_list.append(address)
+    # print(addressEnd_list)
+    # print(len(addressEnd_list))
+
+    for url, room, price, address in zip(urlEnd_list, roomSizeEnd_list, priceEnd_list, addressEnd_list):
+        save_res = room + '||' + price + '||' + address + '||' + url + '\n'
+        save_res = save_res.replace(',', '，').replace('||', ',')
+        print(save_res)
+        fileName = item.replace('/', '_') + '.csv'
+        with open(fileName, 'a') as f:
+            f.write(save_res)
+
+
 def start(item):
     url = 'https://cs.58.com'+item
     headers = {
@@ -53,69 +117,20 @@ def start(item):
     response = requests.get(url,headers=headers)
     # print(response.text)
 
-    code_str = re.search("fangchan-secret';src:url\('data:application/font-ttf;charset=utf-8;base64,(.*?)'\) format\(",response.text,re.S)
-    code_str = code_str.group(1)
-
-    #几室几厅
-    roomSize_list = re.findall('<p class="room strongbox">(.*?)</p>',response.text)
-    roomSizeEnd_list = []
-    for roomSizeUnCode in roomSize_list:
-        roomSizeStr = roomSizeUnCode.replace('&nbsp;','').replace(' ','')
-        fourWord_list = re.findall('&#x(.*?);',roomSizeStr)
-        end_Res = roomSizeStr
-        for fourWord in fourWord_list:
-            jiemaRes = str(jiema(fourWord,code_str))
-            end_Res = end_Res.replace('&#x','').replace(';','').replace(fourWord,jiemaRes)
-        # print(end_Res)
-        roomSizeEnd_list.append(end_Res)
-    # print(roomSizeEnd_list)
-    # print(len(roomSizeEnd_list))
-
-    #价格
-    price_list = re.findall('<div class="money">.*?<b class="strongbox">(.*?)</b>', response.text,re.S)
-    priceEnd_list = []
-    for priceUnCode in price_list:
-        priceStr = priceUnCode.replace('&nbsp;', '').replace(' ', '')
-        fourWord_list = re.findall('&#x(.*?);', priceStr)
-        end_Res = priceStr
-        for fourWord in fourWord_list:
-            jiemaRes = str(jiema(fourWord, code_str))
-            end_Res = end_Res.replace('&#x', '').replace(';', '').replace(fourWord, jiemaRes)
-        # print(end_Res)
-        end_Res = end_Res+'元/月'
-        priceEnd_list.append(end_Res)
-    # print(priceEnd_list)
-    # print(len(priceEnd_list))
-
-
     html = HTML(response.text)
-    #url
-    url_list = html.xpath('//ul[@class="listUl"]/li/div[@class="des"]/h2/a[1]/@href')
-    urlEnd_list = []
-    for myurl in url_list:
-        myurl = 'http:'+myurl
-        urlEnd_list.append(myurl)
-    # print(urlEnd_list)
-    # print(len(urlEnd_list))
 
-    # 地址
-    addressTree_list = html.xpath('//ul[@class="listUl"]/li//p[@class="add"]')
-    addressEnd_list = []
-    for addressTree in addressTree_list:
-        addressTreeStr = etree.tostring(addressTree)
-        address_html = HTML(addressTreeStr)
-        address = address_html.xpath('string(//a[2]/text())')
-        addressEnd_list.append(address)
-    # print(addressEnd_list)
-    # print(len(addressEnd_list))
+    pageNum = int(html.xpath('string(//div[@class="pager"]/a[last()-1])'))
 
-    for url,room,price,address in zip(urlEnd_list,roomSizeEnd_list,priceEnd_list,addressEnd_list):
-        save_res = room+'||'+price+'||'+address+'||'+url+'\n'
-        save_res = save_res.replace(',','，').replace('||',',')
-        print(save_res)
-        fileName = item.replace('/','_')+'.csv'
-        with open(fileName,'a') as f:
-            f.write(save_res)
+    parse(response,html)
+
+    for i in range(2,pageNum+1):
+        print('当前页：'+str(i))
+        each_url = url+'pn'+str(i)
+        print(each_url)
+        response = requests.get(each_url,headers=headers)
+        html = HTML(response.text)
+        parse(response, html)
+
 
 if __name__ == '__main__':
     item_list = []
