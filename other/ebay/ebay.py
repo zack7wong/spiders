@@ -207,7 +207,7 @@ if __name__ == '__main__':
     #
     # for url in item_list:
     #     start(url)
-    for i in range(16,50):
+    for i in range(1,50):
         print('当前页：'+str(i))
         page = str(i)
         pageNum = str((i-1)*200)
