@@ -16,7 +16,7 @@ headers = {
     'accept-encoding': "gzip, deflate, br",
     'accept-language': "zh-CN,zh;q=0.9",
     'cache-control': "no-cache,no-cache",
-    'cookie': "cssg=4bef83bd1680ab1ce501fd21fd3f1045; ak_bmsc=1C0E83076613BF3B5B031D4C191452E6173EE287FC7400006B3E3D5C05E97141~plKbrvm58dQU7eSI+l90ZsCccdMxp8OCgppMsPdsOtdk84CC7B8VQHdTEi0QpuIX5mhDXmuGPR4xFyEmUtVJYTNBq6yIvJbstbVgvkUdnFTaXzMWQ7P7l/GNJBXDFX6oRNnAqJHAHAavmYb/Yx9bO+VCfp5hk1wz9ZutZfihRuub0totbh+QlSopFm0hQoBcxm5Q8hiO7KvRFd11BJtoDWeFlX9tyMIJbodt5AK0BoSlU; bm_sv=834D37B55242EDD530EDE222B0D3AC82~EzEg7s+hP1eJErWTTX9sYFAjM+L5EGSqH44unI72MSyxsK9zfN0Vnrg+Oi4Fgx8sdK0UO0v5on/CBM4iLwWgQTdDoK/S3aYvoPKBWMth5xZof14ELdADpmCdkB3ltxMQ8Bg4VqfqYTehNrZ+OEhOHNh1eSpesJ7SAHUMwQ/pIqA=; JSESSIONID=82618F767B8DB34534C5128087F98013; npii=btguid/4bef83bd1680ab1ce501fd21fd3f10455e1e7b98^cguid/4bef8d271680a88a70101a24b6cf50fb5e1e7b98^; ns1=BAQAAAWhJqGEBAAaAANgATF4ee5pjNzJ8NjAxXjE1NDc1MTk1ODgxNDReXjFeM3wyfDV8NHw3fDExXjFeMl40XjNeMTJeMTJeMl4xXjFeMF4xXjBeMV42NDQyNDU5MDc1T4jlI/xBWCEKtZt7I1R5lj+Q4KI*; dp1=btzo/-1e05c3d562a^u1p/QEBfX0BAX19AQA**5e1e7b9a^bl/CN5fffaf1a^pbf/%23e0002000008000000000005e1e7b9a^; s=CgAD4ACBcPpmaNGJlZjgzYmQxNjgwYWIxY2U1MDFmZDIxZmQzZjEwNDUA7gBmXD6ZmjMGaHR0cHM6Ly93d3cuZWJheS5jb20vc2NoL2kuaHRtbD9fZnJvbT1SNDAmX3NhY2F0PTAmX25rdz1tb3BhciZfcGduPTYmX3NrYz0xMDAwJnJ0PW5jI2l0ZW0xZWYyODc2YzFjB1U1rhQ*; nonsession=BAQAAAWgWKMkCAAaAAAgAHFxk1RoxNTQ3NTIwMDE5eDEzMjkxNzk4MDE4OHgweDJZADMABF4ee5osVVNBAMoAIGWjSZo0YmVmODNiZDE2ODBhYjFjZTUwMWZkMjFmZDNmMTA0NQDLAAJcPU8jMzZCSVNPI61pTtIIkDfbrDFZ+FxUmw**; __gads=ID=850c74044014a39a:T=1547520027:S=ALNI_MbhQNPSwIc8efi08HjY9HhnE_oE8g; ebay=%5Esbf%3D%231000000000010000100200%5Ecv%3D15555%5Ejs%3D1%5E",
+    'cookie': "cssg=4bef83bd1680ab1ce501fd21fd3f1045; ak_bmsc=1C0E83076613BF3B5B031D4C191452E6173EE287FC7400006B3E3D5C05E97141~plKbrvm58dQU7eSI+l90ZsCccdMxp8OCgppMsPdsOtdk84CC7B8VQHdTEi0QpuIX5mhDXmuGPR4xFyEmUtVJYTNBq6yIvJbstbVgvkUdnFTaXzMWQ7P7l/GNJBXDFX6oRNnAqJHAHAavmYb/Yx9bO+VCfp5hk1wz9ZutZfihRuub0totbh+QlSopFm0hQoBcxm5Q8hiO7KvRFd11BJtoDWeFlX9tyMIJbodt5AK0BoSlU; __gads=ID=850c74044014a39a:T=1547520027:S=ALNI_MbhQNPSwIc8efi08HjY9HhnE_oE8g; JSESSIONID=02F7FFC3FF52078FD19BC7B49D6F168F; npii=btguid/4bef83bd1680ab1ce501fd21fd3f10455e1e9660^cguid/4bef8d271680a88a70101a24b6cf50fb5e1e9660^; ns1=BAQAAAWhJqGEBAAaAANgATF4elmFjNzJ8NjAxXjE1NDc1MTk1ODgxNDReXjFeM3wyfDV8NHw3fDExXjFeMl40XjNeMTJeMTJeMl4xXjFeMF4xXjBeMV42NDQyNDU5MDc1wjjrMv7yIxrlxOeb8zsE+KNVFqo*; s=CgAD4ACBcPrRhNGJlZjgzYmQxNjgwYWIxY2U1MDFmZDIxZmQzZjEwNDUA7gBXXD60YTMGaHR0cHM6Ly93d3cuZWJheS5jb20vc2NoL2kuaHRtbD9fZnJvbT1SNDAmX3NhY2F0PTAmX25rdz1tb3BhciZfcGduPTE2Jl9za2M9MzAwMCZydD1uY8t9HdI*; nonsession=BAQAAAWhJqGEBAAaAAAgAHFxk7+ExNTQ3NTIwMDE5eDEzMjkxNzk4MDE4OHgweDJZADMABF4elmEsVVNBAMsAAVw9aek1AMoAIGWjZGE0YmVmODNiZDE2ODBhYjFjZTUwMWZkMjFmZDNmMTA0NXn9xvZWZb40gjP7agpKj7Efk3IX; dp1=btzo/-1e05fffc9e2^u1p/QEBfX0BAX19AQA**5e1e9661^bl/CN5fffc9e1^pbf/#e0002000008000000000005fffc9e2^; ebay=%5Esbf%3D%2341000000000010000100200%5Ecv%3D15555%5Ejs%3D1%5E",
     'pragma': "no-cache",
     'referer': "https://www.ebay.com/sch/i.html?_from=R40&_sacat=0&_nkw=mopar&_pgn=5&_skc=800&rt=nc",
     'upgrade-insecure-requests': "1",
@@ -40,7 +40,7 @@ def get_api(itemId):
         'cache-control': "no-cache",
     }
     data = body.format(itemId=itemId)
-    response = requests.request("POST", url, data=data, headers=headers)
+    response = requests.request("POST", url, data=data, headers=headers,verify=False)
 
     # print(response.text)
     with open('myxml.xml','w') as f:
@@ -172,13 +172,13 @@ def get_api(itemId):
 
 def start(url):
     try:
-        response = requests.get(url,headers=headers,timeout=10)
+        response = requests.get(url,headers=headers,timeout=10,verify=False)
         html = HTML(response.text)
         itemId_list = html.xpath('//ul[@id="ListViewInner"]/li/@listingid')
     except:
         print('列表页出错')
         with open('列表页.txt', 'a') as f:
-            f.write(start_url)
+            f.write(start_url+'\n')
         return
     # print(response.text)
 
@@ -192,7 +192,7 @@ def start(url):
             except:
                 print('详情页出错')
                 with open('详情页.txt', 'a') as f:
-                    f.write(itemId)
+                    f.write(itemId+'\n')
 
 if __name__ == '__main__':
     with open('results.csv','w') as f:
@@ -207,10 +207,11 @@ if __name__ == '__main__':
     #
     # for url in item_list:
     #     start(url)
-    for i in range(1,50):
+    for i in range(16,50):
         print('当前页：'+str(i))
         page = str(i)
-        pageNum = str(i-1)*200
+        pageNum = str((i-1)*200)
         url = 'https://www.ebay.com/sch/i.html?_from=R40&_sacat=0&_nkw=mopar&_pgn={page}&_skc={pageNum}&rt=nc'
         start_url = url.format(page=page,pageNum=pageNum)
+        print(start_url)
         start(start_url)
