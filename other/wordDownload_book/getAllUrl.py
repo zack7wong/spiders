@@ -8,6 +8,7 @@ import random
 import download
 import redis
 import json
+import time
 
 headers = {
     'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
@@ -88,6 +89,8 @@ def get_each_cat(url):
     for detail_url in detail_url_list:
         detail_url = 'http://www.gezhongshu.com/'+detail_url
         parse_detail(detail_url)
+        print('暂停3秒')
+        time.sleep(3)
 
     for i in range(2,allNumPage+1):
         try:
@@ -102,6 +105,8 @@ def get_each_cat(url):
                 try:
                     detail_url = 'http://www.gezhongshu.com/' + detail_url
                     parse_detail(detail_url)
+                    print('暂停3秒')
+                    time.sleep(3)
                 except:
                     print('详情页出错')
                     with open('详情页出错url.txt','a') as f:

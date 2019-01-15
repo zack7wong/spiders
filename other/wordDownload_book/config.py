@@ -2,7 +2,7 @@
 REQUEST_NUM = 0
 
 #请求多少次后换IP配置
-CHANGE_IP = 30
+CHANGE_IP = 20
 
 #代理IP
 IP_URL = ''
@@ -13,7 +13,7 @@ PROXY_SWITCH = True
 #是否使用cookies
 COOKIES_SWITCH = False
 #请求最大出错次数
-ERROR_MAX = 3
+ERROR_MAX = 1
 
 #请求头配置
 HEADERS = {
