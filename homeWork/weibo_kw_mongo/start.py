@@ -6,15 +6,13 @@ import json
 import config
 import math
 import time
+import db
 import dateutil.parser
 from urllib.parse import quote
 from lxml.etree import HTML
 from lxml import etree
 import time
 
-#微博关键字搜索爬虫：某一时间段内某关键字的所有微博的 发博用户名，微博内容，微博内容的评论内容，转发量，评论量，点赞量，发博时间，评论内容的评论时间，当前时间。
-
-# 例如：13年-14年关键字 速腾断轴 的所有微博和微博评论的以上字段。
 
 postId_list = []
 commentId_list = []
@@ -45,12 +43,12 @@ def getTimeStamp(dateStr):
     timestamp = int(time.mktime(time_tuple))
     return timestamp
 
-def get_comment(id,item):
+def get_comment(postId,item):
     commentTotalPage = int(item['commentTotalPage'])
     comment_url = 'https://m.weibo.cn/comments/hotflow?id={id}&mid={id}&max_id={max_id}&max_id_type=0'
     max_id = 0
     for i in range(1,commentTotalPage+1):
-        start_url = comment_url.format(id=id,max_id=max_id)
+        start_url = comment_url.format(id=postId,max_id=max_id)
         response = down.get_html(start_url)
         if response:
             json_obj = json.loads(response.text)
@@ -68,11 +66,18 @@ def get_comment(id,item):
                     continue
                 else:
                     commentId_list.append(commentId)
-                save_res = id+'||'+commentId+'||'+comment_content+'||'+comment_publishDateStr
+                save_res = postId+'||'+commentId+'||'+comment_content+'||'+comment_publishDateStr
                 save_res = save_res.replace(',', '，').replace(' ', '').replace('\n', ' ').replace('\r', ' ').replace('||', ',').strip()+'\n'
                 print(save_res)
-                with open('comment.csv','a') as f:
-                    f.write(save_res)
+                # with open('comment.csv','a') as f:
+                #     f.write(save_res)
+                obj = {
+                    'postId':postId,
+                    'commentId':commentId,
+                    'comment_content':comment_content,
+                    'comment_publishDateStr':comment_publishDateStr,
+                }
+                mongoClient.save_comment(obj)
         else:
             print('评论请求失败')
             continue
@@ -87,18 +92,17 @@ def parse(item,response):
     for etreeItem in allitem_list:
         itemStr = etree.tostring(etreeItem)
         html = HTML(itemStr)
-        id = html.xpath('string(//div[@class="card-wrap"]/@mid)')
-        if id == '':
+        postId = html.xpath('string(//div[@class="card-wrap"]/@mid)')
+        if postId == '':
             print('搜索无结果')
             return
 
-
-        if id in postId_list:
+        if postId in postId_list:
             continue
         else:
-            postId_list.append(id)
+            postId_list.append(postId)
 
-        url = 'https://m.weibo.cn/status/'+id
+        url = 'https://m.weibo.cn/status/'+postId
         userName = html.xpath('string(//a[@class="name"])')
         content = html.xpath('//p[@class="txt"]//text()')
         content = ''.join(content).strip()
@@ -109,14 +113,29 @@ def parse(item,response):
         crawl_time = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime())
 
 
-        save_res = keyword+'||'+startDate+'||'+endDate+'||'+id +'||'+url+'||'+userName+'||'+content+'||'+publishDateStr+'||'+reposts_count+'||'+comments_count+'||'+attitudes_count+'||'+crawl_time
+        save_res = keyword+'||'+startDate+'||'+endDate+'||'+postId +'||'+url+'||'+userName+'||'+content+'||'+publishDateStr+'||'+reposts_count+'||'+comments_count+'||'+attitudes_count+'||'+crawl_time
         save_res = save_res.replace(',','，').replace(' ','').replace('\n',' ').replace('\r',' ').replace('||',',').strip()+'\n'
         print(save_res)
-        with open('post.csv','a',encoding='utf8',errors='ignore') as f:
-            f.write(save_res)
+        # with open('post.csv','a',encoding='utf8',errors='ignore') as f:
+        #     f.write(save_res)
+        obj = {
+            'keyword':keyword,
+            'startDate':startDate,
+            'endDate':endDate,
+            'postId':postId,
+            'url':url,
+            'userName':userName,
+            'content':content,
+            'publishDateStr':publishDateStr,
+            'reposts_count':reposts_count,
+            'comments_count':comments_count,
+            'attitudes_count':attitudes_count,
+            'crawl_time':crawl_time,
+        }
+        mongoClient.save_post(obj)
 
         #处理评论
-        get_comment(id,item)
+        get_comment(postId,item)
 
 def main(item):
     keyword = quote(item['keyword'])
@@ -138,6 +157,7 @@ def main(item):
 
 if __name__ == '__main__':
     down = download.Download()
+    mongoClient = db.MongoClient()
     item_list = read()
     for obj in item_list:
         print('当前关键词：'+obj['keyword'])
