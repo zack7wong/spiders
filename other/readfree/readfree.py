@@ -4,7 +4,7 @@ import os
 import time
 import re
 import logging
-from config import account
+import config
 from config import cookies
 from urllib.parse import urljoin
 import json
@@ -12,28 +12,27 @@ import json
 url = "http://readfree.me"
 post_url = "https://readfree.me/accounts/login/?next=/"
 current_path = os.path.dirname(os.path.abspath(__file__))
-cookies_path = os.path.join(current_path, "readfree.cookies")
+# cookies_path = os.path.join(current_path, "readfree.cookies")
 logfile_path = os.path.join(current_path, "readfree.log")
 captcha_path = os.path.join(current_path, "captcha.png")
 
 headers = {}
 headers["User-Agent"] = "Mozilla/5.0 (X11; Linux x86_64) Gecko/20100101 Firefox/51.0"
-s = requests.Session()
-s.headers.update(headers)
+
 
 logging.basicConfig(filename=logfile_path, level='DEBUG')
 date = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 logging.info("===============Log Started at " + date + "===============")
 
 
-def load_cookies():
+def load_cookies(cookies_path):
     load_cj = http.cookiejar.LWPCookieJar()
     load_cj.load(cookies_path, ignore_expires=True, ignore_discard=True)
     load_ck = requests.utils.dict_from_cookiejar(load_cj)
     return load_ck
 
 
-def save_cookies(cookies):
+def save_cookies(cookies,cookies_path):
     save_cj = http.cookiejar.LWPCookieJar()
     save_ck = {c.name: c.value for c in cookies}
     requests.utils.cookiejar_from_dict(save_ck, save_cj)
@@ -48,22 +47,21 @@ def process_cookies():
     logging.info('Cookies generated.')
 
 
-def login_by_cookies():
-    ck = load_cookies()
+def login_by_cookies(s,cookies_path):
+    ck = load_cookies(cookies_path)
     s.cookies.update(ck)
     req = s.get(url)
     if req.status_code == 200:
-        save_cookies(s.cookies)
+        save_cookies(s.cookies,cookies_path)
         logging.info("=============Login by cookies successfully at %s =============" % date)
     else:
         logging.warning('Cookies expired, please update the cookies')
 
 
-def login():
+def login(s,account):
     s.headers = {}
     headers = {}
     headers["User-Agent"] = "Mozilla/5.0 (X11; Linux x86_64) Gecko/20100101 Firefox/51.0"
-    s.headers.update(headers)
     # print(s.headers)
     req = s.get(url)
     captcha_url = re.findall(r'<img src="(.*?)"', req.text)[0]
@@ -136,22 +134,47 @@ def login():
         s.get(url)
         logging.error('Login successfully.')
         print('登录成功')
-        save_cookies(s.cookies)
+        current_path = os.path.dirname(os.path.abspath(__file__))
+        cookies_path = os.path.join(current_path, account['email']+".cookies")
+        save_cookies(s.cookies,cookies_path)
         return True
 
 
 def main():
-    if os.path.exists(cookies_path):
-        print('使用cookie登录')
-        login_by_cookies()
-    elif (cookies["csrftoken"] != "") & (cookies["sessionid"] != ""):
-        process_cookies()
-        login_by_cookies()
-    else:
-        while True:
-            flag = login()
+    for account in config.account_list:
+        s = requests.Session()
+        s.headers.update(headers)
+        print('正在处理'+str(account))
+        exist_flag = True
+        for root, dirs, files in os.walk(".", topdown=False):
+            for name in files:
+                if name == account['email']+'.cookies':
+                    print('使用cookie登录')
+                    exist_flag = False
+                    current_path = os.path.dirname(os.path.abspath(__file__))
+                    cookies_path = os.path.join(current_path, name)
+                    login_by_cookies(s,cookies_path)
+                    break
+
+        while exist_flag:
+            flag = login(s,account)
             if flag is True:
                 break
+
+
+    #
+    # if os.path.exists(cookies_path):
+    #     print('使用cookie登录')
+    #     login_by_cookies()
+    # elif (cookies["csrftoken"] != "") & (cookies["sessionid"] != ""):
+    #     process_cookies()
+    #     login_by_cookies()
+    # else:
+    #     for account in config.account_lis:
+    #         while True:
+    #             flag = login(account)
+    #             if flag is True:
+    #                 break
 
 
 if __name__ == '__main__':
