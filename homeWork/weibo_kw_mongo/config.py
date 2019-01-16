@@ -3,22 +3,11 @@
 REQUEST_NUM = 0
 
 #请求多少次后换IP配置
-CHANGE_IP = 0
+CHANGE_IP = 30
 
 #代理IP
-IP = ''
+IP_URL = ''
 
-#大于该评论数则不获取时间
-commentsNum = 50
-
-#大于该转发数则不获取时间
-repostsNum = 50
-
-#暂停时间
-sleepTime = 3
-
-gsid = '_2A252l9wGDeRxGeBI7VoY8izKyz2IHXVTBWjOrDV6PUJbkdANLXGjkWpNRm0hpm4-79PKFi9KhFjsQMZsgp-6Vzzd'
-s = '6f4aaaaa'
 
 #是否开启代理
 PROXY_SWITCH = False
