@@ -5,6 +5,7 @@ MONGO_URL = 'localhost'
 MONGO_DB = 'weibo'
 MONGO_TABLE_POST = 'weibo_post'
 MONGO_TABLE_COMMENT = 'weibo_comment'
+MONGO_TABLE_WENZHANG = 'weibo_wenzhang'
 MONGO_PORT = 27017
 MONGO_PASSWORD = None
 
@@ -29,6 +30,7 @@ class MongoClient(object):
         self.db = self.client[MONGO_DB]
         self.table_post = self.db[MONGO_TABLE_POST]
         self.table_comment = self.db[MONGO_TABLE_COMMENT]
+        self.table_wenzhang = self.db[MONGO_TABLE_WENZHANG]
 
     def count(self,myTable):
         count_num = self.db.get_collection(myTable).count()
@@ -77,7 +79,7 @@ class MongoClient(object):
             return False
 
     def save_wenzhang(self,results):
-        if self.table_comment.update({'wenzhangId':results['wenzhangId']},{'$set':results},True):
+        if self.table_wenzhang.update({'wenzhangId':results['wenzhangId']},{'$set':results},True):
             print('存储文章到MongoDB成功',results)
             return True
         else:
