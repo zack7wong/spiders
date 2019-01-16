@@ -50,8 +50,15 @@ def get_comment(id,item):
     comment_url = 'https://m.weibo.cn/comments/hotflow?id={id}&mid={id}&max_id={max_id}&max_id_type=0'
     max_id = 0
     for i in range(1,commentTotalPage+1):
+        time.sleep(2)
+        print('暂停2秒')
+        headers = {
+            'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36",
+            'cache-control': "no-cache",
+        }
         start_url = comment_url.format(id=id,max_id=max_id)
-        response = down.get_html(start_url)
+        print(start_url)
+        response = down.get_html(start_url,headers=headers)
         if response:
             json_obj = json.loads(response.text)
             if json_obj['ok'] == 0:
@@ -68,10 +75,10 @@ def get_comment(id,item):
                     continue
                 else:
                     commentId_list.append(commentId)
-                save_res = id+'||'+commentId+'||'+comment_content+'||'+comment_publishDateStr
+                save_res = id+'\t||\t'+commentId+'||'+comment_content+'||'+comment_publishDateStr
                 save_res = save_res.replace(',', '，').replace(' ', '').replace('\n', ' ').replace('\r', ' ').replace('||', ',').strip()+'\n'
                 print(save_res)
-                with open('comment.csv','a') as f:
+                with open('comment.csv','a',encoding='gbk',errors='ignore') as f:
                     f.write(save_res)
         else:
             print('评论请求失败')
@@ -109,10 +116,10 @@ def parse(item,response):
         crawl_time = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime())
 
 
-        save_res = keyword+'||'+startDate+'||'+endDate+'||'+id +'||'+url+'||'+userName+'||'+content+'||'+publishDateStr+'||'+reposts_count+'||'+comments_count+'||'+attitudes_count+'||'+crawl_time
+        save_res = keyword+'||'+startDate+'||'+endDate+'||\t'+id +'||'+url+'||'+userName+'||'+content+'||'+publishDateStr+'||'+reposts_count+'||'+comments_count+'||'+attitudes_count+'||'+crawl_time
         save_res = save_res.replace(',','，').replace(' ','').replace('\n',' ').replace('\r',' ').replace('||',',').strip()+'\n'
         print(save_res)
-        with open('post.csv','a',encoding='utf8',errors='ignore') as f:
+        with open('post.csv','a',encoding='gbk',errors='ignore') as f:
             f.write(save_res)
 
         #处理评论
@@ -139,6 +146,10 @@ def main(item):
 if __name__ == '__main__':
     down = download.Download()
     item_list = read()
+    with open('post.csv', 'w', encoding='gbk', errors='ignore') as f:
+        f.write('关键词,开始时间,结束时间,id,链接,用户名,内容,发布时间,转发数,评论数,点赞数,爬取时间\n')
+    with open('comment.csv', 'w', encoding='gbk', errors='ignore') as f:
+        f.write('id,评论id,评论内容,评论时间\n')
     for obj in item_list:
         print('当前关键词：'+obj['keyword'])
         main(obj)
