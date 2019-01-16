@@ -62,18 +62,26 @@ class MongoClient(object):
 
     def save_post(self,results):
         if self.table_post.update({'postId':results['postId']},{'$set':results},True):
-            print('存储到MongoDB成功',results)
+            print('存储微博到MongoDB成功',results)
             return True
         else:
-            print('存储失败',results)
+            print('存储微博失败',results)
             return False
 
     def save_comment(self,results):
         if self.table_comment.update({'commentId':results['commentId']},{'$set':results},True):
-            print('存储到MongoDB成功',results)
+            print('存储评论到MongoDB成功',results)
             return True
         else:
-            print('存储失败',results)
+            print('存储评论失败',results)
+            return False
+
+    def save_wenzhang(self,results):
+        if self.table_comment.update({'wenzhangId':results['wenzhangId']},{'$set':results},True):
+            print('存储文章到MongoDB成功',results)
+            return True
+        else:
+            print('存储文章失败',results)
             return False
 
     def save_first(self,results):
