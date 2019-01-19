@@ -79,12 +79,15 @@ def start():
             print(dataquxian['quid'])
             try:
                 for i in range(2):
+                    print('sleep 3s..')
+                    time.sleep(3)
                     myhourStart = i*12
                     myhourEnd = myhourStart +11
                     if myhourStart == 0:
                         myhourStart = '00'
                     station_ids = dataquxian['quid']
                     data = body.format(nowDate=now_date,station_ids=station_ids,myhourStart=myhourStart,myhourEnd=myhourEnd)
+                    # print(data)
                     response = down.get_html(url,method='post',headers=headers,data=data)
                     response.encoding ='utf8'
                     if '海平面气压' not in response.text:
@@ -144,7 +147,6 @@ def start():
                                     f.write(save_res+'\n')
                         print('success!')
             except:
-                # print('未知错误')
                 print('failed')
                 continue
     return True
@@ -228,8 +230,8 @@ if __name__ == '__main__':
         start_res = start()
         if start_res:
             # print('该轮已经跑完，30分钟后重新获取')
-            print('sleep...,24 hour start')
-            time.sleep(60*60*24)
+            print('sleep...,20 hour start')
+            time.sleep(60*60*20)
             # time.sleep(2)
         else:
             print('retry')
