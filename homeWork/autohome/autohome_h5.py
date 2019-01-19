@@ -26,6 +26,12 @@ headers = {
     'Postman-Token': "17408e9f-3981-4f0d-ab0c-25c6a3b713a8"
 }
 
+def get_normal(detail_response):
+    html = HTML(detail_response.text)
+    content = html.xpath('string(//div[@class="tz-paragraph"])')
+    return content
+
+
 def get_comment(detail_response,commentStr):
     # print(commentStr)
     text = detail_response.text
@@ -42,7 +48,7 @@ def get_comment(detail_response,commentStr):
     target_loc = [int(i) for i in target_loc.split(";")]
     # print(repr(target_method), repr(target_text), repr(target_loc))
     ret_str_lst = []
-    unformatted_content_html = re.search('<p class="rrlycontxt".+?<div class="reply-handle"', commentStr, re.DOTALL)
+    unformatted_content_html = re.search('<div class="txt".+?<div class="reply-handle"', commentStr, re.DOTALL)
     if unformatted_content_html:
         unformatted_content_html = unformatted_content_html.group(0)
     else:
@@ -66,6 +72,9 @@ def get_content(detail_response):
     variables = re.findall("var (\w{3})='(.)';", text)
     var_tables = {each[0]: each[1] for each in variables}
     target_script = re.search('<div class="content conttxt".+?<script>(.+?\(document\);)</script>', text, re.DOTALL)
+    if target_script == None:
+        return get_normal(detail_response)
+
     need_decrypt_results = re.search("\[''\+(.+?)\]\(''\+(.+?)\+\w{3}\(''\)\);.+?''\+(.+?)\)", target_script.group(1))
     target_method, target_text, target_loc = decrypt_text(var_tables, need_decrypt_results.group(1)), \
                                              decrypt_text(var_tables, need_decrypt_results.group(2)), \
@@ -80,7 +89,6 @@ def get_content(detail_response):
     unformatted_content_text_groups = re.findall(">([^\s<>]+)<|('hs_kw(\d).+?'>)", unformatted_content_html, re.DOTALL)
     for each in unformatted_content_text_groups:
         if each[0]:
-
             ret_str_lst.append(each[0])
         elif each[1]:
             next_loc_index = int(each[2])
@@ -103,7 +111,7 @@ def parse(link,detail_response):
     id = re.search('https://club.m.autohome.com.cn/bbs/thread/(.*?)/(\d+)-1.html',link).group(2)
     url = link
 
-    if html.xpath('string(//em[@class="mark-tu"])') == '精':
+    if html.xpath('string(//em[@class="mark-jing"])') == '精':
         jinghua = '是'
     else:
         jinghua = '否'
@@ -121,7 +129,7 @@ def parse(link,detail_response):
         try:
             commentStr = etree.tostring(eachEtree, encoding="utf-8").decode('utf8')
             commentContent = get_comment(detail_response,commentStr)
-            if commentContent:
+            if commentContent and commentContent != '我要申诉本楼已被管理员删除查看回帖内容查看操作记录':
                 all_comment_list.append(commentContent)
             # with open('comment.csv','a') as f:
             #     commentRes = id +','+commentContent.replace(',','，').replace('\n', ' ').strip()+'\n'
@@ -135,7 +143,7 @@ def parse(link,detail_response):
     save_res = id + '||' + url + '||' + userName + '||' + title + '||' + jinghua + '||' + clickCount + '||' + replyCount + '||' + content + '||' + publishDate+'||'
     save_res = save_res.replace(',', '，').replace('\n', ' ').replace('\r', ' ').replace('||',',').strip() + all_comment_list+'\n'
     print(save_res)
-    with open('post.csv', 'a', encoding='utf8', errors='ignore') as f:
+    with open('post.csv', 'a', encoding='gbk', errors='ignore') as f:
         f.write(save_res)
 
 def start():
@@ -153,33 +161,22 @@ def start():
         'cache-control': "no-cache",
     }
 
-    for i in range(1,3361):
-        proxies = {
-            'http': 'http://JIANYIHTT' + str(random.randint(1, 20)) + ':KIFKOYY84J@http-proxy-t1.dobel.cn:9180',
-            'https': 'http://JIANYIHTT' + str(random.randint(1, 20)) + ':KIFKOYY84J@http-proxy-t1.dobel.cn:9180',
-        }
+    for i in range(1,3361):  #2199
 
         print('当前页：'+str(i))
         start_url = 'https://club.m.autohome.com.cn/Adaptive/Forum/GetTopicListPartial?bbs=c&bbsid=2761&pageindex={pageToken}&type=&sort=&qaType='.format(pageToken=i)
         print(start_url)
         try:
-            response = requests.get(start_url,verify=False,timeout=10,headers=headers,proxies=proxies)
+            response = requests.get(start_url,verify=False,timeout=10,headers=headers)
             # print(response.text)
             html = HTML(response.text)
             url_list = html.xpath('//body/li/a/@href')
 
             for url in url_list:
-
-                proxies = {
-                    'http': 'http://JIANYIHTT' + str(random.randint(1, 20)) + ':KIFKOYY84J@http-proxy-t1.dobel.cn:9180',
-                    'https': 'http://JIANYIHTT' + str(
-                        random.randint(1, 20)) + ':KIFKOYY84J@http-proxy-t1.dobel.cn:9180',
-                }
-
                 link = 'https://club.m.autohome.com.cn'+url
                 print(link)
                 try:
-                    detail_response = requests.get(link,verify=False,timeout=10,headers=headers,proxies=proxies)
+                    detail_response = requests.get(link,verify=False,timeout=10,headers=headers)
                     parse(link,detail_response)
                 except:
                     print('详情页错误')
@@ -193,28 +190,7 @@ def start():
             continue
 
 
-        # print('当前页：' + str(i))
-        # start_url = 'https://club.m.autohome.com.cn/Adaptive/Forum/GetTopicListPartial?bbs=c&bbsid=2761&pageindex={pageToken}&type=&sort=&qaType='.format(pageToken=i)
-        # print(start_url)
-        # response = requests.get(start_url, verify=False)
-        # # print(response.text)
-        # html = HTML(response.text)
-        # url_list = html.xpath('//body/li/a/@href')
-        #
-        # for url in url_list:
-        #     link = 'https://club.m.autohome.com.cn' + url
-        #     print(link)
-        #
-        #     proxies = {
-        #         'http':'http://JIANYIHTT'+str(random.randint(1,20))+':KIFKOYY84J@http-proxy-t1.dobel.cn:9180',
-        #         'https':'http://JIANYIHTT'+str(random.randint(1,20))+':KIFKOYY84J@http-proxy-t1.dobel.cn:9180',
-        #     }
-        #
-        #     detail_response = requests.get(link,proxies=proxies, headers=headers, verify=False)
-        #     parse(link, detail_response)
-        #     exit()
-
 if __name__ == '__main__':
-    with open('post.csv','w') as f:
+    with open('post.csv','w',encoding='gbk') as f:
         f.write('id,url,用户名,标题,是否精华,点击数,回复数,内容,发布时间,评论内容\n')
     start()
