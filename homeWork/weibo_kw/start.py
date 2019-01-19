@@ -21,22 +21,20 @@ commentId_list = []
 
 def read():
     item_list = []
-    with open('keyword.txt') as f:
-        results = f.readlines()
-        for res in results:
-            keyword = res.split(',')[0]
-            startDate = res.split(',')[1]
-            endDate = res.split(',')[2]
-            totalPage = res.split(',')[3]
-            commentTotalPage = res.split(',')[4].strip()
-            obj ={
-                'keyword':keyword,
-                'startDate':startDate,
-                'endDate':endDate,
-                'totalPage':totalPage,
-                'commentTotalPage':commentTotalPage,
-            }
-            item_list.append(obj)
+    res = '机油门,2018-12-01,2019-01-16,50,10'
+    keyword = res.split(',')[0]
+    startDate = res.split(',')[1]
+    endDate = res.split(',')[2]
+    totalPage = res.split(',')[3]
+    commentTotalPage = res.split(',')[4].strip()
+    obj ={
+        'keyword':keyword,
+        'startDate':startDate,
+        'endDate':endDate,
+        'totalPage':totalPage,
+        'commentTotalPage':commentTotalPage,
+    }
+    item_list.append(obj)
     return item_list
 
 def getTimeStamp(dateStr):
@@ -58,30 +56,36 @@ def get_comment(id,item):
         }
         start_url = comment_url.format(id=id,max_id=max_id)
         print(start_url)
-        response = down.get_html(start_url,headers=headers)
-        if response:
-            json_obj = json.loads(response.text)
-            if json_obj['ok'] == 0:
-                print('评论为空')
-                return
-            for data in json_obj['data']['data']:
-                commentId = data['id']
-                comment_content = data['text']
-                publishDate = getTimeStamp(data['created_at'])
-                comment_publishDateStr = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(publishDate))
+        try:
+            response = down.get_html(start_url,headers=headers)
+            if response:
+                json_obj = json.loads(response.text)
+                if json_obj['ok'] == 0:
+                    print('评论为空')
+                    return
+                for data in json_obj['data']['data']:
+                    commentId = data['id']
+                    comment_content = data['text']
+                    publishDate = getTimeStamp(data['created_at'])
+                    comment_publishDateStr = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(publishDate))
 
 
-                if commentId in commentId_list:
-                    continue
-                else:
-                    commentId_list.append(commentId)
-                save_res = id+'\t||\t'+commentId+'||'+comment_content+'||'+comment_publishDateStr
-                save_res = save_res.replace(',', '，').replace(' ', '').replace('\n', ' ').replace('\r', ' ').replace('||', ',').strip()+'\n'
-                print(save_res)
-                with open('comment.csv','a',encoding='gbk',errors='ignore') as f:
-                    f.write(save_res)
-        else:
-            print('评论请求失败')
+                    if commentId in commentId_list:
+                        continue
+                    else:
+                        commentId_list.append(commentId)
+                    save_res = id+'\t||\t'+commentId+'||'+comment_content+'||'+comment_publishDateStr
+                    save_res = save_res.replace(',', '，').replace(' ', '').replace('\n', ' ').replace('\r', ' ').replace('||', ',').strip()+'\n'
+                    print(save_res)
+                    with open('comment.csv','a',encoding='gbk',errors='ignore') as f:
+                        f.write(save_res)
+            else:
+                with open('评论出错url.txt', 'a') as f:
+                    f.write(str(start_url))
+                continue
+        except:
+            with open('评论出错url.txt', 'a') as f:
+                f.write(str(start_url))
             continue
 
 def parse(item,response):
@@ -97,7 +101,7 @@ def parse(item,response):
         id = html.xpath('string(//div[@class="card-wrap"]/@mid)')
         if id == '':
             print('搜索无结果')
-            return
+            return True
 
 
         if id in postId_list:
@@ -133,6 +137,7 @@ def main(item):
     URL = 'https://s.weibo.com/weibo/%25E7%258E%258B%25E6%2580%259D%25E8%2581%25AA?q={keyword}&typeall=1&suball=1&timescope=custom:{startDate}:{endDate}&Refer=g&page={pageToken}'
 
     for i in range(1,pageNum+1):
+        print('当前页数：'+str(i))
         start_url = URL.format(keyword=keyword,pageToken=i,startDate=startDate,endDate=endDate)
         print(start_url)
         response = down.get_html(start_url)
@@ -142,6 +147,40 @@ def main(item):
         else:
             print('网络请求失败')
             continue
+
+# def main(item):
+#     # date_list = [{'start': '2018-03-01', 'end': '2018-03-30'}, {'start': '2018-04-01', 'end': '2018-04-30'}, {'start': '2018-05-01', 'end': '2018-05-30'}, {'start': '2018-06-01', 'end': '2018-06-30'}, {'start': '2018-07-01', 'end': '2018-07-30'}, {'start': '2018-08-01', 'end': '2018-08-30'}, {'start': '2018-09-01', 'end': '2018-09-30'}, {'start': '2018-10-01', 'end': '2018-10-30'}, {'start': '2018-11-01', 'end': '2018-11-30'}, {'start': '2018-12-01', 'end': '2018-12-30'},{'start': '2019-01-01', 'end': '2019-01-16'}]
+#     date_list = [{'start': '2017-12-01', 'end': '2017-12-30'},{'start': '2018-01-01', 'end': '2018-01-30'},{'start': '2018-02-01', 'end': '2018-02-30'}]
+#
+#     for mydate in date_list:
+#         keyword = quote(item['keyword'])
+#         startDate = mydate['start']
+#         endDate = mydate['end']
+#         pageNum = int(item['totalPage'])
+#
+#         URL = 'https://s.weibo.com/weibo/%25E7%258E%258B%25E6%2580%259D%25E8%2581%25AA?q={keyword}&typeall=1&suball=1&timescope=custom:{startDate}:{endDate}&Refer=g&page={pageToken}'
+#
+#         for i in range(1,pageNum+1):
+#             print('当前日期:'+str(mydate['start']))
+#             print('当前页数：'+str(i))
+#             start_url = URL.format(keyword=keyword,pageToken=i,startDate=startDate,endDate=endDate)
+#             print(start_url)
+#             try:
+#                 response = down.get_html(start_url)
+#                 if response:
+#                     # print(response.text):
+#                     parseRes = parse(item,response)
+#                     if parseRes:
+#                         break
+#                 else:
+#                     print('网络请求失败')
+#                     with open('出错url.txt','a') as f:
+#                         f.write(str(start_url))
+#                     continue
+#             except:
+#                 with open('出错url.txt', 'a') as f:
+#                     f.write(str(start_url))
+#                 continue
 
 if __name__ == '__main__':
     down = download.Download()
