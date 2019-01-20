@@ -21,18 +21,21 @@ commentId_list = []
 
 def read():
     item_list = []
-    res = '机油门,2018-12-01,2019-01-16,50,10'
+    #typeall=1   xsort=hot  scope=ori  atten=1   vip=1  category=4   viewpoint=1
+    res = '机油门,2018-12-01,2019-01-16,50,10,typeall=1'
     keyword = res.split(',')[0]
     startDate = res.split(',')[1]
     endDate = res.split(',')[2]
     totalPage = res.split(',')[3]
-    commentTotalPage = res.split(',')[4].strip()
+    commentTotalPage = res.split(',')[4]
+    queryType = res.split(',')[5].strip()
     obj ={
         'keyword':keyword,
         'startDate':startDate,
         'endDate':endDate,
         'totalPage':totalPage,
         'commentTotalPage':commentTotalPage,
+        'queryType':queryType,
     }
     item_list.append(obj)
     return item_list
@@ -134,11 +137,12 @@ def main(item):
     startDate = item['startDate']
     endDate = item['endDate']
     pageNum = int(item['totalPage'])
-    URL = 'https://s.weibo.com/weibo/%25E7%258E%258B%25E6%2580%259D%25E8%2581%25AA?q={keyword}&typeall=1&suball=1&timescope=custom:{startDate}:{endDate}&Refer=g&page={pageToken}'
+    queryType = item['queryType']
+    URL = 'https://s.weibo.com/weibo/%25E7%258E%258B%25E6%2580%259D%25E8%2581%25AA?q={keyword}&{queryType}&suball=1&timescope=custom:{startDate}:{endDate}&Refer=g&page={pageToken}'
 
     for i in range(1,pageNum+1):
         print('当前页数：'+str(i))
-        start_url = URL.format(keyword=keyword,pageToken=i,startDate=startDate,endDate=endDate)
+        start_url = URL.format(keyword=keyword,queryType=queryType,pageToken=i,startDate=startDate,endDate=endDate)
         print(start_url)
         response = down.get_html(start_url)
         if response:
