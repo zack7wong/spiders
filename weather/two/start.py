@@ -230,8 +230,8 @@ if __name__ == '__main__':
         start_res = start()
         if start_res:
             # print('该轮已经跑完，30分钟后重新获取')
-            print('sleep...,20 hour start')
-            time.sleep(60*60*20)
+            print('sleep...,16 hour start')
+            time.sleep(60*60*16)
             # time.sleep(2)
         else:
             print('retry')
