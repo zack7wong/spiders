@@ -152,13 +152,14 @@ def setComment(link,mycomment):
     else:
         #发帖无验证码
         # check
+        headers['X-Requested-With'] = 'XMLHttpRequest'
         check_url = 'https://forum.cyberctm.com/forum.php?mod=ajax&action=checkpostrule&inajax=yes&ac=reply'
         check_response = requests.get(check_url, headers=headers, proxies=proxies)
         check_response_CookieDic = check_response.cookies.get_dict()
         cookieStr = headers['Cookie']
         cookieStr = replace_cooke(cookieStr, check_response_CookieDic)
         headers['Cookie'] = cookieStr
-
+        del headers['X-Requested-With']
         # 开始回复
         tid = re.search('https://forum.cyberctm.com/forum.php\?mod=viewthread&tid=(\d+)&extra=', link).group(1)
 
@@ -168,7 +169,7 @@ def setComment(link,mycomment):
         body = 'message={message}&posttime={posttime}&formhash=3da10717&usesig=1&subject=++'
         posttime = str(int(time.time()) - 1)
         data = body.format(message=quote(mycomment), posttime=posttime)
-        # print(data)
+        print(data)
 
         headers['Content-Type'] = "application/x-www-form-urlencoded"
         headers['Content-Length'] = str(len(data))
@@ -214,7 +215,7 @@ def start():
     sleepTime = input('\n请输入多少分钟后循环发布：')
 
     while True:
-        num_input_list = num_input_listStr.split('。')
+        num_input_list = num_input_listStr.split('.')
         with open('评论内容.txt') as f:
             mycomment = f.read().strip()
 
