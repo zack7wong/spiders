@@ -5,14 +5,16 @@ import requests
 from lxml.etree import HTML
 import re
 import time
+import copy
 from hashlib import md5
+from urllib.parse import quote
 
 proxies = {
     'http':'http://127.0.0.1:1087',
     'https':'http://127.0.0.1:1087',
 }
 
-headers = {
+start_headers = {
     'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
     'Accept-Encoding': "gzip, deflate, br",
     'Accept-Language': "zh-CN,zh;q=0.9",
@@ -71,51 +73,44 @@ def replace_cooke(cookieStr,CookieDic):
         cookieStr = re.sub(key + '=(.*?);', key + '=' + CookieDic[key] + ';', cookieStr)
     return cookieStr
 
-def start():
-    start_url = 'https://forum.cyberctm.com/home.php?mod=space&do=thread&view=me'
-    response = requests.get(start_url, headers=headers, proxies=proxies)
-    # print(response.text)
-    html = HTML(response.text)
-    url_list = html.xpath('//ul[@id="waterfall"]/li/div/h2/a/@href')
-    for url in url_list:
-        #请求详情页
-        link = 'https://forum.cyberctm.com/' + url
-        print(link)
-        detail_response = requests.get(link,headers=headers, proxies=proxies)
+def setComment(link,mycomment):
+    headers = copy.deepcopy(start_headers)
+    detail_response = requests.get(link, headers=headers, proxies=proxies)
+    # 处理获取返回的cookie
+    deatail_response_CookieDic = detail_response.cookies.get_dict()
+    cookieStr = headers['Cookie']
+    cookieStr = replace_cooke(cookieStr, deatail_response_CookieDic)
+    headers['Cookie'] = cookieStr
 
-        #处理获取返回的cookie
-        deatail_response_CookieDic = detail_response.cookies.get_dict()
-        cookieStr = headers['Cookie']
-        cookieStr = replace_cooke(cookieStr, deatail_response_CookieDic)
-        headers['Cookie'] = cookieStr
+    # print(detail_response.text)
 
-
-        #匹配获取图片的code
-        seccode = re.search('<span id="seccode_(.*?)"></span>',detail_response.text).group(1)
+    # 匹配获取图片的code
+    seccode = re.search('<span id="seccode_(.*?)"></span>', detail_response.text)
+    #发帖有验证码
+    if seccode:
+        seccode = seccode.group(1)
         print(seccode)
-        #请求换一张图片
-        update_img_url = 'https://forum.cyberctm.com/misc.php?mod=seccode&action=update&idhash='+seccode
+        # 请求换一张图片
+        update_img_url = 'https://forum.cyberctm.com/misc.php?mod=seccode&action=update&idhash=' + seccode
         update_response = requests.get(update_img_url, headers=headers, proxies=proxies)
-        #处理获取返回的cookie
         update_response_CookieDic = update_response.cookies.get_dict()
         cookieStr = headers['Cookie']
         cookieStr = replace_cooke(cookieStr, update_response_CookieDic)
         headers['Cookie'] = cookieStr
 
-        #请求并保存图片
+        # 请求并保存图片
         img_url = 'https://forum.cyberctm.com/' + re.search('src="(misc.php.*?)"', update_response.text).group(1)
-        print(img_url)
+        # print(img_url)
         img_reponse = requests.get(img_url, headers=headers, proxies=proxies)
-        # 处理获取返回的cookie
         img_reponse_CookieDic = img_reponse.cookies.get_dict()
         cookieStr = headers['Cookie']
         cookieStr = replace_cooke(cookieStr, img_reponse_CookieDic)
         headers['Cookie'] = cookieStr
 
-        with open('captcha.png','wb') as f:
+        with open('captcha.png', 'wb') as f:
             f.write(img_reponse.content)
 
-        #开始打码
+        # 开始打码
         print('正在处理验证码。。')
         with open('captcha.png', 'rb') as f:
             im = f.read()
@@ -123,35 +118,105 @@ def start():
         print(captcha_res)
         captcha_res = captcha_res['Result']
 
-        #check 验证码
+        # check 验证码
         check_url = 'https://forum.cyberctm.com/misc.php?mod=seccode&action=check&inajax=1&modid=forum::viewthread&idhash={seccode}&secverify={captcha_res}'
         check_response = requests.get(check_url, headers=headers, proxies=proxies)
-        # 处理获取返回的cookie
         check_response_CookieDic = check_response.cookies.get_dict()
         cookieStr = headers['Cookie']
         cookieStr = replace_cooke(cookieStr, check_response_CookieDic)
         headers['Cookie'] = cookieStr
 
-
-        #开始回复
-        tid = re.search('https://forum.cyberctm.com/forum.php\?mod=viewthread&tid=(\d+)&extra=',link).group(1)
+        # 开始回复
+        tid = re.search('https://forum.cyberctm.com/forum.php\?mod=viewthread&tid=(\d+)&extra=', link).group(1)
         reply_url = 'https://forum.cyberctm.com/forum.php?mod=post&action=reply&fid=291&tid={tid}&extra=&replysubmit=yes&infloat=yes&handlekey=fastpost&inajax=1'.format(tid=tid)
-        print(reply_url)
+        # print(reply_url)
         body = 'message={message}&seccodehash={seccode}&seccodemodid=forum%3A%3Aviewthread&seccodeverify={seccodeverify}&posttime={posttime}&formhash=3da10717&usesig=1&subject=++'
-        posttime = str(int(time.time())-1)
-        data = body.format(message='hahaqq',seccodeverify=captcha_res, posttime=posttime, seccode=seccode)
-        print(data)
+        posttime = str(int(time.time()) - 1)
+        data = body.format(message=quote(mycomment), seccodeverify=captcha_res, posttime=posttime, seccode=seccode)
+        # print(data)
 
         headers['Content-Type'] = "application/x-www-form-urlencoded"
         headers['Content-Length'] = str(len(data))
         response = requests.post(reply_url, headers=headers, data=data, proxies=proxies)
-        print(response.text)
+        # print(response.text)
         if '非常感謝，回覆發佈成功' in response.text:
-            print('发布成功')
+            print('发布成功！')
+        elif '抱歉，您兩次發表間隔少於 10 秒，請稍候再發表' in response.text:
+            print('抱歉，您兩次發表間隔少於 10 秒，請稍候再發表')
+        elif '抱歉，驗證碼填寫錯誤' in response.text:
+            print('抱歉，驗證碼填寫錯誤')
         else:
             print('发布失败')
-        break
+        print('两个帖子发布时间需要间隔10秒，正在暂停10秒..')
+        time.sleep(10)
+    else:
+        #发帖无验证码
+        # 开始回复
+        tid = re.search('https://forum.cyberctm.com/forum.php\?mod=viewthread&tid=(\d+)&extra=', link).group(1)
+        reply_url = 'https://forum.cyberctm.com/forum.php?mod=post&action=reply&fid=291&tid={tid}&extra=&replysubmit=yes&infloat=yes&handlekey=fastpost&inajax=1'.format(tid=tid)
+        # print(reply_url)
+        body = 'message={message}&seccodemodid=forum%3A%3Aviewthread&posttime={posttime}&formhash=3da10717&usesig=1&subject=++'
+        posttime = str(int(time.time()) - 1)
+        data = body.format(message=quote(mycomment), posttime=posttime)
+        # print(data)
+
+        headers['Content-Type'] = "application/x-www-form-urlencoded"
+        headers['Content-Length'] = str(len(data))
+        response = requests.post(reply_url, headers=headers, data=data, proxies=proxies)
+        # print(response.text)
+        if '非常感謝，回覆發佈成功' in response.text:
+            print('发布成功！')
+        elif '抱歉，您兩次發表間隔少於 10 秒，請稍候再發表' in response.text:
+            print('抱歉，您兩次發表間隔少於 10 秒，請稍候再發表')
+        elif '抱歉，驗證碼填寫錯誤' in response.text:
+            print('抱歉，驗證碼填寫錯誤')
+        else:
+            print('发布失败')
+        print('两个帖子发布时间需要间隔10秒，正在暂停10秒..')
+        time.sleep(10)
+
+def start():
+    pageToken = 1
+    start_url = 'https://forum.cyberctm.com/home.php?mod=space&uid=503430&do=thread&view=me&order=dateline&page='+str(pageToken)
+    response = requests.get(start_url, headers=start_headers, proxies=proxies)
+    # print(response.text)
+    html = HTML(response.text)
+
+    url_list = html.xpath('//ul[@id="waterfall"]/li/div/h2/a/@href')
+    title_list = html.xpath('//ul[@id="waterfall"]/li/div/h2/a/text()')
+
+    while True:
+        num = 1
+        item_list = []
+        for url,title in zip(url_list,title_list):
+            #请求详情页
+            print(str(num)+'. '+title)
+            link = 'https://forum.cyberctm.com/' + url
+            # print(link)
+            obj = {
+                'numkey':str(num),
+                'link':link,
+                'title':title
+            }
+            item_list.append(obj)
+            num+=1
+
+        num_input_list = input('\n请求输入要发布评论的帖子的序号：')
+        num_input_list = num_input_list.split('。')
+        with open('评论内容.txt') as f:
+            mycomment = f.read().strip()
+
+        print('当前评论内容是：'+mycomment)
+        for item in item_list:
+            for num_input in num_input_list:
+                if item['numkey'] == num_input:
+                    print('\n正在评论：'+str(item['numkey']))
+                    setComment(item['link'],mycomment)
+                    break
+
+
+
 
 if __name__ == '__main__':
-    rc = RClient('u3002019', 'YamPak2859', '119125', 'bd78afebc5f3417390dc481bda615067')
+    rc = RClient('zero9988', 'zero007.', '121381', '56ac8da0371748d799d312b77ff2b16f')
     start()
