@@ -156,10 +156,15 @@ def setComment(link,mycomment):
     #发帖有验证码
     if seccode:
         seccode = seccode.group(1)
-        doing(seccode,headers,link,mycomment)
+        doingRes = doing(seccode,headers,link,mycomment)
+        if doingRes:
+            return True
+        else:
+            return False
     else:
         #发帖无验证码
         # check
+        print('第一次发布，无验证码，正在处理')
         headers['X-Requested-With'] = 'XMLHttpRequest'
         check_url = 'https://forum.cyberctm.com/forum.php?mod=ajax&action=checkpostrule&inajax=yes&ac=reply'
         check_response = requests.get(check_url, headers=headers, proxies=proxies, timeout=10)
@@ -173,7 +178,11 @@ def setComment(link,mycomment):
         seccode = re.search('<span id="seccode_(.*?)"></span>', check_response.text)
         if seccode:
             seccode = seccode.group(1)
-            doing(seccode, headers, link, mycomment)
+            doingRes = doing(seccode, headers, link, mycomment)
+            if doingRes:
+                return True
+            else:
+                return False
         else:
             print('第一次发布，没有获取到验证码')
         ##################

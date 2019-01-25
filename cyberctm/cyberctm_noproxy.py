@@ -10,8 +10,8 @@ from hashlib import md5
 from urllib.parse import quote
 
 proxies = {
-    'http': 'http://127.0.0.1:1087',
-    'https': 'http://127.0.0.1:1087',
+    'http':'http://127.0.0.1:1087',
+    'https':'http://127.0.0.1:1087',
 }
 
 start_headers = {
@@ -28,6 +28,7 @@ start_headers = {
     'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36",
     'cache-control': "no-cache",
 }
+
 
 
 class RClient(object):
@@ -67,8 +68,7 @@ class RClient(object):
         r = requests.post('http://api.ruokuai.com/reporterror.json', data=params, headers=self.headers, timeout=30)
         return r.json()
 
-
-def replace_cooke(cookieStr, CookieDic):
+def replace_cooke(cookieStr,CookieDic):
     for key in CookieDic:
         cookieStr = re.sub(key + '=(.*?);', key + '=' + CookieDic[key] + ';', cookieStr)
         # if re.search(key,cookieStr):
@@ -78,8 +78,7 @@ def replace_cooke(cookieStr, CookieDic):
 
     return cookieStr
 
-
-def doing(seccode, headers, link, mycomment):
+def doing(seccode,headers,link,mycomment):
     print(seccode)
     # 请求换一张图片
     update_img_url = 'https://forum.cyberctm.com/misc.php?mod=seccode&action=update&idhash=' + seccode
@@ -119,8 +118,7 @@ def doing(seccode, headers, link, mycomment):
 
     # 开始回复
     tid = re.search('https://forum.cyberctm.com/forum.php\?mod=viewthread&tid=(\d+)&extra=', link).group(1)
-    reply_url = 'https://forum.cyberctm.com/forum.php?mod=post&action=reply&fid=291&tid={tid}&extra=&replysubmit=yes&infloat=yes&handlekey=fastpost&inajax=1'.format(
-        tid=tid)
+    reply_url = 'https://forum.cyberctm.com/forum.php?mod=post&action=reply&fid=291&tid={tid}&extra=&replysubmit=yes&infloat=yes&handlekey=fastpost&inajax=1'.format(tid=tid)
     body = 'message={message}&seccodehash={seccode}&seccodemodid=forum%3A%3Aviewthread&seccodeverify={seccodeverify}&posttime={posttime}&formhash=3da10717&usesig=1&subject=++'
     posttime = str(int(time.time()) - 1)
     data = body.format(message=quote(mycomment), seccodeverify=captcha_res, posttime=posttime, seccode=seccode)
@@ -143,8 +141,7 @@ def doing(seccode, headers, link, mycomment):
     time.sleep(10)
     return True
 
-
-def setComment(link, mycomment):
+def setComment(link,mycomment):
     headers = copy.deepcopy(start_headers)
     detail_response = requests.get(link, headers=headers,  timeout=10)
     # 处理获取返回的cookie
@@ -156,13 +153,18 @@ def setComment(link, mycomment):
     # 匹配获取图片的code
     seccode = re.search('<span id="seccode_(.*?)"></span>', detail_response.text)
 
-    # 发帖有验证码
+    #发帖有验证码
     if seccode:
         seccode = seccode.group(1)
-        doing(seccode, headers, link, mycomment)
+        doingRes = doing(seccode,headers,link,mycomment)
+        if doingRes:
+            return True
+        else:
+            return False
     else:
-        # 发帖无验证码
+        #发帖无验证码
         # check
+        print('第一次发布，无验证码，正在处理')
         headers['X-Requested-With'] = 'XMLHttpRequest'
         check_url = 'https://forum.cyberctm.com/forum.php?mod=ajax&action=checkpostrule&inajax=yes&ac=reply'
         check_response = requests.get(check_url, headers=headers,  timeout=10)
@@ -176,7 +178,11 @@ def setComment(link, mycomment):
         seccode = re.search('<span id="seccode_(.*?)"></span>', check_response.text)
         if seccode:
             seccode = seccode.group(1)
-            doing(seccode, headers, link, mycomment)
+            doingRes = doing(seccode, headers, link, mycomment)
+            if doingRes:
+                return True
+            else:
+                return False
         else:
             print('第一次发布，没有获取到验证码')
         ##################
@@ -204,11 +210,9 @@ def setComment(link, mycomment):
         # print('两个帖子发布时间需要间隔10秒，正在暂停10秒..')
         # time.sleep(10)
 
-
 def start():
     pageToken = 1
-    start_url = 'https://forum.cyberctm.com/home.php?mod=space&uid=503430&do=thread&view=me&order=dateline&page=' + str(
-        pageToken)
+    start_url = 'https://forum.cyberctm.com/home.php?mod=space&uid=503430&do=thread&view=me&order=dateline&page='+str(pageToken)
     response = requests.get(start_url, headers=start_headers)
     # print(response.text)
     html = HTML(response.text)
@@ -218,18 +222,18 @@ def start():
 
     num = 1
     item_list = []
-    for url, title in zip(url_list, title_list):
-        # 请求详情页
-        print(str(num) + '. ' + title)
+    for url,title in zip(url_list,title_list):
+        #请求详情页
+        print(str(num)+'. '+title)
         link = 'https://forum.cyberctm.com/' + url
         # print(link)
         obj = {
-            'numkey': str(num),
-            'link': link,
-            'title': title
+            'numkey':str(num),
+            'link':link,
+            'title':title
         }
         item_list.append(obj)
-        num += 1
+        num+=1
 
     num_input_listStr = input('\n请输入要发布评论的帖子的序号：')
     sleepTime = input('\n请输入多少分钟后循环发布：')
@@ -239,13 +243,13 @@ def start():
         with open('评论内容.txt') as f:
             mycomment = f.read().strip()
 
-        print('当前评论内容是：' + mycomment)
+        print('当前评论内容是：'+mycomment)
         for item in item_list:
             for num_input in num_input_list:
                 if item['numkey'] == num_input:
-                    print('\n正在评论：' + str(item['numkey']))
+                    print('\n正在评论：'+str(item['numkey']))
                     try:
-                        setRes = setComment(item['link'], mycomment)
+                        setRes = setComment(item['link'],mycomment)
                         if setRes:
                             pass
                         else:
@@ -254,10 +258,11 @@ def start():
                         print('未知错误')
 
                     break
-        sleepTimeMin = 60 * int(sleepTime)
-        print('\n当前时间：' + str(time.strftime('%Y-%m-%d %H:%M:%S')))
-        print('等待下一轮：' + sleepTime + '分钟后重新启动。。。')
+        sleepTimeMin = 60*int(sleepTime)
+        print('\n当前时间：'+str(time.strftime('%Y-%m-%d %H:%M:%S')))
+        print('等待下一轮：'+sleepTime+'分钟后重新启动。。。')
         time.sleep(sleepTimeMin)
+
 
 
 if __name__ == '__main__':
