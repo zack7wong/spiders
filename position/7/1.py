@@ -1,0 +1,94 @@
+# #!/usr/bin/env python
+# # -*- coding:utf-8 -*-
+#
+# # 佛山科学技术学院    http://jy.fosu.edu.cn/eweb/jygl/zpfw.so
+# # 云南师范大学商学院   http://yssxy.bibibi.net/
+# # 桂林理工大学  http://glut.doerjob.com/   招聘会 招聘信息
+# # 桂林理工大学博文学院   http://yunjy.bwgl.cn/module/careers
+# #
+# # 上海应用技术大学   http://job.sit.edu.cn/
+# #
+# # 上海第二工业大学   http://career.sspu.edu.cn/eweb/jygl/index.so?reurl=%2F%2Findex.jsp%3Fnull
+# # 上海理工大学  http://91.usst.edu.cn/
+# # 爬招聘信息，宣讲信息
+#
+# # 宣讲信息：  企业名称 宣讲地点，宣讲时间 场地
+# # 岗位信息： 企业名称、企业地点、岗位名称、工作类型、岗位职责 薪资水准
+#
+# import requests
+# from lxml.etree import HTML
+# import time
+# import re
+#
+# headers = {
+#     'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+#     'Accept-Encoding': "gzip, deflate",
+#     'Accept-Language': "zh-CN,zh;q=0.9",
+#     'Cache-Control': "no-cache",
+#     'Connection': "keep-alive",
+#     # 'Cookie': "JSESSIONID=19F0D89ADD780E500E8364C855CC1DCA.tomcat101",
+#     # 'Host': "career.sspu.edu.cn",
+#     'Pragma': "no-cache",
+#     'Upgrade-Insecure-Requests': "1",
+#     'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36",
+#     'cache-control': "no-cache",
+#     'Postman-Token': "029cfacf-d506-4430-a44d-ba5832ab3ee9"
+#     }
+#
+#
+# id_list = []
+# def start():
+#     start_url = 'http://91.usst.edu.cn/PositionList.aspx/'
+#
+#     for i in range(0,2):
+#         body = 'ctl00%24ScriptManager1=ctl00%24content%24upContent%7Cctl00%24content%24GvPositionList%24ctl13%24btnGo&_TSM_HiddenField_=2GFwlGU9ATlFIxrdsXRzcja58_1t5F8HSleaZM4ZQwk1&ctl00%24txtKeyword=&ctl00%24content%24txtPname=&ctl00%24content%24PCctrl%24ddlProvince=&ctl00%24content%24PCctrl%24ddlCity=&ctl00%24content%24ddlComputer=--%E4%B8%8D%E9%99%90--&ctl00%24content%24txtZy=&ctl00%24content%24ddlFbrq=--%E4%B8%8D%E9%99%90--&ctl00%24content%24ddlLanguage=--%E4%B8%8D%E9%99%90--&ctl00%24content%24txtDwmc=&ctl00%24content%24HyCtrl%24ddlHy=&ctl00%24content%24ddlJobNature=--%E4%B8%8D%E9%99%90--&ctl00%24content%24ddlSalary=--%E4%B8%8D%E9%99%90--&ctl00%24content%24ddlXL=--%E4%B8%8D%E9%99%90--&ctl00%24content%24ddlGender=&ctl00%24content%24GvPositionList%24ctl13%24txtNewPageIndex={page}&ctl00%24content%24hfRowCount=3798&__EVENTTARGET=ctl00%24content%24GvPositionList%24ctl13%24btnGo&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE=%2FwEPDwUJODUwNTYxMTQ1D2QWAmYPZBYEAgEPZBYGZg8WAh4Fc3R5bGUFI2JhY2tncm91bmQtY29sb3I6IzAzOWE3OSFpbXBvcnRhbnQ7FgICBQ9kFgICAg8WAh4HVmlzaWJsZWhkAgEPZBYGAgEPZBYCAgEPFgIeCWlubmVyaHRtbAUG5a2m55SfZAIDD2QWAgIBDxYCHwIFBuaVmeW4iGQCBQ9kFgICAQ8WAh8CBQbpm4fkuLtkAgMPZBYCAgEPZBYCZg9kFgYCAw9kFgZmDxAPFgweBVdpZHRoGwAAAAAAQGBAAQAAAB4IQ3NzQ2xhc3NlHg1EYXRhVGV4dEZpZWxkBQZzc3FqbWMeDkRhdGFWYWx1ZUZpZWxkBQZzc3FqZG0eC18hRGF0YUJvdW5kZx4EXyFTQgKCAmQQFSQKLS3kuI3pmZAtLQnljJfkuqzluIIJ5aSp5rSl5biCCeays%2BWMl%2BecgQnlsbHopb%2FnnIES5YaF6JKZ5Y%2Bk6Ieq5rK75Yy6Cei%2BveWugeecgQnlkInmnpfnnIEM6buR6b6Z5rGf55yBCeS4iua1t%2BW4ggnmsZ%2Foi4%2FnnIEJ5rWZ5rGf55yBCeWuieW%2BveecgQnnpo%2Flu7rnnIEJ5rGf6KW%2F55yBCeWxseS4nOecgQnmsrPljZfnnIEJ5rmW5YyX55yBCea5luWNl%2BecgQnlub%2FkuJznnIEV5bm%2F6KW%2F5aOu5peP6Ieq5rK75Yy6Cea1t%2BWNl%2BecgQnph43luobluIIJ5Zub5bed55yBCei0teW3nuecgQnkupHljZfnnIEP6KW%2F6JeP6Ieq5rK75Yy6CemZleilv%2BecgQnnlJjogoPnnIEJ6Z2S5rW355yBFeWugeWkj%2BWbnuaXj%2BiHquayu%2BWMuhjmlrDnlobnu7TlkL7lsJToh6rmsrvljLoJ5Y%2Bw5rm%2B55yBFemmmea4r%2BeJueWIq%2BihjOaUv%2BWMuhXmvrPpl6jnibnliKvooYzmlL%2FljLoG5aKD5aSWFSQAAjExAjEyAjEzAjE0AjE1AjIxAjIyAjIzAjMxAjMyAjMzAjM0AjM1AjM2AjM3AjQxAjQyAjQzAjQ0AjQ1AjQ2AjUwAjUxAjUyAjUzAjU0AjYxAjYyAjYzAjY0AjY1AjcxAjgxAjgyAjk5FCsDJGdnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZxYBZmQCAg8QDxYGHwMbAAAAAACAZkABAAAAHwRlHwgCggJkEBUBCi0t5LiN6ZmQLS0VAQAUKwMBZxYBZmQCBA8QDxYIHwMbAAAAAACAZkABAAAAHwRlHwgCggIfAWhkEBUBCi0t5LiN6ZmQLS0VAQAUKwMBZxYBZmQCDw9kFgJmDxAPFgYfBQUGaHluYW1lHwYFBmh5Y29kZR8HZ2QQFWEKLS3kuI3pmZAtLQkwMS3lhpzkuJoJMDIt5p6X5LiaDDAzLeeVnOeJp%2BS4mgkwNC3muJTkuJohMDUt5Yac44CB5p6X44CB54mn44CB5riU5pyN5Yqh5LiaGzA2LeeFpOeCreW8gOmHh%2BWSjOa0l%2BmAieS4mh4wNy3nn7PmsrnlkozlpKnnhLbmsJTlvIDph4fkuJobMDgt6buR6Imy6YeR5bGe55%2B%2F6YeH6YCJ5LiaGzA5LeacieiJsumHkeWxnuefv%2BmHh%2BmAieS4mhgxMC3pnZ7ph5HlsZ7nn7%2Fph4fpgInkuJoVMTEt5byA6YeH6L6F5Yqp5rS75YqoEjEyLeWFtuS7lumHh%2Befv%2BS4mhgxMy3lhpzlia%2Fpo5%2Flk4HliqDlt6XkuJoSMTQt6aOf5ZOB5Yi26YCg5LiaJDE1LemFkuOAgemlruaWmeWSjOeyvuWItuiMtuWItumAoOS4mhIxNi3ng5%2FojYnliLblk4HkuJoMMTct57q657uH5LiaGzE4Lee6uue7h%2BacjeijheOAgeacjemlsOS4mjMxOS3nmq7pnanjgIHmr5vnmq7jgIHnvr3mr5vlj4rlhbbliLblk4HlkozliLbpnovkuJo2MjAt5pyo5p2Q5Yqg5bel5ZKM5pyo44CB56u544CB6Jek44CB5qOV44CB6I2J5Yi25ZOB5LiaEjIxLeWutuWFt%2BWItumAoOS4mhgyMi3pgKDnurjlkoznurjliLblk4HkuJohMjMt5Y2w5Yi35ZKM6K6w5b2V5aqS5LuL5aSN5Yi25LiaMzI0LeaWh%2BaVmeOAgeW3pee%2BjuOAgeS9k%2BiCsuWSjOWoseS5kOeUqOWTgeWItumAoOS4mi0yNS3nn7PmsrnliqDlt6XjgIHngrznhKblkozmoLjnh4PmlpnliqDlt6XkuJonMjYt5YyW5a2m5Y6f5paZ5ZKM5YyW5a2m5Yi25ZOB5Yi26YCg5LiaEjI3LeWMu%2BiNr%2BWItumAoOS4mhgyOC3ljJblrabnuqTnu7TliLbpgKDkuJobMjkt5qmh6IO25ZKM5aGR5paZ5Yi25ZOB5LiaGzMwLemdnumHkeWxnuefv%2BeJqeWItuWTgeS4miczMS3pu5HoibLph5HlsZ7lhrbngrzlkozljovlu7bliqDlt6XkuJooMzIt5pyJ6Imy6YeR5bGe5Ya254K85ZKM5Y6L5bu25Yqg5bel5LiaIBIzMy3ph5HlsZ7liLblk4HkuJoYMzQt6YCa55So6K6%2B5aSH5Yi26YCg5LiaGDM1LeS4k%2BeUqOiuvuWkh%2BWItumAoOS4mhIzNi3msb3ovabliLbpgKDkuJo5Mzct6ZOB6Lev6Ii56Ii26Iiq56m66Iiq5aSp5ZKM5YW25LuW6L%2BQ6L6T6K6%2B5aSH5Yi26YCg5LiaITM4LeeUteawlOacuuaisOWSjOWZqOadkOWItumAoOS4mjMzOS3orqHnrpfmnLrjgIHpgJrkv6Hlkozlhbbku5bnlLXlrZDorr7lpIfliLbpgKDkuJoYNDAt5Luq5Zmo5Luq6KGo5Yi26YCg5LiaEjQxLeWFtuS7luWItumAoOS4mh40Mi3lup%2FlvIPotYTmupDnu7zlkIjliKnnlKjkuJoqNDMt6YeR5bGe5Yi25ZOB44CB5py65qKw5ZKM6K6%2B5aSH5L%2Bu55CG5LiaJDQ0LeeUteWKm%2BOAgeeDreWKm%2BeUn%2BS6p%2BWSjOS%2Bm%2BW6lOS4mhw0NS3nh4PmsJTnlJ%2FkuqflkozkvpvlupTkuJogGzQ2LeawtOeahOeUn%2BS6p%2BWSjOS%2Bm%2BW6lOS4mhI0Ny3miL%2FlsYvlu7rnrZHkuJoYNDgt5Zyf5pyo5bel56iL5bu6562R5LiaEjQ5LeW7uuetkeWuieijheS4miE1MC3lu7rnrZHoo4XppbDlkozlhbbku5blu7rnrZHkuJoMNTEt5om55Y%2BR5LiaDDUyLembtuWUruS4mhI1My3pk4Hot6%2Fov5DovpPkuJoSNTQt6YGT6Lev6L%2BQ6L6T5LiaEjU1LeawtOS4iui%2FkOi%2Bk%2BS4mhI1Ni3oiKrnqbrov5DovpPkuJoSNTct566h6YGT6L%2BQ6L6T5LiaITU4LeijheWNuOaQrOi%2FkOWSjOi%2FkOi%2Bk%2BS7o%2BeQhuS4mgw1OS3ku5PlgqjkuJoMNjAt6YKu5pS%2F5LiaDDYxLeS9j%2BWuv%2BS4mgw2Mi3ppJDppa7kuJotNjMt55S15L%2Bh44CB5bm%2F5pKt55S16KeG5ZKM5Y2r5pif5Lyg6L6T5pyN5YqhGzY0LeS6kuiBlOe9keWSjOebuOWFs%2BacjeWKoSE2NS3ova%2Fku7blkozkv6Hmga%2FmioDmnK%2FmnI3liqHkuJoVNjYt6LSn5biB6YeR6J6N5pyN5YqhFTY3Lei1hOacrOW4guWcuuacjeWKoQw2OC3kv53pmankuJoSNjkt5YW25LuW6YeR6J6N5LiaDzcwLeaIv%2BWcsOS6p%2BS4mgw3MS3np5%2FotYHkuJoSNzIt5ZWG5Yqh5pyN5Yqh5LiaGDczLeeglOeptuWSjOivlemqjOWPkeWxlRg3NC3kuJPkuJrmioDmnK%2FmnI3liqHkuJohNzUt56eR5oqA5o6o5bm%2F5ZKM5bqU55So5pyN5Yqh5LiaEjc2LeawtOWIqeeuoeeQhuS4miE3Ny3nlJ%2FmgIHkv53miqTlkoznjq%2FlooPmsrvnkIbkuJoYNzgt5YWs5YWx6K6%2B5pa9566h55CG5LiaEjc5LeWxheawkeacjeWKoeS4mjM4MC3mnLrliqjovabjgIHnlLXlrZDkuqflk4Hlkozml6XnlKjkuqflk4Hkv67nkIbkuJoSODEt5YW25LuW5pyN5Yqh5LiaCTgyLeaVmeiCsgk4My3ljavnlJ8PODQt56S%2B5Lya5bel5L2cFTg1LeaWsOmXu%2BWSjOWHuueJiOS4mjM4Ni3lub%2Fmkq3jgIHnlLXop4bjgIHnlLXlvbHlkozlvbHop4blvZXpn7PliLbkvZzkuJoSODct5paH5YyW6Im65pyv5LiaCTg4LeS9k%2BiCsgw4OS3lqLHkuZDkuJoYOTAt5Lit5Zu95YWx5Lqn5YWa5py65YWzDzkxLeWbveWutuacuuaehB45Mi3kurrmsJHmlL%2FljY%2FjgIHmsJHkuLvlhZrmtL4POTMt56S%2B5Lya5L%2Bd6ZqcMzk0Lee%2BpOS8l%2BWbouS9k%2BOAgeekvuS8muWbouS9k%2BWSjOWFtuS7luaIkOWRmOe7hOe7hxs5NS3ln7rlsYLnvqTkvJfoh6rmsrvnu4Tnu4cPOTYt5Zu96ZmF57uE57uHFWEAAjAxAjAyAjAzAjA0AjA1AjA2AjA3AjA4AjA5AjEwAjExAjEyAjEzAjE0AjE1AjE2AjE3AjE4AjE5AjIwAjIxAjIyAjIzAjI0AjI1AjI2AjI3AjI4AjI5AjMwAjMxAjMyAjMzAjM0AjM1AjM2AjM3AjM4AjM5AjQwAjQxAjQyAjQzAjQ0AjQ1AjQ2AjQ3AjQ4AjQ5AjUwAjUxAjUyAjUzAjU0AjU1AjU2AjU3AjU4AjU5AjYwAjYxAjYyAjYzAjY0AjY1AjY2AjY3AjY4AjY5AjcwAjcxAjcyAjczAjc0Ajc1Ajc2Ajc3Ajc4Ajc5AjgwAjgxAjgyAjgzAjg0Ajg1Ajg2Ajg3Ajg4Ajg5AjkwAjkxAjkyAjkzAjk0Ajk1Ajk2FCsDYWdnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dkZAIbDzwrABEDAA8WBB8HZx4LXyFJdGVtQ291bnQC1h1kARAWABYAFgAMFCsAABYCZg9kFhpmDw8WAh4MVGFibGVTZWN0aW9uCyopU3lzdGVtLldlYi5VSS5XZWJDb250cm9scy5UYWJsZVJvd1NlY3Rpb24AZGQCAQ9kFgxmDw8WAh4EVGV4dAUn5LiK5rW35qC85rS%2B5paw6IO95rqQ5oqA5pyv5pyJ6ZmQ5YWs5Y%2B4ZGQCAQ8PFgIfCwUJ5a6e5Lmg55SfZGQCAg8PFgIfCwUG5pys56eRZGQCAw8PFgIfCwUCMTBkZAIEDw8WAh8LBQoyMDE5LTAxLTIzZGQCBQ9kFgJmDxUBBTI2NzIzZAICD2QWDGYPDxYCHwsFJOS4iua1t%2Be7mOS6q%2Be9kee7nOenkeaKgOaciemZkOWFrOWPuGRkAgEPDxYCHwsFDOWuouacjeS4k%2BWRmGRkAgIPDxYCHwsFBumrmOiBjGRkAgMPDxYCHwsFAjEwZGQCBA8PFgIfCwUKMjAxOS0wMS0yMmRkAgUPZBYCZg8VAQUyNjcyMmQCAw9kFgxmDw8WAh8LBSTkuIrmtbfnu5jkuqvnvZHnu5znp5HmioDmnInpmZDlhazlj7hkZAIBDw8WAh8LBRxKYXZh5bel56iL5biI77yI55So5oi356uv77yJZGQCAg8PFgIfCwUG5LiT56eRZGQCAw8PFgIfCwUBNWRkAgQPDxYCHwsFCjIwMTktMDEtMjJkZAIFD2QWAmYPFQEFMjY3MjFkAgQPZBYMZg8PFgIfCwUk5LiK5rW357uY5Lqr572R57uc56eR5oqA5pyJ6ZmQ5YWs5Y%2B4ZGQCAQ8PFgIfCwUlSmF2YeW3peeoi%2BW4iO%2B8iOWFrOWPuOWQjuWPsOezu%2Be7n%2B%2B8iWRkAgIPDxYCHwsFBuacrOenkWRkAgMPDxYCHwsFATVkZAIEDw8WAh8LBQoyMDE5LTAxLTIyZGQCBQ9kFgJmDxUBBTI2NzIwZAIFD2QWDGYPDxYCHwsFJOS4iua1t%2Be7mOS6q%2Be9kee7nOenkeaKgOaciemZkOWFrOWPuGRkAgEPDxYCHwsFEuekvuWMuuS6p%2BWTgei%2FkOiQpWRkAgIPDxYCHwsFBuS4jemZkGRkAgMPDxYCHwsFATVkZAIEDw8WAh8LBQoyMDE5LTAxLTIyZGQCBQ9kFgJmDxUBBTI2NzE5ZAIGD2QWDGYPDxYCHwsFJOS4iua1t%2Be7mOS6q%2Be9kee7nOenkeaKgOaciemZkOWFrOWPuGRkAgEPDxYCHwsFEuWGheWuueetluWIkue8lui%2BkWRkAgIPDxYCHwsFBuacrOenkWRkAgMPDxYCHwsFATVkZAIEDw8WAh8LBQoyMDE5LTAxLTIyZGQCBQ9kFgJmDxUBBTI2NzE4ZAIHD2QWDGYPDxYCHwsFJOS4iua1t%2Be7mOS6q%2Be9kee7nOenkeaKgOaciemZkOWFrOWPuGRkAgEPDxYCHwsFDOWfjuW4gui%2FkOiQpWRkAgIPDxYCHwsFBuS4jemZkGRkAgMPDxYCHwsFATVkZAIEDw8WAh8LBQoyMDE5LTAxLTIyZGQCBQ9kFgJmDxUBBTI2NzE3ZAIID2QWDGYPDxYCHwsFJOS4iua1t%2Be7mOS6q%2Be9kee7nOenkeaKgOaciemZkOWFrOWPuGRkAgEPDxYCHwsFDOekvuWMuui%2FkOiQpWRkAgIPDxYCHwsFBuS4jemZkGRkAgMPDxYCHwsFATVkZAIEDw8WAh8LBQoyMDE5LTAxLTIyZGQCBQ9kFgJmDxUBBTI2NzE2ZAIJD2QWDGYPDxYCHwsFJOS4iua1t%2Be7mOS6q%2Be9kee7nOenkeaKgOaciemZkOWFrOWPuGRkAgEPDxYCHwsFG%2BeUqOaIt%2Bi%2FkOiQpe%2B8iOWfjuW4guerr%2B%2B8iWRkAgIPDxYCHwsFBuacrOenkWRkAgMPDxYCHwsFATVkZAIEDw8WAh8LBQoyMDE5LTAxLTIyZGQCBQ9kFgJmDxUBBTI2NzE1ZAIKD2QWDGYPDxYCHwsFJOS4iua1t%2Be7mOS6q%2Be9kee7nOenkeaKgOaciemZkOWFrOWPuGRkAgEPDxYCHwsFEzIwMTnov5DokKXnrqHln7nnlJ9kZAICDw8WAh8LBQbmnKznp5FkZAIDDw8WAh8LBQIxMGRkAgQPDxYCHwsFCjIwMTktMDEtMjJkZAIFD2QWAmYPFQEFMjY3MTRkAgsPDxYCHwFoZGQCDA8PFgIfCgsrBAJkFgJmD2QWAmYPFQIBMgMzODBkAgMPFgIfAAUjYmFja2dyb3VuZC1jb2xvcjojMDM5YTc5IWltcG9ydGFudDtkGAEFHGN0bDAwJGNvbnRlbnQkR3ZQb3NpdGlvbkxpc3QPPCsADAICAgEIAvwCZCZOASR%2FH6CNvfyIRnnwgW6jz4OZlAOHwSdlL%2BYqJe4a&__VIEWSTATEGENERATOR=EC077B4A&__EVENTVALIDATION=%2FwEdAMUB2n6MMD7w3%2FnnIqtwrNNpR%2BHREkc2Y2s%2F%2BEYUbNYcHhtG5gs%2BCXbTVRtygopxTWNDfFd6WnOXNmvs9fCydhUTxVQQ%2B%2Bg7wpCxVsifssUJ3uN9%2Bu%2Fwsldyoe0QDu4KIaYN4QGX%2FDpYJt3RFo9mL2m2%2BjX1x73PeLKasA5YAi2Cvqeibia7q6EEdEc7xWgdCpuODpBjv9fuM9y4iJ6IX4agwUwWxidjMzey%2BRMtyMyMIk%2BJRK4S94pHWQoWyeWz%2BdKVfJfGnhftP2x90%2BI4w3Y2dP8CGlNsGlUffhJ%2Bg3QxwKEH57gaV%2FamNll24PROyRYYbLqHsIpx8Q%2FsZvPzTKRgUJz6jIWwpHOOJ06L9SgQhgRfM3fpAs4%2F4mme15A%2BCGKBkzFM9EaH3oedH9ogXQQU%2BgNMXKBUychs6h1SUw7I%2B0umkrBzLsGJtwA2GCGyQQUEloUhlyMQIW5lnXdUGHrM1y9%2BtvQFJPfG6vFtkUTY%2FH2vcaTjVDFBmQuNQ%2FpXBezimNbxA7OeARsrK4IhVd4szYWc7QbIiU23ohcGDTycsZTgRvSCgw3RLZf9Q80c%2FrwP4%2FkcQHHik3Fl1%2Fp3%2BC3z96AKRSM87SqK9DJVzDTXFH%2BztagX7z3lDQXVLyzdemwpH%2B4MU0q64VylkeX%2FC0y%2BqsDxX38uJjBRhStfHb1gEcJlNrsQzWUgxhGc%2BnVfygcxisRc4rWpMa4BdsUW4n2A4CQr1gcsSwmnMWl%2FWsx8RFzx8c%2FlfRZhIi5iGzuhRsKrJ8LKUHo4sSHumwQ1tIWJvVtg9kwj3vyp01h6EVt83DO1s8eBADxWfzK7paZS%2BdkTpfWSKaXYBTVmpLDzuA%2FRZbgEd9fAlN%2BE2FK%2BLxgNXL0XWm2jEciRKVqucgo4%2BDaLai7P6PUNqP4LQng%2FSTUmoNTVHu23eQGvVes8Qarf8DtYEnU7G8cEVlh4qId0TlTan2HuBnd4OToAdogKOs4AU8HxuDDywx%2ByBkC4PXtyckrzbzQy8R8y1EliqMnS3Xf3m5EuAO%2BP0JJE587AChCNIzeODg%2BUzjTyU3EBRbDS%2BXWY5G8%2FeF%2BI%2FUJavTAo1sGvGmA4IE8NXzfuFFwAhFgcpf2vXiB960trnf62JZvYmd1lupBco4CwCiKsyeQX0enMjcec%2FZhW%2B%2BQipq9m%2BFrplu3kS6EorYPPlwkJfYI5a1ye2QE775JCyrUMoBoqo6gfTfZ%2B1z041uiJPEf7KZOuzjBlh193%2BY%2F1XeeqcA2Kven4DUlcBc1Y73WsC%2BGv%2FqcviQGVwHcOXsavippuZr63wJb14Uxb0rmv3dIFeysGzfdhZnn9%2Fpft0T%2B%2FFvEYmRXCsYFhg2y%2F5Ads7fCEqFG6zdkZHqzv7kIwDQPPrZ9huvdrTh1l8objD5ajGSVFBZdGps4thugkmoIJX8s%2FqHlurBOwpVk1tMMqdibtsPUHYd%2B1OzrmDaDGMg6JoGh6GMR%2FEWBAz%2FX5px7mm6ry%2Bpjnx7R1XurNvzeWdjVePHSV7XfseV9opvIuTkxRgPI5VbHXYm%2Flf52PpAq%2FpH3OjItggZC88TWzlPmIPEjCY3iQ1IGs0EBG6FAZL%2F82p26z51qJ8yQf1zzcN5ucfp2AouGh278jOy70bvCj1ffgwluW0ZxC5%2FtBr62Rnwb7cMxYwz6AYU5jsZiazkdo5CYY7pZ8uQdUQW%2FOptNlkEeJfzx%2BE6dPSMHdl9%2BYdzkEU65K%2Boxf9drPsmR158Wso7dHLlRx43%2FXgAGnqOByNaQib8EHJh31ROWsagwwXlwlxfAmvFWk8vq1WG1kPtVp42S80v4ywwpx7H4VdcHZd2veHLOTbg3mzycFmJ7DloQfjyGWNwF0v2NY01ASQbYsRXJF2QfSkijejdZu9HXboTwobE0DBqbD82kzuLExHiEisjDp2HAwyl0pewjctBglX%2FNQfXtLd%2BA2bzyw208Ou%2FaFpNkpA9xyo7USeeKJHq35ou8FAf%2BwYNIV%2FHMmf3VTsLPFrX0ZLgVtOPvNTFoewNf8i2g%2Bd1MpmsHG5saTbNYqavCtRwQNEhn%2BR%2BZwNTobzDwGHWSIBkr4DsNtk9szkDcMRrVmOtUE1GbIFLXplSdKxhEkAvsdqmOPOD1pnSTKct5uqmLxvdkhgAqQFWi7NG2SETAVk7Mv8DGL2YfWR%2B2IwQkB0V7Ozm%2BjBmmoXiP9d1EF5geH4iw%2FQ5rJJnGJdAMsPGVmqI5WUWgPkNBnwrwfe0ZN1dlWVrUUQ7t6kI4bA9ZHTwjKvkwM7GOtUJeQglnwxcCrnsKQKjR7mTAL0qovZD4%2BSDqdnqvo%2FGCshMHv%2BiIt7ORQe%2F3IEQDHsSEv8lKBgB3Tari0nO8pce9Y5Lu6sbghTlBf3BY0xW%2FFHOjhG0Pu9ek4MFL7IJ8JHoaZhX2X9Z5P8WGiXXWxtrUOcSPZix26zBYMpgcgPhGcPL0Gw0QmMaHIp5RbyP93Q5a641y0ATt9XbVC05PKf23AQjLSUh0rRJG0NU4SDum1A8a36MN%2FAzuPTTMuZLnXliNIKXNw4jafgxlE9DDqoXIJ992HA%2FDkjoQSqIcNa%2FZ8ilETWyWhtQdoUbpMd23XIXI73BjEjXF17gRniGSaehB89%2FGaj8WCzpV4n7aGhKFU1N%2BGUgbifVZQH0sHMJHgQcrc8fI%2BLCvCK3%2FOcZ64sQ0Mbzdd1c42yrWKcXeRr9e59dOKJMjwNK1cMYrQQNwTzBvLB6Ofh9ZeelnruuufMLdGMmq4YoLJUFbo1FXVt45Dcbsx7B57x2r0iI0nbBaRZDV0hvk7SBpKDckSU6UX8ILK935s2rOz%2B7pHkpo3mauSPIJgnhJdjblOX1bkiIq2p2jhF3%2FLZW0KQdRcLsBznGP2zQBK0laR4um6zKZZbFz1t66TMAFUWvejdnFiugLRWckzjFyJEqSsJ8e8o1EdcmKng4S%2FoGJ3vexmwPIYNesSK6RXJft9lIsmZMYih1eIM58oh1AvhBzi3RXBlYw%2FKMgRyxidyF26k2XieI02JOCaPHXqXvgwn1y1ztOMOdExKN02klD5NSMBPGya9IC4o8sbsxSw4Mf8JFhYZ3vuPQnAWjyHKQ9HfiF8IslexUAOY8Rsj7J9d0XJ2NjuK1%2Fg9L7qstldl9%2FHPwoB5LyEkZXVQjjaphxA%2FUIkzMyw4NVDful3dIDeuzEx27qTUr5X1b%2FQWoQSq8vsEOIYc8z%2FXQPOaYbC508p%2FM4fiOe%2F34OLLyIN9ai323QNC9zalHcD5GfYdfemKJI%2BnCmSKk%2B3e0LeryYeFrI5CtOruaoeeBDAH9HD7wZHWAUiy6Z4tvs0htRNFZI4eER9l6NdvD2LZGfPoFiIQkNtppwTusGeyIapbOYUpu0r%2B1FNXG1qTUB%2FBmy92FEkMhqbvkgP%2BjREQxYw58BsR6eXBeZL51ba621xRWwfNeoNLGhwKGjZrKpgnBcDe9KaOegLmiiq6P949ha0kAYUDDvsabaHfERAHFtl0NP1H%2B0DRbjUaEzCI3nHd2RKu%2FLxvZ9erW0azjijfI3KmYyYqCaz83QvADP5Jea6Qg%2FyzzWo4SYza6YCRJ3THQCYJESmDXbwixR1%2BS0ftZ2mc%2Bi%2BuGlpOreyMIUSnToAGmYewTLVDlCPgLhxhoT6%2BllhAu3pkbqBNRI9JWvXK7%2B7QpWZ3DZ5hfBt5RsqhJs%2BIHobni4ADu%2F2%2F9m%2BvC4U8bxgFz0bY%2FuUAeda%2FrbZKXHOkYsSQkKKSA8RZP9Rt4U8ssSQrYnoNdbo2lVI%2B3Gmi%2BdyftYTkb5kHHnQNop%2Fljb%2Bc1dDKg4i0UlO0ZHBHnPWgpx691pfWkQE88f5AWcjHvucXlymBR5%2BOFKLGIB%2F%2BkYAPJ1Jl9iG3WP725fAowj1XY117xFWFsnXaa6z8KJl543R87irwwrCJuw9Rmixip6BgYSmOUpn0NyzpHzOGjlvPXVxfNvzClY%2BrdIsLzokNZFeR3IH6auKLTNUCFnQp11UyQNGAujUoJYuRDCR4EZYMBqA6mA%2BQg3HJbCaM8j4wCR%2BT1mMTikS2MdVONZBWmuPa9DU7txWS4Kga8Etg95JJpIMdLE0aByN7vtktEqqvDkP3wT2kNBOpts52Nr8fmemxUNJrhyvo%2FinUBNh4qxXP%2B2IgnAjFrMc0HWX8zFuQsZfslFVl%2FY6GbXs5cKi0XK5unSnLw0OVnUba8hZlC2281BYTFMUJSFiI9Q3bhHU5CwmBQtqNds6vI6Jpqp6mPaNpKJvtnmMa6Yjkw%3D%3D&__ASYNCPOST=true&'
+#         data = body.format(page=i)
+#         response = requests.post(start_url, data=data)
+#         # print(response.text)
+#         html = HTML(response.text)
+#         url_list = html.xpath('//table[@id="content_GvPositionList"]//tr/td[6]/a/@href')
+#         for url in url_list:
+#             link = 'http://91.usst.edu.cn'+url
+#             print(link)
+#
+#
+#
+#
+# if __name__ == '__main__':
+#     with open('岗位信息.csv','w',encoding='gbk') as f:
+#         f.write('企业名称,企业地点,岗位名称,工作类型,岗位职责,薪资水准\n')
+#     start()
+
+
+
+
+from selenium import  webdriver
+from lxml.etree import HTML
+import time
+driver = webdriver.Chrome()
+driver.get('http://91.usst.edu.cn/PositionList.aspx/')
+# print(driver.page_source)
+html = HTML(driver.page_source)
+url_list = html.xpath('//table[@id="content_GvPositionList"]//tr/td[6]/a/@href')
+print(url_list)
+for url in url_list:
+    link = 'http://91.usst.edu.cn'+url
+    print(link)
+    with open('url.txt','a') as f:
+        f.write(link+'\n')
+
+
+
+for i in range(380):
+    time.sleep(2)
+    driver.find_element_by_css_selector('#content_GvPositionList_btnNext').click()
+    time.sleep(2)
+    html = HTML(driver.page_source)
+    url_list = html.xpath('//table[@id="content_GvPositionList"]//tr/td[6]/a/@href')
+    print(url_list)
+    # print(driver.page_source)
+    for url in url_list:
+        link = 'http://91.usst.edu.cn' + url
+        print(link)
+        with open('url.txt', 'a') as f:
+            f.write(link + '\n')
