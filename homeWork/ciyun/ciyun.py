@@ -45,14 +45,14 @@ from lxml.etree import HTML
 #         f.write(conten)
 
 
-text = open("b.txt", "rb").read()
+text = open("mytxt.txt", "rb").read()
 # 结巴分词
 wordlist = jieba.cut(text, cut_all=True)
 wl = " ".join(wordlist)
 
 d = path.dirname(__file__)
 
-alice_mask = np.array(Image.open(path.join(d, "tupian.jpeg")))
+alice_mask = np.array(Image.open(path.join(d, "china.jpg")))
 # 设置词云
 wc = WordCloud(background_color="white",  # 设置背景颜色
                mask = alice_mask,  #设置背景图片
