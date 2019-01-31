@@ -89,7 +89,9 @@ def get_index(keywords,city):
         if id in id_list:
             continue
         else:
-            get_detail(id)
+            # get_detail(id)
+            with open('allid.csv','a') as f:
+                f.write(id+'\n')
             id_list.append(id)
 
     #翻页
@@ -105,7 +107,9 @@ def get_index(keywords,city):
             if id in id_list:
                 continue
             else:
-                get_detail(id)
+                # get_detail(id)
+                with open('allid.csv', 'a') as f:
+                    f.write(id + '\n')
                 id_list.append(id)
 
 def start():
