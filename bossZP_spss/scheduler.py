@@ -25,10 +25,17 @@ class Scheduler(object):
         self.redisClient = RedisClient()
 
     def run(self):
-        #self.get_qu()
-        #self.get_zhen()
+
         # self.push_url_to_redis()
-        self.get_position()
+
+        flag = True
+        while flag:
+            redis_len =  self.redisClient.llen('employment')
+            print('redis队列长度：' + str(redis_len))
+            if redis_len > 0:
+                self.get_position()
+            else:
+                flag = False
 
     def get_qu(self):
         sql = 'select * from shi'
@@ -238,7 +245,9 @@ class Scheduler(object):
 
         for res in shi_results:
             pid = res[2]
-            NEW_POSITION_URL = 'https://www.zhipin.com/job_detail/?query=%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%B8%88&scity={pid}&industry=&position='
-            url = NEW_POSITION_URL.format(pid=pid)
-            url_obj = {"url":url, "cityId":pid, 'zhiweiId':'1'}
-            self.redisClient.push('employment', json.dumps(url_obj))
+            # NEW_POSITION_URL = 'https://www.zhipin.com/job_detail/?query=%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%B8%88&scity={pid}&industry=&position='
+            for i in range(1,11):
+                NEW_POSITION_URL = 'https://www.zhipin.com/c{pid}/?query=%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%B8%88&page={pageToken}&ka=page-{pageToken}'
+                url = NEW_POSITION_URL.format(pid=pid,pageToken=i)
+                url_obj = {"url":url, "cityId":pid, 'zhiweiId':'1'}
+                self.redisClient.push('employment', json.dumps(url_obj))
