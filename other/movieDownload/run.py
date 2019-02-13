@@ -13,7 +13,8 @@ headers = {
     'Accept-Language': "zh-CN,zh;q=0.9",
     'Cache-Control': "no-cache",
     'Connection': "keep-alive",
-    'Cookie': "ASP.NET_SessionId=gvj5dbb0z2xjhpkdarkdowkv; UM_distinctid=168dfc3f82d103-01fd5b1b82ab77-10376654-1fa400-168dfc3f82e1fe; LoginInfo=userEmail=546094038@qq.com&userName=zrx2011&userpass=72511; CNZZDATA1000377994=227412378-1549942388-%7C1549960452",
+    # 'Cookie': "ASP.NET_SessionId=gvj5dbb0z2xjhpkdarkdowkv;",
+              # "ASP.NET_SessionId=gvj5dbb0z2xjhpkdarkdowkv; UM_distinctid=168dfc3f82d103-01fd5b1b82ab77-10376654-1fa400-168dfc3f82e1fe; LoginInfo=userEmail=546094038@qq.com&userName=zrx2011&userpass=72511; CNZZDATA1000377994=227412378-1549942388-%7C1550018383; "
     'Host': "www.lavafox.com",
     'Pragma': "no-cache",
     'Upgrade-Insecure-Requests': "1",
@@ -35,6 +36,30 @@ def read_txt():
             item_list.append(obj)
     return item_list
 
+def login():
+    global headers
+    print('正在登录。。')
+
+    headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+    headers['X-Requested-With'] = 'XMLHttpRequest'
+
+    url = 'https://www.lavafox.com/Handler/register-form.ashx'
+    body = 'qlemail=546094038@qq.com&action=valid_email&email=546094038@qq.com'
+    response = requests.post(url, headers=headers, data=body, timeout=15)
+    mycookie = response.cookies.get_dict()
+    NET_SessionId = mycookie['ASP.NET_SessionId']
+    print(NET_SessionId)
+    print(response.text)
+    headers['Cookie'] = 'ASP.NET_SessionId='+NET_SessionId
+
+
+    body = 'action=login&lemail=546094038@qq.com&lpwd=682565&lrme=0'
+    response = requests.post(url, headers=headers, data=body, timeout=15)
+    print(response.text)
+    del headers['Content-Type']
+    del headers['X-Requested-With']
+#     用户名546094038@qq.com
+# 密码682565
 
 def get_words(item):
     print('\n正在处理单词。。')
@@ -134,6 +159,7 @@ def get_sentences(item):
         urllib.request.urlretrieve(audio_url, LocalPath)
 
 def start(item):
+    login()
     get_words(item)
     get_sentences(item)
     get_movies(item)
