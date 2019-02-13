@@ -80,8 +80,8 @@ def get_words(item):
         english = article.xpath('string(.//div[@style="font-size:16px;color:#333;"]/a/text())').strip()
         chinese = article.xpath('string(.//div[@class="post-content"]/div[last()]/text())').strip()
         english_chinese = english+chinese
-        # audio_url = 'https://www.lavafox.com/'+article.xpath('string(.//div[@style="font-size:16px;color:#333;"]//source/@src)').strip()
-        audio_url = 'https://www.lavafox.com/'+article.xpath('string(.//audio/source/@src)').strip()
+        audio_url = 'https://www.lavafox.com/'+article.xpath('string(.//div[@style="font-size:16px;color:#333;"]//source/@src)').strip()
+        # audio_url = 'https://www.lavafox.com/'+article.xpath('string(.//audio/source/@src)').strip()
         print(word)
         print(yinbiao)
         print(content)
@@ -96,11 +96,13 @@ def get_words(item):
 
         #下载音频
 
-        fileName = re.search('https://www.lavafox.com/images/(sound|mp3)/(.*?).mp3',audio_url).group(2)
-        fileName = fileName + '.mp3'
-        print('正在下载单词音频：'+fileName)
-        LocalPath = os.path.join('audio', fileName)
-        urllib.request.urlretrieve(audio_url, LocalPath)
+        fileName = re.search('https://www.lavafox.com/images/(sound|mp3)/(.*?).mp3',audio_url)
+        if fileName:
+            fileName = fileName.group(2)
+            fileName = fileName + '.mp3'
+            print('正在下载单词音频：'+fileName)
+            LocalPath = os.path.join('audio', fileName)
+            urllib.request.urlretrieve(audio_url, LocalPath)
 
 def get_movies(item):
     print('\n正在处理视频。。')
