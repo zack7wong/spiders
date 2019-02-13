@@ -159,7 +159,6 @@ def get_sentences(item):
         urllib.request.urlretrieve(audio_url, LocalPath)
 
 def start(item):
-    login()
     get_words(item)
     get_sentences(item)
     get_movies(item)
@@ -175,6 +174,8 @@ if __name__ == '__main__':
     with open('sentences.csv', 'w', encoding='gbk') as f:
         f.write('链接,英文句子,中文解释,出处,音频地址\n')
 
+
+    login()
     item_list = read_txt()
     for item in item_list:
         start(item)
