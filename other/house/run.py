@@ -64,7 +64,6 @@ def start():
         start_url = 'http://hu.tmsf.com/newhouse/property_searchall.htm'
         body = 'keytype=1&keyword=&sid=330500&districtid=&areaid=&dealprice=&propertystate=&propertytype=&ordertype=&priceorder=&openorder=&page={pageToken}&bbs='
         mydata = body.format(pageToken=i)
-        print(mydata)
 
         response = requests.post(start_url,headers=headers, data=mydata)
         # print(response.text)
