@@ -7,6 +7,24 @@ import re
 
 numberDIC = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8','nine':'9','zero':'0','dor':'.',}
 
+headers = {
+    'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+    'Accept-Encoding': "gzip, deflate",
+    'Accept-Language': "zh-CN,zh;q=0.9",
+    'Cache-Control': "no-cache",
+    'Connection': "keep-alive",
+    'Content-Length': "136",
+    'Content-Type': "application/x-www-form-urlencoded",
+    'Cookie': "Hm_lvt_8db7cb1b4649ef76847e460b7e13171c=1549873241; UM_distinctid=168dba4db4c43b-01069eeb2606ed-10376654-1fa400-168dba4db4d267; JSESSIONID=E979465F5BC0706F1B759F5767B4B0F4; CNZZDATA1253675216=1932841714-1549868380-%7C1550106978; Hm_lpvt_8db7cb1b4649ef76847e460b7e13171c=1550112030",
+    'Host': "hu.tmsf.com",
+    'Origin': "http://hu.tmsf.com",
+    'Pragma': "no-cache",
+    'Referer': "http://hu.tmsf.com/newhouse/property_searchall.htm",
+    'Upgrade-Insecure-Requests': "1",
+    'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36",
+    'cache-control': "no-cache",
+}
+
 def deal_num(mylist):
     res = ''
     for item in mylist:
@@ -45,8 +63,10 @@ def start():
         print('目录页当前页：'+str(i))
         start_url = 'http://hu.tmsf.com/newhouse/property_searchall.htm'
         body = 'keytype=1&keyword=&sid=330500&districtid=&areaid=&dealprice=&propertystate=&propertytype=&ordertype=&priceorder=&openorder=&page={pageToken}&bbs='
+        mydata = body.format(pageToken=i)
+        print(mydata)
 
-        response = requests.get(start_url,data=body.format(pageToken=i))
+        response = requests.post(start_url,headers=headers, data=mydata)
         # print(response.text)
 
         html = HTML(response.text)
