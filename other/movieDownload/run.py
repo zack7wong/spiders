@@ -6,6 +6,8 @@ from lxml.etree import HTML
 import urllib
 import re
 import os
+from urllib.parse import quote
+
 
 headers = {
     'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
@@ -80,7 +82,8 @@ def get_words(item):
         english = article.xpath('string(.//div[@style="font-size:16px;color:#333;"]/a/text())').strip()
         chinese = article.xpath('string(.//div[@class="post-content"]/div[last()]/text())').strip()
         english_chinese = english+chinese
-        audio_url = 'https://www.lavafox.com/'+article.xpath('string(.//div[@style="font-size:16px;color:#333;"]//source/@src)').strip()
+        download_audio_name = article.xpath('string(.//div[@style="font-size:16px;color:#333;"]//source/@src)').strip()
+        audio_url = 'https://www.lavafox.com/'+ quote(download_audio_name)
         # audio_url = 'https://www.lavafox.com/'+article.xpath('string(.//audio/source/@src)').strip()
         print(word)
         print(yinbiao)
@@ -96,7 +99,7 @@ def get_words(item):
 
         #下载音频
 
-        fileName = re.search('https://www.lavafox.com/images/(sound|mp3)/(.*?).mp3',audio_url)
+        fileName = re.search('images/(sound|mp3)/(.*?).mp3', download_audio_name)
         if fileName:
             fileName = fileName.group(2)
             fileName = fileName + '.mp3'
@@ -144,7 +147,10 @@ def get_sentences(item):
         english = article.xpath('string(.//h2/a/text())').strip()
         chinese = article.xpath('.//div[@class="post-content"]/p/text()')
         chinese = ''.join(chinese).strip()
-        audio_url = 'https://www.lavafox.com/' + article.xpath('string(.//audio/source/@src)').strip()
+
+        download_audio_name = article.xpath('string(.//audio/source/@src)').strip()
+        audio_url = 'https://www.lavafox.com/' + quote(download_audio_name)
+
         print(english)
         print(chinese)
         # print(audio_url)
@@ -156,7 +162,7 @@ def get_sentences(item):
 
         # 下载句子音频
         # fileName = re.search('https://www.lavafox.com/images/sound/(.*?).mp3', audio_url).group(1)
-        fileName = re.search('https://www.lavafox.com/images/(sound|mp3)/(.*?).mp3', audio_url).group(2)
+        fileName = re.search('images/(sound|mp3)/(.*?).mp3', download_audio_name).group(2)
         fileName = fileName + '.mp3'
         print('正在下载句子音频：' + fileName)
         LocalPath = os.path.join('audio', fileName)
