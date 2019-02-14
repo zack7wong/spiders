@@ -9,6 +9,8 @@ import copy
 from hashlib import md5
 from urllib.parse import quote
 
+USE_PROXY = True
+
 proxies = {
     'http':'http://127.0.0.1:1087',
     'https':'http://127.0.0.1:1087',
@@ -82,7 +84,10 @@ def doing(seccode,headers,link,mycomment):
     print(seccode)
     # 请求换一张图片
     update_img_url = 'https://forum.cyberctm.com/misc.php?mod=seccode&action=update&idhash=' + seccode
-    update_response = requests.get(update_img_url, headers=headers, proxies=proxies, timeout=10)
+    if USE_PROXY:
+        update_response = requests.get(update_img_url, headers=headers, proxies=proxies, timeout=10)
+    else:
+        update_response = requests.get(update_img_url, headers=headers,timeout=10)
     update_response_CookieDic = update_response.cookies.get_dict()
     cookieStr = headers['Cookie']
     cookieStr = replace_cooke(cookieStr, update_response_CookieDic)
@@ -91,7 +96,10 @@ def doing(seccode,headers,link,mycomment):
     # 请求并保存图片
     img_url = 'https://forum.cyberctm.com/' + re.search('src="(misc.php.*?)"', update_response.text).group(1)
     # print(img_url)
-    img_reponse = requests.get(img_url, headers=headers, proxies=proxies, timeout=10)
+    if USE_PROXY:
+        img_reponse = requests.get(img_url, headers=headers, proxies=proxies, timeout=10)
+    else:
+        img_reponse = requests.get(img_url, headers=headers, timeout=10)
     img_reponse_CookieDic = img_reponse.cookies.get_dict()
     cookieStr = headers['Cookie']
     cookieStr = replace_cooke(cookieStr, img_reponse_CookieDic)
@@ -110,7 +118,10 @@ def doing(seccode,headers,link,mycomment):
 
     # check 验证码
     check_url = 'https://forum.cyberctm.com/misc.php?mod=seccode&action=check&inajax=1&modid=forum::viewthread&idhash={seccode}&secverify={captcha_res}'
-    check_response = requests.get(check_url, headers=headers, proxies=proxies, timeout=10)
+    if USE_PROXY:
+        check_response = requests.get(check_url, headers=headers, proxies=proxies, timeout=10)
+    else:
+        check_response = requests.get(check_url, headers=headers, timeout=10)
     check_response_CookieDic = check_response.cookies.get_dict()
     cookieStr = headers['Cookie']
     cookieStr = replace_cooke(cookieStr, check_response_CookieDic)
@@ -125,8 +136,11 @@ def doing(seccode,headers,link,mycomment):
 
     headers['Content-Type'] = "application/x-www-form-urlencoded"
     headers['Content-Length'] = str(len(data))
-    response = requests.post(reply_url, headers=headers, data=data, proxies=proxies, timeout=10)
-    # print(response.text)
+    if USE_PROXY:
+        response = requests.post(reply_url, headers=headers, data=data, proxies=proxies, timeout=10)
+    else:
+        response = requests.post(reply_url, headers=headers, data=data,timeout=10)
+    print(response.text)
     if '非常感謝，回覆發佈成功' in response.text:
         print('发布成功！')
     elif '抱歉，您兩次發表間隔少於 10 秒，請稍候再發表' in response.text:
@@ -143,7 +157,10 @@ def doing(seccode,headers,link,mycomment):
 
 def setComment(link,mycomment):
     headers = copy.deepcopy(start_headers)
-    detail_response = requests.get(link, headers=headers, proxies=proxies, timeout=10)
+    if USE_PROXY:
+        detail_response = requests.get(link, headers=headers, proxies=proxies, timeout=10)
+    else:
+        detail_response = requests.get(link, headers=headers, timeout=10)
     # 处理获取返回的cookie
     deatail_response_CookieDic = detail_response.cookies.get_dict()
     cookieStr = headers['Cookie']
@@ -167,7 +184,11 @@ def setComment(link,mycomment):
         print('第一次发布，无验证码，正在处理')
         headers['X-Requested-With'] = 'XMLHttpRequest'
         check_url = 'https://forum.cyberctm.com/forum.php?mod=ajax&action=checkpostrule&inajax=yes&ac=reply'
-        check_response = requests.get(check_url, headers=headers, proxies=proxies, timeout=10)
+        if USE_PROXY:
+            check_response = requests.get(check_url, headers=headers, proxies=proxies, timeout=10)
+        else:
+            check_response = requests.get(check_url, headers=headers, timeout=10)
+
         check_response_CookieDic = check_response.cookies.get_dict()
         cookieStr = headers['Cookie']
         cookieStr = replace_cooke(cookieStr, check_response_CookieDic)
@@ -213,7 +234,10 @@ def setComment(link,mycomment):
 def start():
     pageToken = 1
     start_url = 'https://forum.cyberctm.com/home.php?mod=space&uid=503430&do=thread&view=me&order=dateline&page='+str(pageToken)
-    response = requests.get(start_url, headers=start_headers, proxies=proxies)
+    if USE_PROXY:
+        response = requests.get(start_url, headers=start_headers, proxies=proxies)
+    else:
+        response = requests.get(start_url, headers=start_headers)
     # print(response.text)
     html = HTML(response.text)
 
