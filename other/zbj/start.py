@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
+
 import requests
 from lxml.etree import HTML
 import re
+
 
 def parse_detail(response):
     html = HTML(response.text)
