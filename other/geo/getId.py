@@ -65,11 +65,14 @@ def get_detail(id):
 
 if __name__ == '__main__':
     item_list = []
-    with open('结果.csv',encoding='gbk') as f:
-        results = f.readlines()
-        for res in results:
-            id = res.split(',')[0]
-            item_list.append(id)
+    try:
+        with open('结果.csv',encoding='gbk') as f:
+            results = f.readlines()
+            for res in results:
+                id = res.split(',')[0]
+                item_list.append(id)
+    except:
+        pass
 
     id_list = []
     with open('allid.csv') as f:
