@@ -99,6 +99,7 @@ def get_index(keywords,city):
         print('当前页'+str(i))
         start_url = 'http://restapi.amap.com/v3/place/text?&keywords={keywords}&city={city}&output=json&offset=20&page={pageToken}&key=3def748c5207f7a190b67df5f4633673&extensions=all'
         url = start_url.format(keywords=keywords, city=city, pageToken=i)
+        # print(url)
         response = requests.get(url)
         json_obj = json.loads(response.text)
 
@@ -108,6 +109,7 @@ def get_index(keywords,city):
                 continue
             else:
                 # get_detail(id)
+                print(id)
                 with open('allid.csv', 'a') as f:
                     f.write(id + '\n')
                 id_list.append(id)

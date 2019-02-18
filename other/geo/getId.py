@@ -20,7 +20,7 @@ def get_detail(id):
 
     url = start_url.format(id=id)
     print(url)
-    response = requests.get(url,headers=headers)
+    response = requests.get(url,headers=headers,verify=False)
     # response = requests.get(url)
     json_obj = json.loads(response.text)
     print(response.text)
