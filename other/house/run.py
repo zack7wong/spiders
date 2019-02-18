@@ -4,6 +4,7 @@
 import requests
 from lxml.etree import HTML
 import re
+import time
 
 numberDIC = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8','nine':'9','zero':'0','dor':'.',}
 
@@ -59,7 +60,7 @@ def parse_detail(url,title,address,response):
             f.write(save_res)
 
 def start():
-    for i in range(1,100):
+    for i in range(1,100): #22
         print('目录页当前页：'+str(i))
         start_url = 'http://hu.tmsf.com/newhouse/property_searchall.htm'
         body = 'keytype=1&keyword=&sid=330500&districtid=&areaid=&dealprice=&propertystate=&propertytype=&ordertype=&priceorder=&openorder=&page={pageToken}&bbs='
@@ -68,7 +69,8 @@ def start():
         try:
             response = requests.post(start_url,headers=headers, data=mydata,timeout=10)
         except:
-            print('超时错误')
+            print('超时错误，暂停5秒')
+            time.sleep(5)
             continue
         # print(response.text)
 
@@ -83,7 +85,13 @@ def start():
             print(url)
 
             #获取详情页第一页
-            response = requests.get(url)
+            try:
+                response = requests.get(url)
+            except:
+                print('超时错误，暂停5秒')
+                time.sleep(5)
+                continue
+
             html = HTML(response.text)
 
             # 获取总页数
@@ -102,7 +110,8 @@ def start():
                 try:
                     each_response = requests.get(each_page_url, timeout=10)
                 except:
-                    print('超时错误')
+                    print('超时错误，暂停5秒')
+                    time.sleep(5)
                     continue
                 parse_detail(url, title, address, each_response)
 
