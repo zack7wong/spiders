@@ -65,7 +65,11 @@ def start():
         body = 'keytype=1&keyword=&sid=330500&districtid=&areaid=&dealprice=&propertystate=&propertytype=&ordertype=&priceorder=&openorder=&page={pageToken}&bbs='
         mydata = body.format(pageToken=i)
 
-        response = requests.post(start_url,headers=headers, data=mydata)
+        try:
+            response = requests.post(start_url,headers=headers, data=mydata,timeout=10)
+        except:
+            print('超时错误')
+            continue
         # print(response.text)
 
         html = HTML(response.text)
@@ -95,7 +99,11 @@ def start():
                 print('每个楼盘当前页：'+str(j))
                 each_page_url = url + 'isopen=&presellid=&buildingid=&area=&allprice=&housestate=&housetype=&page={pageToken}&roomid='.format(pageToken=j)
                 print(each_page_url)
-                each_response = requests.get(each_page_url)
+                try:
+                    each_response = requests.get(each_page_url, timeout=10)
+                except:
+                    print('超时错误')
+                    continue
                 parse_detail(url, title, address, each_response)
 
 
