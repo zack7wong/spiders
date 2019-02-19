@@ -51,8 +51,11 @@ def get_detail(id):
     bd_lon, bd_lat = wgs2bd(gdlon, gdlat)
 
     print(name)
-    if '派出所' in name or '居委会' in name or '办事处' in name:
-        return
+    no_cralw_list = ['派出所','居委会','办事处','中学','服务站','体育馆','幼教中心','学校','大学','有限公司','医院','活动中心','服务中心','活动室','太极苑','产业园']
+    for noName in no_cralw_list:
+        if noName in name:
+            print('非住宅区，不抓取')
+            return
 
     save_res = id+'||'+name+'||'+address+'||'+lon+'||'+lat+'||'+shape+'||'+title+'||'+city_name+'||'+str(bd_lon)+'||'+str(bd_lat)+'||'+bd_shape
     save_res = save_res.replace('\n','').replace('\t','').replace(',','，').replace('||',',')+'\n'
