@@ -13,6 +13,7 @@ with open('urls.txt') as f:
 
 for myurl in item_list:
     url = 'http://www.wanmi.cc/gj/'+myurl
+    print(url)
     response = requests.get(url)
     # html = HTML(response.text)
     # price = html.xpath('string(//div[@class="gujia"]/text())')
