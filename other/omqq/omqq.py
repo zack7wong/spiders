@@ -41,18 +41,22 @@ def login():
     flag = 0
     while True:
         cookies = driver.get_cookies()
+
+        cookieStr1 = ''
+        cookieStr2 = ''
         for cookie in cookies:
             if cookie['name'] == 'userid':
-                cookieStr = 'userid=' + cookie['value']+';'
-                headers['cookie'] += cookieStr
+                cookieStr1 = 'userid=' + cookie['value']+';'
+
                 flag += 1
 
             if cookie['name'] == 'omtoken':
-                cookieStr = 'omtoken=' + cookie['value'] + ';'
-                headers['cookie'] += cookieStr
+                cookieStr2 = 'omtoken=' + cookie['value'] + ';'
                 flag+=1
-
+        if cookieStr1 !='' and cookieStr2 !='':
+            endStr = cookieStr1+cookieStr2
         if flag == 2:
+            headers['cookie'] = endStr
             print('已登录...')
             break
         print('未检测到登录cookie。。')
@@ -63,8 +67,8 @@ def login():
 
 
 def get_html_detail(vid,url):
-    print(url)
-    response = requests.get(url)
+    print('网页url：'+url)
+    response = requests.get(url, verify=False)
     response.encoding = 'utf8'
     # print(response.text)
     html = HTML(response.text)
@@ -116,7 +120,7 @@ def get_source(vid):
         resStr += '腾讯新闻:'+str('%.2f'%(json_obj['data']['total_inews_play_pv']*100/totalCount))+'%;'
         resStr += '腾讯视频:'+str('%.2f'%(json_obj['data']['total_live_play_pv']*100/totalCount))+'%;'
         resStr += 'QQ看点:'+str('%.2f'%(json_obj['data']['total_kandian_play_pv']*100/totalCount))+'%;'
-        resStr += 'QQ浏览器:'+str('%.2f'%(json_obj['data']['total_qzone_play_pv']*100/totalCount))+'%;'
+        resStr += 'QQ浏览器:'+str('%.2f'%(json_obj['data']['total_qb_play_pv']*100/totalCount))+'%;'
         resStr += '微信看一看:'+str('%.2f'%(json_obj['data']['total_wx_play_pv']*100/totalCount))+'%;'
         resStr += '其他:'+str('%.2f'%(json_obj['data']['new_total_other_play_pv']*100/totalCount))+'%;'
     print(resStr)
@@ -154,6 +158,7 @@ def get_oneWeek_oneMonth(vid,publishDate):
 
 
 def parse_detail(vid):
+    print('id:'+vid)
     url = 'https://napi.om.qq.com/VideoData/VideoRealStatis?vid={vid}&fields=2%7C7&source=0'
     start_url = url.format(vid=vid)
     response = requests.get(start_url, headers=headers, verify=False)
@@ -195,6 +200,7 @@ def start():
     if 'response' in json_obj and json_obj['response']['code'] == -10403:
         print('登录失效，正在登录。。')
         login()
+        start()
 
     #获取总页数
     total_num = json_obj['data']['total']
@@ -217,7 +223,12 @@ def start():
         json_obj = json.loads(response.text)
         for item in json_obj['data']['list']:
             vid = item['vid']
-            parse_detail(vid)
+            try:
+                parse_detail(vid)
+            except:
+                print('当前id出错：'+str(vid))
+                with open('错误.txt','a') as f:
+                    f.write(vid+'\n')
 
     print('程序运行完毕~')
     time.sleep(6000)
