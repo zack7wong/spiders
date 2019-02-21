@@ -106,7 +106,7 @@ def get_html_detail(vid,url):
 
 def get_source(vid):
     url = 'https://napi.om.qq.com/VideoData/SingleVideo?vid='+vid
-    response = requests.get(url,headers=headers)
+    response = requests.get(url,headers=headers, verify=False)
     # print(response.text)
     json_obj = json.loads(response.text)
 
@@ -224,7 +224,13 @@ def start():
         print('当前页：'+str(i))
         url = 'https://napi.om.qq.com/VideoData/MediaVideoList?startdate=2019-02-12&enddate=2019-02-18&limit=8&page={pageToken}&fields=2%7C3&source=0'
         start_url = url.format(pageToken=i)
-        response = requests.get(start_url, headers=headers, verify=False)
+        try:
+            response = requests.get(start_url, headers=headers, verify=False)
+        except:
+            print('当前页出错')
+            with open('错误.txt', 'a') as f:
+                f.write(start_url + '\n')
+            continue
         # print(response.text)
         json_obj = json.loads(response.text)
         for item in json_obj['data']['list']:
@@ -235,6 +241,7 @@ def start():
                 print('当前id出错：'+str(vid))
                 with open('错误.txt','a') as f:
                     f.write(vid+'\n')
+                continue
 
     print('程序运行完毕~')
     time.sleep(6000)
