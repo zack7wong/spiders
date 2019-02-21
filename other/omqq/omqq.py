@@ -131,11 +131,15 @@ def get_oneWeek_oneMonth(vid,publishDate):
     url = 'https://napi.om.qq.com/VideoData/VideoDailyList?vid={vid}&fields=2%7C7&source=0&startdate={startDate}&enddate={endDate}'
 
     # oneWeek_startDate = time.strftime('%Y-%m-%d',time.localtime(int(time.time())-60*60*24*7))
-    oneWeek_startDate = publishDate
-    oneWeek_endDate = time.strftime('%Y-%m-%d',time.localtime(int(time.time())+60*60*24*7))
+    # oneWeek_endDate = time.strftime('%Y-%m-%d',time.localtime(int(time.time())+60*60*24*7))
+
+    oneWeek_startDate = publishDate.split(' ')[0]
+    oneWeek_startDate_stampTime = time.strptime(oneWeek_startDate, "%Y-%m-%d")
+    oneWeek_startDate_stampTime = time.mktime(oneWeek_startDate_stampTime)
+    oneWeek_endDate = time.strftime('%Y-%m-%d',time.localtime(int(oneWeek_startDate_stampTime)+60*60*24*7))
     oneWeek_url = url.format(vid=vid,startDate=oneWeek_startDate,endDate=oneWeek_endDate)
     # print(oneWeek_url)
-    response = requests.get(oneWeek_url, headers=headers)
+    response = requests.get(oneWeek_url, headers=headers, verify=False)
     json_obj = json.loads(response.text)
     oneWeek_count = 0
     for data in json_obj['data']['list']:
@@ -143,12 +147,14 @@ def get_oneWeek_oneMonth(vid,publishDate):
     print('一周播放量：'+str(oneWeek_count))
 
     # oneMonth_startDate = datetime.date.today() - relativedelta(months=+1)
-    oneMonth_startDate = publishDate
     # oneMonth_endDate = time.strftime('%Y-%m-%d', time.localtime(int(time.time()) - 60 * 60 * 24))
-    oneMonth_endDate = time.strftime('%Y-%m-%d',time.localtime(int(time.time())+60*60*24*30))
+    oneMonth_startDate = publishDate.split(' ')[0]
+    oneMonth_startDate_stampTime = time.strptime(oneMonth_startDate, "%Y-%m-%d")
+    oneMonth_startDate_stampTime = time.mktime(oneMonth_startDate_stampTime)
+    oneMonth_endDate = time.strftime('%Y-%m-%d', time.localtime(int(oneMonth_startDate_stampTime) + 60 * 60 * 24 * 30))
     oneMonth_url = url.format(vid=vid,startDate=oneMonth_startDate,endDate=oneMonth_endDate)
     # print(oneMonth_url)
-    response = requests.get(oneMonth_url, headers=headers)
+    response = requests.get(oneMonth_url, headers=headers, verify=False)
     json_obj = json.loads(response.text)
     oneMonth_count = 0
     for data in json_obj['data']['list']:
