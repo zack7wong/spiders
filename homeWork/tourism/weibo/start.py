@@ -17,6 +17,8 @@ postId_list = []
 commentId_list = []
 
 def read():
+
+    #配置url请求的一些参数
     item_list = []
     #typeall=1   xsort=hot  scope=ori  atten=1   vip=1  category=4   viewpoint=1
     res = '大理旅游,2019-01-01,2019-01-16,50,10,typeall=1'
@@ -26,6 +28,7 @@ def read():
     totalPage = res.split(',')[3]
     commentTotalPage = res.split(',')[4]
     queryType = res.split(',')[5].strip()
+    #返回json对象
     obj ={
         'keyword':keyword,
         'startDate':startDate,
@@ -38,15 +41,18 @@ def read():
     return item_list
 
 def getTimeStamp(dateStr):
+    #处理时间问题
     dateTime = dateutil.parser.parse(dateStr)
     time_tuple = (dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute, dateTime.second, 0, 0, 0)
     timestamp = int(time.mktime(time_tuple))
     return timestamp
 
 def get_comment(id,item):
+    #获取评论
     commentTotalPage = int(item['commentTotalPage'])
     comment_url = 'https://m.weibo.cn/comments/hotflow?id={id}&mid={id}&max_id={max_id}&max_id_type=0'
     max_id = 0
+    #翻页
     for i in range(1,commentTotalPage+1):
         time.sleep(2)
         print('暂停2秒')
@@ -63,6 +69,7 @@ def get_comment(id,item):
                 if json_obj['ok'] == 0:
                     print('评论为空')
                     return
+                #处理字段
                 for data in json_obj['data']['data']:
                     commentId = data['id']
                     comment_content = data['text']
@@ -75,6 +82,7 @@ def get_comment(id,item):
                     else:
                         commentId_list.append(commentId)
 
+                    #存数据库
                     sql = "insert into weiboComment(commentId,content,commentTime) values ('%s','%s','%s')" % (
                         commentId, comment_content, comment_publishDateStr,) \
                           + "ON DUPLICATE KEY UPDATE content='%s'" % (comment_content)
@@ -101,7 +109,10 @@ def parse(item,response):
     endDate = item['endDate']
 
     allhtml = HTML(response.text)
+    #xpath获取数据
     allitem_list = allhtml.xpath('//div[@id="pl_feedlist_index"]//div[@class="card-wrap"]')
+
+    #处理字段
     for etreeItem in allitem_list:
         itemStr = etree.tostring(etreeItem)
         html = HTML(itemStr)
@@ -116,6 +127,7 @@ def parse(item,response):
         else:
             postId_list.append(id)
 
+        #xpath获取各个数据
         url = 'https://m.weibo.cn/status/'+id
         userName = html.xpath('string(//a[@class="name"])')
         content = html.xpath('//p[@class="txt"]//text()')
@@ -126,7 +138,7 @@ def parse(item,response):
         attitudes_count = html.xpath('string(//div[@class="card-act"]/ul/li[4]/a/em/text())')
         crawl_time = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime())
 
-
+        #存数据库
         sql = "insert into weiboSight(keyword,startDate,endDate,postId,url,userName,content,publishDateStr,reposts_count,comments_count,attitudes_count,crawl_time) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" % (
             keyword, startDate, endDate, id, url, userName, content, publishDateStr, reposts_count, comments_count,
             attitudes_count, crawl_time) \
@@ -144,6 +156,7 @@ def parse(item,response):
         get_comment(id,item)
 
 def main(item):
+    #设置参数
     keyword = quote(item['keyword'])
     startDate = item['startDate']
     endDate = item['endDate']
@@ -151,8 +164,10 @@ def main(item):
     queryType = item['queryType']
     URL = 'https://s.weibo.com/weibo/%25E7%258E%258B%25E6%2580%259D%25E8%2581%25AA?q={keyword}&{queryType}&suball=1&timescope=custom:{startDate}:{endDate}&Refer=g&page={pageToken}'
 
+    #翻页
     for i in range(1,pageNum+1):
         print('当前页数：'+str(i))
+        #拼接url
         start_url = URL.format(keyword=keyword,queryType=queryType,pageToken=i,startDate=startDate,endDate=endDate)
         print(start_url)
         response = down.get_html(start_url)
@@ -165,8 +180,10 @@ def main(item):
 
 
 if __name__ == '__main__':
+    #实例化数据库，下载器对象
     mysqlCli = db.MysqlClient()
     down = download.Download()
+    #获取配置参数
     item_list = read()
     # with open('post.csv', 'w', encoding='gbk', errors='ignore') as f:
     #     f.write('关键词,开始时间,结束时间,id,链接,用户名,内容,发布时间,转发数,评论数,点赞数,爬取时间\n')

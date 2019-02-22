@@ -11,7 +11,7 @@
  Target Server Version : 50713
  File Encoding         : 65001
 
- Date: 30/01/2019 15:54:42
+ Date: 22/02/2019 18:28:34
 */
 
 SET NAMES utf8mb4;
@@ -31,7 +31,7 @@ CREATE TABLE `qunarComment` (
   `sightName` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`sightId`,`commentId`)
-) ENGINE=InnoDB AUTO_INCREMENT=22302 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21110 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of qunarComment
@@ -13576,6 +13576,7 @@ INSERT INTO `qunarComment` VALUES (21066, '4089487325', '207263081', '悦*晴', 
 INSERT INTO `qunarComment` VALUES (21067, '4089487325', '206877963', 'r*2', '用户未点评，系统默认好评。', '2018-07-20', '丹噶尔古城');
 INSERT INTO `qunarComment` VALUES (21068, '4089487325', '200704845', 'y*1', '用户未点评，系统默认好评。', '2017-05-17', '丹噶尔古城');
 INSERT INTO `qunarComment` VALUES (21069, '4089487325', '200704560', 'y*1', '用户未点评，系统默认好评。', '2017-05-17', '丹噶尔古城');
+INSERT INTO `qunarComment` VALUES (21102, '4185114321', '209214568', '山*糕', '位于青海省西宁市湟中县鲁沙尔镇西南隅的莲花山坳中，国家AAAA级景区，是我国藏传佛教格鲁派(俗称黄教)创始人宗喀巴大师的诞生地，是藏区黄教六大寺院之一，也是青海省首屈一指的名胜古迹和全国重点文物保护单位，距省会西宁市26公里。塔尔寺是青海省藏传佛教中的第一大寺院。', '2019-01-31', '塔尔寺');
 COMMIT;
 
 -- ----------------------------
@@ -13592,7 +13593,7 @@ CREATE TABLE `qunarSight` (
   `addressDetail` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`sightId`)
-) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of qunarSight
@@ -13659,6 +13660,138 @@ INSERT INTO `qunarSight` VALUES (88, '3461799776', '八瓣莲花非物质文化�
 INSERT INTO `qunarSight` VALUES (89, '2954068856', '西宁浦宁之珠', '西宁市尽收眼底，一览“西宁小”', 'http://touch.piao.qunar.com/touch/detail_2954068856.html?st=a3clM0QlRTYlOTklQUYlRTclODIlQjklRTklOTclQTglRTclQTUlQTglMjZpZCUzRDM3MTMlMjZ0eXBlJTNEMCUyNmlkeCUzRDglMjZxdCUzRHRhZyUyNmFwayUzRDMlMjZzYyUzRFRPVUNIJTI2YWJ0cmFjZSUzRGJ3ZCU0MCVFNiU5QyVBQyVFNSU5QyVCMCUyNnVyJTNEJUU4JUE1JUJGJUU1JUFFJTgxJTI2bHIlM0QlRTglQTUlQkYlRTUlQUUlODElMjZmdCUzRCU3QiU3RA%3D%3D', '538', '青海省西宁城西区浦宁之珠');
 INSERT INTO `qunarSight` VALUES (90, '4089487325', '丹噶尔古城', '感受到深远的历史文化', 'http://touch.piao.qunar.com/touch/detail_4089487325.html?st=a3clM0QlRTYlOTklQUYlRTclODIlQjklRTklOTclQTglRTclQTUlQTglMjZpZCUzRDE1NDg4JTI2dHlwZSUzRDAlMjZpZHglM0Q5JTI2cXQlM0R0YWclMjZhcGslM0QzJTI2c2MlM0RUT1VDSCUyNmFidHJhY2UlM0Rid2QlNDAlRTYlOUMlQUMlRTUlOUMlQjAlMjZ1ciUzRCVFOCVBNSVCRiVFNSVBRSU4MSUyNmxyJTNEJUU4JUE1JUJGJUU1JUFFJTgxJTI2ZnQlM0QlN0IlN0Q%3D', '109', '青海省西宁市湟源县城关镇明清老街');
 INSERT INTO `qunarSight` VALUES (91, '1831514328', '黑泉水库', '摄影宝地', 'http://touch.piao.qunar.com/touch/detail_1831514328.html?st=a3clM0QlRTYlOTklQUYlRTclODIlQjklRTklOTclQTglRTclQTUlQTglMjZpZCUzRDQ2NTAxMyUyNnR5cGUlM0QwJTI2aWR4JTNEMTAlMjZxdCUzRHRhZyUyNmFwayUzRDMlMjZzYyUzRFRPVUNIJTI2YWJ0cmFjZSUzRGJ3ZCU0MCVFNiU5QyVBQyVFNSU5QyVCMCUyNnVyJTNEJUU4JUE1JUJGJUU1JUFFJTgxJTI2bHIlM0QlRTglQTUlQkYlRTUlQUUlODElMjZmdCUzRCU3QiU3RA%3D%3D', '0', '青海省西宁市大通县宝库乡（近227国道）');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for weiboComment
+-- ----------------------------
+DROP TABLE IF EXISTS `weiboComment`;
+CREATE TABLE `weiboComment` (
+  `id` int(255) NOT NULL AUTO_INCREMENT,
+  `commentId` varchar(550) DEFAULT NULL,
+  `content` text,
+  `commentTime` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `commentId` (`commentId`)
+) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of weiboComment
+-- ----------------------------
+BEGIN;
+INSERT INTO `weiboComment` VALUES (1, '4329223860801943', '钢琴陪我弹了一天', '2019-01-16 23:01:03');
+INSERT INTO `weiboComment` VALUES (2, '4329231100397122', '满啦~谢谢大家！<span class=\"url-icon\"><img alt=[心] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/l_xin-8e9a1a0346.png\" style=\"width:1em; height:1em;\" /></span>晚安<span class=\"url-icon\"><img alt=[抱抱] src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_baobao-48217db41a.png\" style=\"width:1em; height:1em;\" /></span><span class=\"url-icon\"><img alt=[月亮] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/w_yueliang-fbe3621f53.png\" style=\"width:1em; height:1em;\" /></span><span class=\"url-icon\"><img alt=[哈欠] src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_dahaqi-6a5eb3a95c.png\" style=\"width:1em; height:1em;\" /></span>', '2019-01-16 23:29:50');
+INSERT INTO `weiboComment` VALUES (3, '4329232819679538', '<span class=\"url-icon\"><img alt=[色] src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_huaxin-2223062425.png\" style=\"width:1em; height:1em;\" /></span>', '2019-01-16 23:36:40');
+INSERT INTO `weiboComment` VALUES (4, '4329227808092286', '<span class=\"url-icon\"><img alt=[羞嗒嗒] src=\"//h5.sinaimg.cn/m/emoticon/icon/lxh/lxh_xiudada-3da77c6e68.png\" style=\"width:1em; height:1em;\" /></span><span class=\"url-icon\"><img alt=[羞嗒嗒] src=\"//h5.sinaimg.cn/m/emoticon/icon/lxh/lxh_xiudada-3da77c6e68.png\" style=\"width:1em; height:1em;\" /></span><span class=\"url-icon\"><img alt=[羞嗒嗒] src=\"//h5.sinaimg.cn/m/emoticon/icon/lxh/lxh_xiudada-3da77c6e68.png\" style=\"width:1em; height:1em;\" /></span>', '2019-01-16 23:16:44');
+INSERT INTO `weiboComment` VALUES (5, '4329227584886600', '来啦', '2019-01-16 23:15:52');
+INSERT INTO `weiboComment` VALUES (6, '4329223822883326', '<span class=\"url-icon\"><img alt=[给你小心心] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/qixi2018_xiaoxinxin-50c03f17bf.png\" style=\"width:1em; height:1em;\" /></span><span class=\"url-icon\"><img alt=[给你小心心] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/qixi2018_xiaoxinxin-50c03f17bf.png\" style=\"width:1em; height:1em;\" /></span><span class=\"url-icon\"><img alt=[给你小心心] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/qixi2018_xiaoxinxin-50c03f17bf.png\" style=\"width:1em; height:1em;\" /></span>', '2019-01-16 23:00:55');
+INSERT INTO `weiboComment` VALUES (7, '4329223789944827', '我第一', '2019-01-16 23:00:47');
+INSERT INTO `weiboComment` VALUES (8, '4329229438768587', '<span class=\"url-icon\"><img alt=[心] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/l_xin-8e9a1a0346.png\" style=\"width:1em; height:1em;\" /></span><span class=\"url-icon\"><img alt=[心] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/l_xin-8e9a1a0346.png\" style=\"width:1em; height:1em;\" /></span><span class=\"url-icon\"><img alt=[心] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/l_xin-8e9a1a0346.png\" style=\"width:1em; height:1em;\" /></span><span class=\"url-icon\"><img alt=[心] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/l_xin-8e9a1a0346.png\" style=\"width:1em; height:1em;\" /></span>', '2019-01-16 23:23:13');
+INSERT INTO `weiboComment` VALUES (9, '4329226155205515', '助攻', '2019-01-16 23:10:11');
+INSERT INTO `weiboComment` VALUES (10, '4329225013916762', '来啦', '2019-01-16 23:05:39');
+INSERT INTO `weiboComment` VALUES (11, '4329224326388750', '<span class=\"url-icon\"><img alt=[心] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/l_xin-8e9a1a0346.png\" style=\"width:1em; height:1em;\" /></span>', '2019-01-16 23:02:55');
+INSERT INTO `weiboComment` VALUES (12, '4329236317342404', '晚安，求原图<span class=\"url-icon\"><img alt=[月亮] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/w_yueliang-fbe3621f53.png\" style=\"width:1em; height:1em;\" /></span><span class=\"url-icon\"><img alt=[米奇比心] src=\"//h5.sinaimg.cn/m/emoticon/icon/movies/mickey_01-53a4708602.png\" style=\"width:1em; height:1em;\" /></span>', '2019-01-16 23:50:34');
+INSERT INTO `weiboComment` VALUES (13, '4329230676143128', '助攻助攻', '2019-01-16 23:28:09');
+INSERT INTO `weiboComment` VALUES (14, '4329227845645326', '<span class=\"url-icon\"><img alt=[爱你] src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_aini-2b6c9354c7.png\" style=\"width:1em; height:1em;\" /></span>', '2019-01-16 23:16:53');
+INSERT INTO `weiboComment` VALUES (15, '4329226964331530', '<span class=\"url-icon\"><img alt=[给你小心心] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/qixi2018_xiaoxinxin-50c03f17bf.png\" style=\"width:1em; height:1em;\" /></span><span class=\"url-icon\"><img alt=[给你小心心] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/qixi2018_xiaoxinxin-50c03f17bf.png\" style=\"width:1em; height:1em;\" /></span>', '2019-01-16 23:13:24');
+INSERT INTO `weiboComment` VALUES (16, '4329224582420257', '<span class=\"url-icon\"><img alt=[心] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/l_xin-8e9a1a0346.png\" style=\"width:1em; height:1em;\" /></span><span class=\"url-icon\"><img alt=[心] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/l_xin-8e9a1a0346.png\" style=\"width:1em; height:1em;\" /></span><span class=\"url-icon\"><img alt=[心] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/l_xin-8e9a1a0346.png\" style=\"width:1em; height:1em;\" /></span><span class=\"url-icon\"><img alt=[心] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/l_xin-8e9a1a0346.png\" style=\"width:1em; height:1em;\" /></span>', '2019-01-16 23:03:56');
+INSERT INTO `weiboComment` VALUES (49, '4335097043705680', '支持支持..', '2019-02-02 03:59:00');
+INSERT INTO `weiboComment` VALUES (50, '4335094518978529', '朋友，您好？<span class=\"url-icon\"><img alt=[握手] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/h_woshou-9ec25c8391.png\" style=\"width:1em; height:1em;\" /></span>', '2019-02-02 03:48:58');
+INSERT INTO `weiboComment` VALUES (51, '4335086305937470', '很特别哎``！', '2019-02-02 03:16:20');
+INSERT INTO `weiboComment` VALUES (52, '4335081553944700', '超赞，<span class=\"url-icon\"><img alt=[亲亲] src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_qinqin-bdfbfb6ea7.png\" style=\"width:1em; height:1em;\" /></span>', '2019-02-02 02:57:27');
+INSERT INTO `weiboComment` VALUES (53, '4335073530713560', '哇～', '2019-02-02 02:25:34');
+INSERT INTO `weiboComment` VALUES (54, '4335072259633272', '给你一个胜利的眼神<span class=\"url-icon\"><img alt=[笑而不语] src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_heiheihei-c1027e7c02.png\" style=\"width:1em; height:1em;\" /></span>', '2019-02-02 02:20:31');
+INSERT INTO `weiboComment` VALUES (55, '4335065862965789', '看着很好，偶要转发扩散啦，哈哈。[萌翻]', '2019-02-02 01:55:07');
+INSERT INTO `weiboComment` VALUES (56, '4335051996751496', '真的很不错，力挺之~', '2019-02-02 00:59:59');
+INSERT INTO `weiboComment` VALUES (57, '4335039338790764', '转发', '2019-02-02 00:09:42');
+INSERT INTO `weiboComment` VALUES (58, '4334726145772317', '远距离转发~<span class=\"url-icon\"><img alt=[哈哈] src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_haha-bdd6ceb619.png\" style=\"width:1em; height:1em;\" /></span><span class=\"url-icon\"><img alt=[哈哈] src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_haha-bdd6ceb619.png\" style=\"width:1em; height:1em;\" /></span>', '2019-02-01 03:25:10');
+INSERT INTO `weiboComment` VALUES (59, '4334724782413459', '<span class=\"url-icon\"><img alt=[赞] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/h_zan-6e88e6f51d.png\" style=\"width:1em; height:1em;\" /></span> 很靠谱的说，很给力哦', '2019-02-01 03:19:46');
+INSERT INTO `weiboComment` VALUES (60, '4334721229716993', '震惊了！', '2019-02-01 03:05:38');
+INSERT INTO `weiboComment` VALUES (61, '4334719568486273', '很好的一个分享', '2019-02-01 02:59:03');
+INSERT INTO `weiboComment` VALUES (62, '4334712501583126', '支持呀！！', '2019-02-01 02:30:58');
+INSERT INTO `weiboComment` VALUES (63, '4334706645964614', '<span class=\"url-icon\"><img alt=[得意地笑] src=\"//h5.sinaimg.cn/m/emoticon/icon/lxh/lxh_deyidexiao-b7ac0507bb.png\" style=\"width:1em; height:1em;\" /></span>', '2019-02-01 02:07:43');
+INSERT INTO `weiboComment` VALUES (64, '4334705128053823', '支持，你东西都不错。', '2019-02-01 02:01:40');
+INSERT INTO `weiboComment` VALUES (65, '4334685620187088', '美！<span class=\"url-icon\"><img alt=[赞啊] src=\"//h5.sinaimg.cn/m/emoticon/icon/lxh/lxh_zana-8e0ec2a2ce.png\" style=\"width:1em; height:1em;\" /></span>', '2019-02-01 00:44:08');
+INSERT INTO `weiboComment` VALUES (66, '4334679861638047', '貌似长的还挺不赖的。', '2019-02-01 00:21:15');
+INSERT INTO `weiboComment` VALUES (67, '4334676027671906', '<span class=\"url-icon\"><img alt=[围观] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/o_weiguan-440ebe5b66.png\" style=\"width:1em; height:1em;\" /></span>留个记号，期待更新！', '2019-02-01 00:06:02');
+INSERT INTO `weiboComment` VALUES (68, '4334359005134265', '好文章', '2019-01-31 03:06:19');
+INSERT INTO `weiboComment` VALUES (69, '4329232694358107', '我梦见我去找你了', '2019-01-16 23:36:10');
+INSERT INTO `weiboComment` VALUES (70, '4329492673562323', '这个攻略好详细，想去香格里拉', '2019-01-17 16:49:13');
+INSERT INTO `weiboComment` VALUES (71, '4329490086031507', '到云南旅游的朋友一定要看', '2019-01-17 16:38:56');
+INSERT INTO `weiboComment` VALUES (72, '4329484049618356', '最后一段文字不错，我赞同，也写得不错', '2019-01-17 16:14:58');
+INSERT INTO `weiboComment` VALUES (73, '4329475040895516', '云南美景甲天下', '2019-01-17 15:39:10');
+INSERT INTO `weiboComment` VALUES (74, '4329474567270318', '大美丽江，魂牵梦绕的地方', '2019-01-17 15:37:17');
+INSERT INTO `weiboComment` VALUES (75, '4329473610345185', '很棒的云南攻略，实用干货', '2019-01-17 15:33:29');
+INSERT INTO `weiboComment` VALUES (76, '4329473321725176', '一定要走最边的地方才是好玩的', '2019-01-17 15:32:20');
+INSERT INTO `weiboComment` VALUES (77, '4329471865022993', '好棒的云南旅行攻略收了吧', '2019-01-17 15:26:32');
+INSERT INTO `weiboComment` VALUES (78, '4329471606193786', '喜欢云南，太棒啦，要去旅游', '2019-01-17 15:25:30');
+INSERT INTO `weiboComment` VALUES (79, '4329471148511837', '干货满满，旅行好时光', '2019-01-17 15:23:42');
+INSERT INTO `weiboComment` VALUES (80, '4329470696074675', '做的好好，很细心噢', '2019-01-17 15:21:54');
+INSERT INTO `weiboComment` VALUES (81, '4329470682928319', '云南的攻略诶，收藏了收藏了', '2019-01-17 15:21:51');
+INSERT INTO `weiboComment` VALUES (82, '4329159779697878', '哇哦，下次去住你的酒店<span class=\"url-icon\"><img alt=[太开心] src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_taikaixin-2ea4a8779a.png\" style=\"width:1em; height:1em;\" /></span>', '2019-01-16 18:46:26');
+INSERT INTO `weiboComment` VALUES (83, '4332039287483404', '用你的笑容  去改变这个世界，别让这个世界改变了你的笑容。', '2019-01-24 17:28:33');
+INSERT INTO `weiboComment` VALUES (84, '4329817556349751', '<span class=\"url-icon\"><img alt=[good] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/h_good-55854d01bb.png\" style=\"width:1em; height:1em;\" /></span><span class=\"url-icon\"><img alt=[good] src=\"//h5.sinaimg.cn/m/emoticon/icon/others/h_good-55854d01bb.png\" style=\"width:1em; height:1em;\" /></span>', '2019-01-18 14:20:12');
+INSERT INTO `weiboComment` VALUES (85, '4340652978379789', '我来咯', '2019-02-17 11:56:17');
+INSERT INTO `weiboComment` VALUES (86, '4329417981345874', '带你去大理旅游', '2019-01-17 11:52:26');
+INSERT INTO `weiboComment` VALUES (87, '4329361005516406', '超全的大理旅游攻略！码住～<a  href=\"https://m.weibo.cn/search?containerid=231522type%3D1%26t%3D10%26q%3D%23%E6%97%85%E6%B8%B8%23&isnewpage=1\" data-hide=\"\"><span class=\"surl-text\">#旅游#</span></a> <a  href=\"https://m.weibo.cn/search?containerid=231522type%3D1%26t%3D10%26q%3D%23%E6%97%85%E8%A1%8C%23&isnewpage=1\" data-hide=\"\"><span class=\"surl-text\">#旅行#</span></a>', '2019-01-17 08:06:02');
+INSERT INTO `weiboComment` VALUES (88, '4329192709589451', '差点拍屁股决定五一去了', '2019-01-16 20:57:17');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for weiboSight
+-- ----------------------------
+DROP TABLE IF EXISTS `weiboSight`;
+CREATE TABLE `weiboSight` (
+  `id` int(16) NOT NULL AUTO_INCREMENT,
+  `keyword` varchar(500) DEFAULT NULL,
+  `startDate` varchar(500) DEFAULT NULL,
+  `endDate` varchar(500) DEFAULT NULL,
+  `postId` varchar(500) DEFAULT NULL,
+  `url` varchar(500) DEFAULT NULL,
+  `userName` varchar(500) DEFAULT NULL,
+  `content` text,
+  `publishDateStr` varchar(500) DEFAULT NULL,
+  `reposts_count` varchar(500) DEFAULT NULL,
+  `comments_count` varchar(500) DEFAULT NULL,
+  `attitudes_count` varchar(500) DEFAULT NULL,
+  `crawl_time` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `postId` (`postId`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of weiboSight
+-- ----------------------------
+BEGIN;
+INSERT INTO `weiboSight` VALUES (1, '旅游', '2019-01-01', '2019-01-16', '4329223420353567', 'https://m.weibo.cn/status/4329223420353567', '热门电影军', '1月16日，周杰伦在社交媒体平台上晒出了一组美照，原来周杰伦又带着昆凌去意大利的佛罗伦萨旅游了。这次旅行只有周杰伦和昆凌两个人一起去的，并没有带着两个孩子，周杰伦真的是”宠妻狂魔“，在那么忙的工作中，依然能抽出时间陪昆凌一起游玩，一起享受两人世界，真的是非常让人羡慕。这次晒出的照片 ​  展开全文c                \n                    1月16日，周杰伦在社交媒体平台上晒出了一组美照，原来周杰伦又带着昆凌去意大利的佛罗伦萨旅游了。这次旅行只有周杰伦和昆凌两个人一起去的，并没有带着两个孩子，周杰伦真的是”宠妻狂魔“，在那么忙的工作中，依然能抽出时间陪昆凌一起游玩，一起享受两人世界，真的是非常让人羡慕。这次晒出的照片中，周杰伦身穿一件黑白相间的外套，带着黑框墨镜，看上去非常的酷，周杰伦用手比着他自己独特的手势，靠在河边的围墙上，显得非常安逸。其实周杰伦的人气大家都知道，在国内很难自由的在街边玩耍，所以才会选择去往国外旅行。 收起全文d', '01月16日 22:59', '  ', ' ', '2', '2019-02-21 21:45:19');
+INSERT INTO `weiboSight` VALUES (2, '丽江旅游', '2019-01-01', '2019-01-16', '4329220140430224', 'https://m.weibo.cn/status/4329220140430224', '勋章-鹿小娴', '丽江旅游//@勋章-鹿儿://@狍毛群:鹿晗#爱彼品牌大使鹿晗# 感谢爱彼邀请，我们一起勇于挑战，坚持自我，无畏创新@M鹿M                 \n                                    #SIHH2019#首日，#爱彼品牌大使鹿晗#莅临爱彼展厅，鉴赏2019爱彼全新时计杰作；勇于挑战，坚持自我，无畏创新，鹿晗以独立自信的个性演绎#爱彼CODE 11.59系列#的内在精髓。在位于爱彼发源地布拉苏丝的制表厂及博物馆，鹿晗亲自体验爱彼精湛的制表工艺，感受爱彼高级制表艺术的非凡造诣。 ​  展开全文c                                \n                                    #SIHH2019#首日，#爱彼品牌大使鹿晗#莅临爱彼展厅，鉴赏2019爱彼全新时计杰作；勇于挑战，坚持自我，无畏创新，鹿晗以独立自信的个性演绎#爱彼CODE 11.59系列#的内在精髓。在位于爱彼发源地布拉苏丝的制表厂及博物馆，鹿晗亲自体验爱彼精湛的制表工艺，感受爱彼高级制表艺术的非凡造诣。O网页链接 收起全文d', '01月16日 20:04', '  ', ' ', '', '2019-02-21 21:45:44');
+INSERT INTO `weiboSight` VALUES (3, '丽江旅游', '2019-01-01', '2019-01-16', '4329219213926221', 'https://m.weibo.cn/status/4329219213926221', '什么街', '@丽江苏苑旅舍 我撑着雨伞，走在小道上，望眼过去云南旅游攻略，绿油油的一片，真舒服!不时有一两条雨丝飘落在我的脸上大理旅游攻略，那清凉的感觉把炎热的天气赶跑了，只留下清凉的夏日丽江旅游攻略，让人陶醉在那中大的雨景里。 ​​​​', '01月16日 22:42', '  101', ' ', '263', '2019-02-21 21:45:46');
+INSERT INTO `weiboSight` VALUES (4, '丽江旅游', '2019-01-01', '2019-01-16', '4329206457887307', 'https://m.weibo.cn/status/4329206457887307', '涨停萌主', '23不知道是出是留吗？盲目没有方向.投资股票加V信【uat2252】实盘指导个股最佳买卖点和个股短线盈利方法！生物股份600201盐田港000088福达合金603045本钢板材000761渤海金控000415粤高速Ａ000429大华股份002236江苏索普600746美锦能源000723华东科技000727丽江旅游002033福田汽车600166 ​', '01月16日 21:51', '  ', ' ', '', '2019-02-21 21:45:48');
+INSERT INTO `weiboSight` VALUES (5, '丽江旅游', '2019-01-01', '2019-01-16', '4329205205018334', 'https://m.weibo.cn/status/4329205205018334', '大理山海旅拍', '云南旅游小贴士【2019#云南旅游攻略#】最新云南旅行行游记别人都望你快乐 而我只愿你历经山海 觉得人间值得大理丽江旅游攻略@大理山海旅拍  #云南旅行#驴友云南旅游攻略 2大理白族自治州·大理古城 ​', '01月16日 21:46', '  931', ' 209', '1399', '2019-02-21 21:45:50');
+INSERT INTO `weiboSight` VALUES (6, '丽江旅游', '2019-01-01', '2019-01-16', '4329199307323065', 'https://m.weibo.cn/status/4329199307323065', '山海旅拍八千里', '云南旅游小贴士【2019#云南旅游攻略#】最新云南旅行行游记别人都望你快乐 而我只愿你历经山海 觉得人间值得大理丽江旅游攻略@大理山海旅拍  #云南旅行#驴友云南旅游攻略 ​', '01月16日 21:23', '  ', ' 5', '2', '2019-02-21 21:46:14');
+INSERT INTO `weiboSight` VALUES (7, '丽江旅游', '2019-01-01', '2019-01-16', '4329197079846713', 'https://m.weibo.cn/status/4329197079846713', '我是我房子', '//@针灸匠张宝旬 ://@CF951 :反馈疗效，这两天带着三岁二宝来丽江旅游，出发前就二宝就一直咳嗽声音还挺深，很担心旅途中会加重。在候机时用您的小妙招每个穴位按了四百下，当天晚上睡觉就一声也不咳嗽，旅途中宝贝状态一直很好，药都没有吃。感谢您推荐的小妙招，谢谢！                \n                                    \"小儿肺炎 \" 我的秒拍作品,一起来看~ L张宝旬妙招的秒拍视频（使用#秒拍#录制） ​', '2016年12月19日 13:05', '  ', ' ', '', '2019-02-21 21:46:38');
+INSERT INTO `weiboSight` VALUES (8, '丽江旅游', '2019-01-01', '2019-01-16', '4329195570110011', 'https://m.weibo.cn/status/4329195570110011', '回家过年迎接2019', '@丽江旅游攻略资讯  @潇洒友A  @青歌10                \n                                    发布了头条文章：《\"心敢想，新征程”——成功之路2019年温哥华团拜会成功举办》 #移民# #加拿大移民# #加拿大住家保姆移民#  O″心敢想，新征程”——成功之路2019年温哥华团拜会成功举办 ​', '01月15日 14:59', '  ', ' ', '', '2019-02-21 21:46:40');
+INSERT INTO `weiboSight` VALUES (9, '丽江旅游', '2019-01-01', '2019-01-16', '4329191933257708', 'https://m.weibo.cn/status/4329191933257708', '丽江看点', '#丽江看点##丽江旅游# 【玉龙雪山索道降价，环保资金交还是不交？丽江旅游压力大】自去年9月接到“降价令”后，玉龙雪山大索道票价降逾三成，接下来，原票价里上交给地方政府的环保资金交还是不交，继续交的话，交多少？这对丽江旅游（指丽江玉龙旅游股份有限公司）来说，对业绩影响很大。  ​  展开全文c                \n                    #丽江看点##丽江旅游# 【玉龙雪山索道降价，环保资金交还是不交？丽江旅游压力大】自去年9月接到“降价令”后，玉龙雪山大索道票价降逾三成，接下来，原票价里上交给地方政府的环保资金交还是不交，继续交的话，交多少？这对丽江旅游（指丽江玉龙旅游股份有限公司）来说，对业绩影响很大。 O玉龙雪山索道降价，环保资金交还是不交？丽江旅游压力大 ​​​ O玉龙雪山索道降价，环保资金交还是不交？丽江旅游压力大 收起全文d', '01月16日 20:54', '  ', ' ', '', '2019-02-21 21:46:42');
+INSERT INTO `weiboSight` VALUES (10, '丽江旅游', '2019-01-01', '2019-01-16', '4329191057087638', 'https://m.weibo.cn/status/4329191057087638', '橘一卷', '#丽江##丽江旅游# ￼丽江 有没有明天早上去丽江三义机场的小伙伴，五一街大研古城这边，七点之前走。拼个车～～我们这边两个人，求1-2个小伙伴，有的话私信我，谢谢! ​', '01月16日 20:50', '  ', ' ', '1', '2019-02-21 21:46:45');
+INSERT INTO `weiboSight` VALUES (11, '丽江旅游', '2019-01-01', '2019-01-16', '4329190595611239', 'https://m.weibo.cn/status/4329190595611239', '云南纯玩户外', '老郭晚上还在四季集市唱上了曲#郭德纲##德云社#大理#云南旅游##丽江旅游#大理#大理旅游攻略##泸沽湖##云南旅游##大理##大理旅拍##丽江##丽江旅游#大理#香格里拉##带着微博去云南#  ​​​ L云南纯玩户外的微博视频 ​', '01月16日 20:48', '  ', ' ', '', '2019-02-21 21:46:47');
+INSERT INTO `weiboSight` VALUES (12, '丽江旅游', '2019-01-01', '2019-01-16', '4329180810573853', 'https://m.weibo.cn/status/4329180810573853', '旅游攻略记事本', '【云南旅游攻略】云南自由行怎么玩，云南必去景点都有哪些泸沽湖，玉龙雪山，拉市海，千古情等等这是丽江旅游攻略和丽江旅行攻略，大理旅游攻略的苍山洱海，算是大理旅行攻略希望大家都有一个完美的旅行#玩出新年味# #新年旅行# ​', '01月16日 20:10', '  12', ' 12', '17', '2019-02-21 21:46:49');
+INSERT INTO `weiboSight` VALUES (13, '丽江旅游', '2019-01-01', '2019-01-16', '4329170760387407', 'https://m.weibo.cn/status/4329170760387407', '宣大东草履虫Angela', '云南大理丽江旅游攻略~ ​', '01月16日 19:30', '  ', ' ', '', '2019-02-21 21:47:13');
+INSERT INTO `weiboSight` VALUES (14, '丽江旅游', '2019-01-01', '2019-01-16', '4329165974696229', 'https://m.weibo.cn/status/4329165974696229', '被爱撕碎的风噪', '【史上最全丽江旅游攻略】一篇攻略解决你所有问题：什么时间去丽江合适、行程大概花费多少、需要带哪些物品、交通、住宿、天气及穿衣指南、游玩路线、各景点注意问题...吐血整理超靠谱丽江攻略，想去丽江的朋友们转起收藏吧！<a  href=\"O网页链接\" data-hide=\"\"></a> ​', '01月16日 19:11', '  ', ' ', '', '2019-02-21 21:47:15');
+INSERT INTO `weiboSight` VALUES (15, '丽江旅游', '2019-01-01', '2019-01-16', '4329164041372959', 'https://m.weibo.cn/status/4329164041372959', '旅行君cathy', '【云南旅游攻略】云南自由行怎么玩，云南必去景点都有哪些泸沽湖，玉龙雪山，拉市海，千古情等等这是丽江旅游攻略和丽江旅行攻略，大理旅游攻略的苍山洱海，算是大理旅行攻略希望大家都有一个完美的旅行 ​​​​', '01月16日 19:03', '  ', ' ', '', '2019-02-21 21:47:17');
+INSERT INTO `weiboSight` VALUES (16, '丽江旅游', '2019-01-01', '2019-01-16', '4329164012508329', 'https://m.weibo.cn/status/4329164012508329', '旅行君cathy', '【云南旅游攻略】云南自由行怎么玩，云南必去景点都有哪些泸沽湖，玉龙雪山，拉市海，千古情等等这是丽江旅游攻略和丽江旅行攻略，大理旅游攻略的苍山洱海，算是大理旅行攻略希望大家都有一个完美的旅行 ​​​​', '01月16日 19:03', '  ', ' ', '', '2019-02-21 21:47:20');
+INSERT INTO `weiboSight` VALUES (17, '丽江旅游', '2019-01-01', '2019-01-16', '4329160689860436', 'https://m.weibo.cn/status/4329160689860436', '名表控单眼皮的李三金', '云南大理丽江旅游攻略~ ​', '01月16日 18:50', '  ', ' ', '', '2019-02-21 21:47:22');
+INSERT INTO `weiboSight` VALUES (18, '丽江旅游', '2019-01-01', '2019-01-16', '4329158517474037', 'https://m.weibo.cn/status/4329158517474037', '短线淘金', '2019农历猪年春节临近，有经验的投资者已经开始忙着布局这难得的投资时机。资本市场上，白酒大涨，掀开春节概念股炒作热浪。白酒、家用电器、传媒、软性饮料、黄酒、啤酒等行业受到资金青睐。那么，2019年春节概念股有哪些呢？淘金梳理了一下，大家可以参考：一、白酒：龙头贵州茅台、金种子酒、山 ​  展开全文c                \n                    2019农历猪年春节临近，有经验的投资者已经开始忙着布局这难得的投资时机。资本市场上，白酒大涨，掀开春节概念股炒作热浪。白酒、家用电器、传媒、软性饮料、黄酒、啤酒等行业受到资金青睐。那么，2019年春节概念股有哪些呢？淘金梳理了一下，大家可以参考：一、白酒：龙头贵州茅台、金种子酒、山西汾酒、水井坊、泸州老窖、古井贡酒、酒鬼酒、洋河股份、老白干酒、五粮液、舍得酒业等；二、轻消费：来伊份、洽洽食品、煌上煌、金字火腿、绝味食品、盐津铺子、桂发祥、海欣食品、三全食品等；三、新零售商超：国芳集团、新华都、中央商场、津劝业、三江购物；四、春运：铁龙物流、广深铁路、大秦铁路、上港集团、宁波港、中国国航、中远海控、中远海发；五、贺岁档传媒影院：光线传媒、北京文化、中文传媒、印记传媒、当代东方、天舟文化、万达电影；六、旅游：丽江旅游、宋城演艺、中青旅、中国国旅、国旅联合、黄山旅游、桂林旅游、长白山等。 收起全文d', '01月16日 18:41', '  ', ' ', '6', '2019-02-21 21:47:47');
+INSERT INTO `weiboSight` VALUES (19, '丽江旅游', '2019-01-01', '2019-01-16', '4329157251336103', 'https://m.weibo.cn/status/4329157251336103', '这里是旅游小马甲', '云南自由行攻略，大理丽江泸沽湖七天行程，告诉你云南怎么玩，也许爱情就在洱海边大理旅游攻略，迎接云南旅行攻略新的开心。丽江旅行攻略是在寻找新的美丽，云南旅游攻略追逐新的感观世界，丢掉多余的自己，遇上最真实的自己丽江旅游攻略，云南大理洱海大理苍山、大理双廊大理古城 ，这些大理景点都值 ​  展开全文c                \n                    云南自由行攻略，大理丽江泸沽湖七天行程，告诉你云南怎么玩，也许爱情就在洱海边大理旅游攻略，迎接云南旅行攻略新的开心。丽江旅行攻略是在寻找新的美丽，云南旅游攻略追逐新的感观世界，丢掉多余的自己，遇上最真实的自己丽江旅游攻略，云南大理洱海大理苍山、大理双廊大理古城 ，这些大理景点都值得你去，还有大理古城；云南丽江玉龙雪山，丽江拉市海，束河古镇和丽江古城，一定要看看，真的是大好河山都在云南省！昆明旅游攻略下次来去昆明旅行攻略，还有泸沽湖和香格里拉 收起全文d', '01月16日 18:36', '  339', ' 297', '2018', '2019-02-21 21:47:49');
+INSERT INTO `weiboSight` VALUES (20, '大理旅游', '2019-01-01', '2019-01-16', '4329222040223399', 'https://m.weibo.cn/status/4329222040223399', '向往的旅游V', '去大理怎么玩？一份史上最全大理旅游攻略送给你，带你一周玩转大理！#旅游##向往的旅游# ​', '01月16日 22:53', '  9', ' 2', '4', '2019-02-21 21:48:02');
+INSERT INTO `weiboSight` VALUES (22, '大理旅游', '2019-01-01', '2019-01-16', '4329216893668595', 'https://m.weibo.cn/status/4329216893668595', '松夏央宗旅行', '#新浪看点# 2018年大理十大旅游景点推荐 大理旅游景点排行榜O2018年大理十大旅游景点推荐 大理旅游景点排行榜 ​', '01月16日 22:33', '  ', ' ', '', '2019-02-21 21:48:27');
+INSERT INTO `weiboSight` VALUES (23, '大理旅游', '2019-01-01', '2019-01-16', '4329213630566184', 'https://m.weibo.cn/status/4329213630566184', '在昭通', '大理旅游晚安啦！ ​', '01月16日 22:20', '  ', ' ', '', '2019-02-21 21:48:30');
+INSERT INTO `weiboSight` VALUES (24, '大理旅游', '2019-01-01', '2019-01-16', '4329213567177905', 'https://m.weibo.cn/status/4329213567177905', '在昭通', '大理旅游今天你们都有什么趣事要分享的啊？ ​', '01月16日 22:20', '  ', ' ', '', '2019-02-21 21:48:32');
+INSERT INTO `weiboSight` VALUES (25, '大理旅游', '2019-01-01', '2019-01-16', '4329201048144832', 'https://m.weibo.cn/status/4329201048144832', 'AKAYA_圣火烧酒钱', '//@杜王町金毛玲:想吃//@仿生榨汁机:傣味真滴好吃 云南南部瑞丽景洪的菜味道太特别了//@缓缓焚香 :？暗中记下//@被蛋卷卷 : 我去丽江大理旅游的时候对云南菜印象很差 但自从去过瑞丽后 傣族菜令我魂牵梦绕 傣味就是神味//@girldaisy :我饿了                \n                                    听我讲个云南的故事：说到云南。外省人一定想到过桥米线、饵块饵丝，肤浅。云南绝不只有大理丽江香格里拉，要知道，云南是一个多民族聚集的神地，只是很多地方不够“旅游景点”，大部分人不爱去了解。去年经过怒江州的六库，看到有穿民族服装的阿姨在路边卖米粉，我走过去问她多少钱，她说二十，我 ​  展开全文c                                \n                                    听我讲个云南的故事：说到云南。外省人一定想到过桥米线、饵块饵丝，肤浅。云南绝不只有大理丽江香格里拉，要知道，云南是一个多民族聚集的神地，只是很多地方不够“旅游景点”，大部分人不爱去了解。去年经过怒江州的六库，看到有穿民族服装的阿姨在路边卖米粉，我走过去问她多少钱，她说二十，我想，又不是北京，一碗细米粉二十未免太过分，一定是欺负我外地人，就嗤之以鼻的走开了。到了晚上，又看到几个少数民族阿姨在卖这种米粉，又去问，还是二十，才发现价钱就这样没人坑我，于是坐在路边要了一碗。阿姨先给了我一个大号金属碗，碗里面是装满绿色稀碎叶子的汤水，过了一会儿又端上来一个大盘子，盘子里是堆得冒尖的细米粉和牛肉干。阿姨跟我说：把米粉夹起来，放进绿色的汤水里沾一下再吃，我照做了。我把米粉放进嘴巴的那一刻，灵魂出窍了，我cnm我疯了，我感觉自己吃到了连爱新觉罗也没有吃过的仙粉。北京多牛逼啊，什么没有，我吃过米其林，吃过中国外国各种菜，没有一个让我这么震撼。这个米粉看起来平平无奇，像米线，放进蘸料中，瞬间变得滑溜爽口，入口波波脆，口感酸辣还带着异香，这个酸不是我们常见的醋酸，而是果实的香酸，带着绿色柠檬的清香。我在六库连续吃了三次，依依不舍离开了，回到北京，日思夜想抓耳挠腮，差点出现幻觉，我吃遍三里屯的杂交云南馆子，都是屎，都是假的，我仰天长啸，感到无比痛苦，从来没有任何食物可以引发我如此夸张的想念。我知道这是傣族的食物，叫撒撇（图1234），因为中了这种傣毒，我不得不在这个冬天再次来到云南，来到边境傣族人的大本营暂时解毒，我每天都在吃撒撇，吃得米粉都要从鼻孔里冒出来，我跟狗哥说：我们必须吃到呕吐，恶心，不然回去之后还会痛苦。殊不知，云南人还有更多夸张的食物，比如佤族人，他们吃一种饭叫鸡肉烂饭（图5），味道我形容不了，吃完马上下跪。泡鲁达（图6）虽然很多城市餐馆也做，笑了，还不如喝珍珠奶茶，这边的泡鲁达椰奶香味之浓郁，上面的脆饼奶味之厚重，吃完马上想住院打吊瓶免得晕倒，还有牛干巴（图7）、甩粑粑（奶香鸡蛋香脆波波）、牛肉丸子（嫩滑Q弹入口即化）blablabla。我就这么跟你们说吧，没有x生活的我和狗哥，只会在云南的餐桌上发出此起彼伏的呻吟声。云南人，你们太过分了，竟然如此傣毒，我就算走了，也不会放过你们的，给我记住，我迟早要吃垮你们。（我现在到瑞丽了，有没有姐妹推荐好吃的） 2芒 · 勐焕街区 收起全文d', '01月14日 19:28', '  ', ' ', '', '2019-02-21 21:48:34');
+INSERT INTO `weiboSight` VALUES (26, '大理旅游', '2019-01-01', '2019-01-16', '4329197935575278', 'https://m.weibo.cn/status/4329197935575278', '离乡还有多少哩', '//@新一盒奶油方方: //@仿生榨汁机: 傣味真滴好吃 云南南部瑞丽景洪的菜味道太特别了//@被蛋卷卷: 我去丽江大理旅游的时候对云南菜印象很差 但自从去过瑞丽后 傣族菜令我魂牵梦绕 傣味就是神味                \n                                    听我讲个云南的故事：说到云南。外省人一定想到过桥米线、饵块饵丝，肤浅。云南绝不只有大理丽江香格里拉，要知道，云南是一个多民族聚集的神地，只是很多地方不够“旅游景点”，大部分人不爱去了解。去年经过怒江州的六库，看到有穿民族服装的阿姨在路边卖米粉，我走过去问她多少钱，她说二十，我 ​  展开全文c                                \n                                    听我讲个云南的故事：说到云南。外省人一定想到过桥米线、饵块饵丝，肤浅。云南绝不只有大理丽江香格里拉，要知道，云南是一个多民族聚集的神地，只是很多地方不够“旅游景点”，大部分人不爱去了解。去年经过怒江州的六库，看到有穿民族服装的阿姨在路边卖米粉，我走过去问她多少钱，她说二十，我想，又不是北京，一碗细米粉二十未免太过分，一定是欺负我外地人，就嗤之以鼻的走开了。到了晚上，又看到几个少数民族阿姨在卖这种米粉，又去问，还是二十，才发现价钱就这样没人坑我，于是坐在路边要了一碗。阿姨先给了我一个大号金属碗，碗里面是装满绿色稀碎叶子的汤水，过了一会儿又端上来一个大盘子，盘子里是堆得冒尖的细米粉和牛肉干。阿姨跟我说：把米粉夹起来，放进绿色的汤水里沾一下再吃，我照做了。我把米粉放进嘴巴的那一刻，灵魂出窍了，我cnm我疯了，我感觉自己吃到了连爱新觉罗也没有吃过的仙粉。北京多牛逼啊，什么没有，我吃过米其林，吃过中国外国各种菜，没有一个让我这么震撼。这个米粉看起来平平无奇，像米线，放进蘸料中，瞬间变得滑溜爽口，入口波波脆，口感酸辣还带着异香，这个酸不是我们常见的醋酸，而是果实的香酸，带着绿色柠檬的清香。我在六库连续吃了三次，依依不舍离开了，回到北京，日思夜想抓耳挠腮，差点出现幻觉，我吃遍三里屯的杂交云南馆子，都是屎，都是假的，我仰天长啸，感到无比痛苦，从来没有任何食物可以引发我如此夸张的想念。我知道这是傣族的食物，叫撒撇（图1234），因为中了这种傣毒，我不得不在这个冬天再次来到云南，来到边境傣族人的大本营暂时解毒，我每天都在吃撒撇，吃得米粉都要从鼻孔里冒出来，我跟狗哥说：我们必须吃到呕吐，恶心，不然回去之后还会痛苦。殊不知，云南人还有更多夸张的食物，比如佤族人，他们吃一种饭叫鸡肉烂饭（图5），味道我形容不了，吃完马上下跪。泡鲁达（图6）虽然很多城市餐馆也做，笑了，还不如喝珍珠奶茶，这边的泡鲁达椰奶香味之浓郁，上面的脆饼奶味之厚重，吃完马上想住院打吊瓶免得晕倒，还有牛干巴（图7）、甩粑粑（奶香鸡蛋香脆波波）、牛肉丸子（嫩滑Q弹入口即化）blablabla。我就这么跟你们说吧，没有x生活的我和狗哥，只会在云南的餐桌上发出此起彼伏的呻吟声。云南人，你们太过分了，竟然如此傣毒，我就算走了，也不会放过你们的，给我记住，我迟早要吃垮你们。（我现在到瑞丽了，有没有姐妹推荐好吃的） 2芒 · 勐焕街区 收起全文d', '01月14日 19:28', '  ', ' ', '', '2019-02-21 21:48:36');
+INSERT INTO `weiboSight` VALUES (27, '大理旅游', '2019-01-01', '2019-01-16', '4329194760412464', 'https://m.weibo.cn/status/4329194760412464', '丑寶寶的秘密花園', '#云南旅游攻略##大理旅游跟拍##云南旅行跟拍# 走走停停，第一次接触旅拍感觉超好，摄影师小龙很不错，热情、细心，总能给我们带来不一样的欢笑，最重要人特别好，照片拍的更好，来大理旅游，一定要找他@Seven小龙 ​', '01月16日 21:05', '  ', ' ', '2', '2019-02-21 21:48:39');
+INSERT INTO `weiboSight` VALUES (28, '大理旅游', '2019-01-01', '2019-01-16', '4329192151757576', 'https://m.weibo.cn/status/4329192151757576', '包小小兔', '啊，神仙云南菜。//@缓缓焚香 :？暗中记下//@被蛋卷卷 : 我去丽江大理旅游的时候对云南菜印象很差 但自从去过瑞丽后 傣族菜令我魂牵梦绕 傣味就是神味//@girldaisy :我饿了                \n                                    听我讲个云南的故事：说到云南。外省人一定想到过桥米线、饵块饵丝，肤浅。云南绝不只有大理丽江香格里拉，要知道，云南是一个多民族聚集的神地，只是很多地方不够“旅游景点”，大部分人不爱去了解。去年经过怒江州的六库，看到有穿民族服装的阿姨在路边卖米粉，我走过去问她多少钱，她说二十，我 ​  展开全文c                                \n                                    听我讲个云南的故事：说到云南。外省人一定想到过桥米线、饵块饵丝，肤浅。云南绝不只有大理丽江香格里拉，要知道，云南是一个多民族聚集的神地，只是很多地方不够“旅游景点”，大部分人不爱去了解。去年经过怒江州的六库，看到有穿民族服装的阿姨在路边卖米粉，我走过去问她多少钱，她说二十，我想，又不是北京，一碗细米粉二十未免太过分，一定是欺负我外地人，就嗤之以鼻的走开了。到了晚上，又看到几个少数民族阿姨在卖这种米粉，又去问，还是二十，才发现价钱就这样没人坑我，于是坐在路边要了一碗。阿姨先给了我一个大号金属碗，碗里面是装满绿色稀碎叶子的汤水，过了一会儿又端上来一个大盘子，盘子里是堆得冒尖的细米粉和牛肉干。阿姨跟我说：把米粉夹起来，放进绿色的汤水里沾一下再吃，我照做了。我把米粉放进嘴巴的那一刻，灵魂出窍了，我cnm我疯了，我感觉自己吃到了连爱新觉罗也没有吃过的仙粉。北京多牛逼啊，什么没有，我吃过米其林，吃过中国外国各种菜，没有一个让我这么震撼。这个米粉看起来平平无奇，像米线，放进蘸料中，瞬间变得滑溜爽口，入口波波脆，口感酸辣还带着异香，这个酸不是我们常见的醋酸，而是果实的香酸，带着绿色柠檬的清香。我在六库连续吃了三次，依依不舍离开了，回到北京，日思夜想抓耳挠腮，差点出现幻觉，我吃遍三里屯的杂交云南馆子，都是屎，都是假的，我仰天长啸，感到无比痛苦，从来没有任何食物可以引发我如此夸张的想念。我知道这是傣族的食物，叫撒撇（图1234），因为中了这种傣毒，我不得不在这个冬天再次来到云南，来到边境傣族人的大本营暂时解毒，我每天都在吃撒撇，吃得米粉都要从鼻孔里冒出来，我跟狗哥说：我们必须吃到呕吐，恶心，不然回去之后还会痛苦。殊不知，云南人还有更多夸张的食物，比如佤族人，他们吃一种饭叫鸡肉烂饭（图5），味道我形容不了，吃完马上下跪。泡鲁达（图6）虽然很多城市餐馆也做，笑了，还不如喝珍珠奶茶，这边的泡鲁达椰奶香味之浓郁，上面的脆饼奶味之厚重，吃完马上想住院打吊瓶免得晕倒，还有牛干巴（图7）、甩粑粑（奶香鸡蛋香脆波波）、牛肉丸子（嫩滑Q弹入口即化）blablabla。我就这么跟你们说吧，没有x生活的我和狗哥，只会在云南的餐桌上发出此起彼伏的呻吟声。云南人，你们太过分了，竟然如此傣毒，我就算走了，也不会放过你们的，给我记住，我迟早要吃垮你们。（我现在到瑞丽了，有没有姐妹推荐好吃的） 2芒 · 勐焕街区 收起全文d', '01月14日 19:28', '  ', ' ', '', '2019-02-21 21:48:41');
+INSERT INTO `weiboSight` VALUES (30, '大理旅游', '2019-01-01', '2019-01-16', '4329190188163385', 'https://m.weibo.cn/status/4329190188163385', '钦天监刍藁星线油纸航路', '//@杜王町金毛玲:想吃//@仿生榨汁机:傣味真滴好吃 云南南部瑞丽景洪的菜味道太特别了//@缓缓焚香 :？暗中记下//@被蛋卷卷 : 我去丽江大理旅游的时候对云南菜印象很差 但自从去过瑞丽后 傣族菜令我魂牵梦绕 傣味就是神味//@girldaisy :我饿了                \n                                    听我讲个云南的故事：说到云南。外省人一定想到过桥米线、饵块饵丝，肤浅。云南绝不只有大理丽江香格里拉，要知道，云南是一个多民族聚集的神地，只是很多地方不够“旅游景点”，大部分人不爱去了解。去年经过怒江州的六库，看到有穿民族服装的阿姨在路边卖米粉，我走过去问她多少钱，她说二十，我 ​  展开全文c                                \n                                    听我讲个云南的故事：说到云南。外省人一定想到过桥米线、饵块饵丝，肤浅。云南绝不只有大理丽江香格里拉，要知道，云南是一个多民族聚集的神地，只是很多地方不够“旅游景点”，大部分人不爱去了解。去年经过怒江州的六库，看到有穿民族服装的阿姨在路边卖米粉，我走过去问她多少钱，她说二十，我想，又不是北京，一碗细米粉二十未免太过分，一定是欺负我外地人，就嗤之以鼻的走开了。到了晚上，又看到几个少数民族阿姨在卖这种米粉，又去问，还是二十，才发现价钱就这样没人坑我，于是坐在路边要了一碗。阿姨先给了我一个大号金属碗，碗里面是装满绿色稀碎叶子的汤水，过了一会儿又端上来一个大盘子，盘子里是堆得冒尖的细米粉和牛肉干。阿姨跟我说：把米粉夹起来，放进绿色的汤水里沾一下再吃，我照做了。我把米粉放进嘴巴的那一刻，灵魂出窍了，我cnm我疯了，我感觉自己吃到了连爱新觉罗也没有吃过的仙粉。北京多牛逼啊，什么没有，我吃过米其林，吃过中国外国各种菜，没有一个让我这么震撼。这个米粉看起来平平无奇，像米线，放进蘸料中，瞬间变得滑溜爽口，入口波波脆，口感酸辣还带着异香，这个酸不是我们常见的醋酸，而是果实的香酸，带着绿色柠檬的清香。我在六库连续吃了三次，依依不舍离开了，回到北京，日思夜想抓耳挠腮，差点出现幻觉，我吃遍三里屯的杂交云南馆子，都是屎，都是假的，我仰天长啸，感到无比痛苦，从来没有任何食物可以引发我如此夸张的想念。我知道这是傣族的食物，叫撒撇（图1234），因为中了这种傣毒，我不得不在这个冬天再次来到云南，来到边境傣族人的大本营暂时解毒，我每天都在吃撒撇，吃得米粉都要从鼻孔里冒出来，我跟狗哥说：我们必须吃到呕吐，恶心，不然回去之后还会痛苦。殊不知，云南人还有更多夸张的食物，比如佤族人，他们吃一种饭叫鸡肉烂饭（图5），味道我形容不了，吃完马上下跪。泡鲁达（图6）虽然很多城市餐馆也做，笑了，还不如喝珍珠奶茶，这边的泡鲁达椰奶香味之浓郁，上面的脆饼奶味之厚重，吃完马上想住院打吊瓶免得晕倒，还有牛干巴（图7）、甩粑粑（奶香鸡蛋香脆波波）、牛肉丸子（嫩滑Q弹入口即化）blablabla。我就这么跟你们说吧，没有x生活的我和狗哥，只会在云南的餐桌上发出此起彼伏的呻吟声。云南人，你们太过分了，竟然如此傣毒，我就算走了，也不会放过你们的，给我记住，我迟早要吃垮你们。（我现在到瑞丽了，有没有姐妹推荐好吃的） 2芒 · 勐焕街区 收起全文d', '01月14日 19:28', '  ', ' ', '1', '2019-02-21 21:48:47');
+INSERT INTO `weiboSight` VALUES (31, '大理旅游', '2019-01-01', '2019-01-16', '4329190058798417', 'https://m.weibo.cn/status/4329190058798417', '奕兽兽兽', '啊//@缓缓焚香:？暗中记下//@被蛋卷卷: 我去丽江大理旅游的时候对云南菜印象很差 但自从去过瑞丽后 傣族菜令我魂牵梦绕 傣味就是神味//@girldaisy:我饿了                \n                                    听我讲个云南的故事：说到云南。外省人一定想到过桥米线、饵块饵丝，肤浅。云南绝不只有大理丽江香格里拉，要知道，云南是一个多民族聚集的神地，只是很多地方不够“旅游景点”，大部分人不爱去了解。去年经过怒江州的六库，看到有穿民族服装的阿姨在路边卖米粉，我走过去问她多少钱，她说二十，我 ​  展开全文c                                \n                                    听我讲个云南的故事：说到云南。外省人一定想到过桥米线、饵块饵丝，肤浅。云南绝不只有大理丽江香格里拉，要知道，云南是一个多民族聚集的神地，只是很多地方不够“旅游景点”，大部分人不爱去了解。去年经过怒江州的六库，看到有穿民族服装的阿姨在路边卖米粉，我走过去问她多少钱，她说二十，我想，又不是北京，一碗细米粉二十未免太过分，一定是欺负我外地人，就嗤之以鼻的走开了。到了晚上，又看到几个少数民族阿姨在卖这种米粉，又去问，还是二十，才发现价钱就这样没人坑我，于是坐在路边要了一碗。阿姨先给了我一个大号金属碗，碗里面是装满绿色稀碎叶子的汤水，过了一会儿又端上来一个大盘子，盘子里是堆得冒尖的细米粉和牛肉干。阿姨跟我说：把米粉夹起来，放进绿色的汤水里沾一下再吃，我照做了。我把米粉放进嘴巴的那一刻，灵魂出窍了，我cnm我疯了，我感觉自己吃到了连爱新觉罗也没有吃过的仙粉。北京多牛逼啊，什么没有，我吃过米其林，吃过中国外国各种菜，没有一个让我这么震撼。这个米粉看起来平平无奇，像米线，放进蘸料中，瞬间变得滑溜爽口，入口波波脆，口感酸辣还带着异香，这个酸不是我们常见的醋酸，而是果实的香酸，带着绿色柠檬的清香。我在六库连续吃了三次，依依不舍离开了，回到北京，日思夜想抓耳挠腮，差点出现幻觉，我吃遍三里屯的杂交云南馆子，都是屎，都是假的，我仰天长啸，感到无比痛苦，从来没有任何食物可以引发我如此夸张的想念。我知道这是傣族的食物，叫撒撇（图1234），因为中了这种傣毒，我不得不在这个冬天再次来到云南，来到边境傣族人的大本营暂时解毒，我每天都在吃撒撇，吃得米粉都要从鼻孔里冒出来，我跟狗哥说：我们必须吃到呕吐，恶心，不然回去之后还会痛苦。殊不知，云南人还有更多夸张的食物，比如佤族人，他们吃一种饭叫鸡肉烂饭（图5），味道我形容不了，吃完马上下跪。泡鲁达（图6）虽然很多城市餐馆也做，笑了，还不如喝珍珠奶茶，这边的泡鲁达椰奶香味之浓郁，上面的脆饼奶味之厚重，吃完马上想住院打吊瓶免得晕倒，还有牛干巴（图7）、甩粑粑（奶香鸡蛋香脆波波）、牛肉丸子（嫩滑Q弹入口即化）blablabla。我就这么跟你们说吧，没有x生活的我和狗哥，只会在云南的餐桌上发出此起彼伏的呻吟声。云南人，你们太过分了，竟然如此傣毒，我就算走了，也不会放过你们的，给我记住，我迟早要吃垮你们。（我现在到瑞丽了，有没有姐妹推荐好吃的） 2芒 · 勐焕街区 收起全文d', '01月14日 19:28', '  ', ' 1', '', '2019-02-21 21:48:49');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

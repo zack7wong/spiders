@@ -18,6 +18,7 @@ import jieba.posseg as pseg
 
 
 def read():
+    #读数据
     sql = "select * from weiboComment"
     results = mysqlCli.find_all(sql)
     item_list = []

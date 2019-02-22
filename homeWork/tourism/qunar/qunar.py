@@ -9,6 +9,7 @@ import math
 def get_comment(sightId,commentCount):
     totalNum = math.ceil(int(commentCount)/10)
     print(totalNum)
+    #翻页
     for i in range(1,int(totalNum)+1):
         print('当前页：'+str(i))
         start_url = 'https://touch.piao.qunar.com/touch/queryCommentsAndTravelTips.json?type=mp&pageSize=10&fromType=SIGHT&pageNum={pageToken}&sightId={sightId}&tagType=0'
@@ -19,7 +20,7 @@ def get_comment(sightId,commentCount):
             # print(response.text)
 
             json_obj = json.loads(response.text)
-
+            #字段处理
             for data in json_obj['data']['commentList']:
                 print(data)
                 commentId = data['commentId']
@@ -28,6 +29,7 @@ def get_comment(sightId,commentCount):
                 date = data['date']
                 sightName = data['sightName']
 
+                #存数据
                 sql = "insert into qunarComment(sightId,commentId,author,content,date,sightName) values ('%s','%s','%s','%s','%s','%s')" % (sightId, commentId, author, content, date, sightName)+ "ON DUPLICATE KEY UPDATE content='%s'"%(content)
                 mysqlCli.save(sql)
         except:
@@ -36,7 +38,7 @@ def get_comment(sightId,commentCount):
 
 
 def get_sight():
-
+    #翻页
     for i in range(1,8):
         print('当前列表页：'+str(i))
         start_url = 'http://touch.piao.qunar.com/touch/list.json?region=西宁&isForeign=false&page={pageToken}&pageSize=10&keyword=景点门票'
@@ -45,10 +47,12 @@ def get_sight():
         response = requests.get(url)
         # print(response.text)
         json_obj = json.loads(response.text)
+        #字段处理
         for data in json_obj['data']['sightList']:
             sightId = data['id']
             name = data['name']
-            sightSimpleDesc = data['sightSimpleDesc'] if 'sightSimpleDesc' in data else ''
+
+            sightSimpleDesc = data['sightSimpleDesc'] if 'sightSimpleDesc' in data else '' #字段不存在特殊处理
             url = 'http:'+ data['url']
             commentCount = data['commentCount']
             addressDetail = data['addressDetail']
@@ -64,11 +68,13 @@ def get_sight():
                 'addressDetail': addressDetail,
             }
             print(json.dumps(obj))
+            #存数据
             sql = "insert into qunarSight(sightId,name,sightSimpleDesc,url,commentCount,addressDetail) values ('%s','%s','%s','%s','%s','%s')"%(sightId,name,sightSimpleDesc,url,commentCount,addressDetail)\
                   + "ON DUPLICATE KEY UPDATE sightSimpleDesc='%s'"%(sightSimpleDesc)
             # print(sql)
             mysqlCli.save(sql)
 
+            #获取评论
             get_comment(sightId,commentCount)
 
 
@@ -77,5 +83,6 @@ def start():
 
 
 if __name__ == '__main__':
+    #实例化数据库对象
     mysqlCli = db.MysqlClient()
     start()
