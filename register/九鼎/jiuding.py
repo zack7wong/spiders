@@ -235,7 +235,9 @@ def main(useaname, password, start_url):
 
 if __name__ == '__main__':
     #http://www.xsj280.com/home/usercenter/redpack/rid/RR812MGW82HOX96TD2EZ
-    start_url = input('请输入链接：')
+    # start_url = input('请输入链接：')
+    with open('链接.txt') as f:
+        start_url = f.read().strip()
     # start_url = 'http://www.jiuding288.com/home/usercenter/redpack/rid/DA4R5O099IZIYAJCHQ87'
     account_list = []
     with open('手机号.txt') as f:
