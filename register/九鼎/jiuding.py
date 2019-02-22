@@ -238,6 +238,7 @@ if __name__ == '__main__':
     # start_url = input('请输入链接：')
     with open('链接.txt') as f:
         start_url = f.read().strip()
+    print('当前链接：'+start_url)
     # start_url = 'http://www.jiuding288.com/home/usercenter/redpack/rid/DA4R5O099IZIYAJCHQ87'
     account_list = []
     with open('手机号.txt') as f:
