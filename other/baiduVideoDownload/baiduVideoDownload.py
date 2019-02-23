@@ -66,7 +66,7 @@ def start():
                     print('正在下载：'+title)
                     fileName = title+'.mp4'
                     fileName = os.path.join('video', fileName)
-                    urllib.request.urlretrieve(videoUrl, fileName)
+                    # urllib.request.urlretrieve(videoUrl, fileName)
                     try:
                         urllib.request.urlretrieve(videoUrl, fileName)
                         print('下载成功')
