@@ -67,8 +67,8 @@ def get_ciyun(id,comments):
     wc = WordCloud(background_color="white",  # 设置背景颜色
                    mask=alice_mask,  # 设置背景图片
                    max_words=2000,  # 设置最大显示的字数
-                   # font_path="C:\Windows\Fonts\SimHei.ttf",
-                   font_path="/System/Library/Fonts/PingFang.ttc",
+                   font_path="C:\Windows\Fonts\SimHei.ttf",
+                   # font_path="/System/Library/Fonts/PingFang.ttc",
                    max_font_size=50,  # 设置字体最大值
                    random_state=30,
                    )
