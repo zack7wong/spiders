@@ -18,7 +18,8 @@ headers = {
     'Accept-Language': "zh-CN,zh;q=0.9",
     'Cache-Control': "no-cache",
     'Connection': "keep-alive",
-    'Cookie': "rpdid=iwkikxiqoodospxmmokqw; stardustvideo=1; CURRENT_FNVAL=16; sid=ljzva72k; _uuid=03657428-C497-FD68-A602-C6B7BC4E158276744infoc; buvid3=D4C4D108-B1A6-4B0B-BF18-00707BB34B8A65962infoc; LIVE_BUVID=AUTO2015509224772438; fts=1550923670",
+    # 'Cookie': "rpdid=iwkikxiqoodospxmmokqw; stardustvideo=1; CURRENT_FNVAL=16; sid=ljzva72k; _uuid=03657428-C497-FD68-A602-C6B7BC4E158276744infoc; buvid3=D4C4D108-B1A6-4B0B-BF18-00707BB34B8A65962infoc; LIVE_BUVID=AUTO2015509224772438; fts=1550923670",
+    # 'Cookie': "rpdid=iwkikxiqoodospxmmokqw; stardustvideo=1; CURRENT_FNVAL=16; sid=ljzva72k; _uuid=03657428-C497-FD68-A602-C6B7BC4E158276744infoc; buvid3=D4C4D108-B1A6-4B0B-BF18-00707BB34B8A65962infoc; LIVE_BUVID=AUTO2015509224772438; fts=1550923670",
     'Host': "www.bilibili.com",
     'Pragma': "no-cache",
     'Upgrade-Insecure-Requests': "1",
@@ -30,6 +31,7 @@ def get_danmu(id):
     url = 'https://www.bilibili.com/video/av'+id
     print(url)
     response = requests.get(url, headers=headers, verify=False)
+    # print(response.text)
     #在网页源码中用正则查找
     res = re.search('window.__INITIAL_STATE__=(.*?);\(function\(\){var s;',response.text).group(1)
     json_obj = json.loads(res)
@@ -66,7 +68,7 @@ def get_ciyun(id,comments):
     # 设置词云
     wc = WordCloud(background_color="white",  # 设置背景颜色
                    mask=alice_mask,  # 设置背景图片
-                   max_words=2000,  # 设置最大显示的字数
+                   max_words=1500,  # 设置最大显示的字数
                    font_path="C:\Windows\Fonts\SimHei.ttf",
                    # font_path="/System/Library/Fonts/PingFang.ttc",
                    max_font_size=50,  # 设置字体最大值
@@ -87,6 +89,6 @@ def start(id):
 
 
 if __name__ == '__main__':
-    id_list = ['44009942?','43822309']
+    id_list = ['44009942','43822309']
     for id in id_list:
         start(id)
