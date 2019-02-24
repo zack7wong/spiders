@@ -245,6 +245,8 @@ def setComment(link,mycomment):
         # time.sleep(10)
 
 def start():
+
+    #获取第一页
     pageToken = 1
     start_url = 'https://forum.cyberctm.com/home.php?mod=space&uid=503430&do=thread&view=me&order=dateline&page='+str(pageToken)
     if USE_PROXY:
@@ -272,6 +274,35 @@ def start():
         item_list.append(obj)
         num+=1
 
+    #获取第二页
+    pageToken = 2
+    start_url = 'https://forum.cyberctm.com/home.php?mod=space&uid=503430&do=thread&view=me&order=dateline&page=' + str(pageToken)
+    if USE_PROXY:
+        response = requests.get(start_url, headers=start_headers, proxies=proxies)
+    else:
+        response = requests.get(start_url, headers=start_headers)
+    # print(response.text)
+    html = HTML(response.text)
+
+    url_list = html.xpath('//ul[@id="waterfall"]/li/div/h2/a/@href')
+    title_list = html.xpath('//ul[@id="waterfall"]/li/div/h2/a/text()')
+
+    item_list = []
+    for url, title in zip(url_list, title_list):
+        # 请求详情页
+        print(str(num) + '. ' + title)
+        link = 'https://forum.cyberctm.com/' + url
+        # print(link)
+        obj = {
+            'numkey': str(num),
+            'link': link,
+            'title': title
+        }
+        item_list.append(obj)
+        num += 1
+
+
+    #开始评论回复
     num_input_listStr = input('\n请输入要发布评论的帖子的序号：')
     sleepTime = input('\n请输入多少分钟后循环发布：')
 
