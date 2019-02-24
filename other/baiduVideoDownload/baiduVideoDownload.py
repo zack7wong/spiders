@@ -103,12 +103,12 @@ def start():
                         try:
                             urllib.request.urlretrieve(videoUrl, fileName)
                             print('下载成功')
-                            print('暂停2秒')
-                            time.sleep(2)
+                            print('暂停3秒')
+                            time.sleep(3)
                         except:
                             print('下载失败')
-                            print('暂停2秒')
-                            time.sleep(2)
+                            print('暂停3秒')
+                            time.sleep(3)
                             continue
         else:
             print('视频数据为空')
