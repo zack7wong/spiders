@@ -287,7 +287,6 @@ def start():
     url_list = html.xpath('//ul[@id="waterfall"]/li/div/h2/a/@href')
     title_list = html.xpath('//ul[@id="waterfall"]/li/div/h2/a/text()')
 
-    item_list = []
     for url, title in zip(url_list, title_list):
         # 请求详情页
         print(str(num) + '. ' + title)
