@@ -16,7 +16,7 @@ from requests import RequestException
 
 account_list = []
 
-#IP_URL = 'http://api.xdaili.cn/xdaili-api//greatRecharge/getGreatIp?spiderId=76e61e3813bd4db29d4374c6edbe7720&orderno=YZ201811220862kmEuoK&returnType=2&count=1'
+IP_URL = 'http://api.xdaili.cn/xdaili-api//greatRecharge/getGreatIp?spiderId=76e61e3813bd4db29d4374c6edbe7720&orderno=YZ201811220862kmEuoK&returnType=2&count=1'
 
 
 def get_ip(url):
@@ -62,12 +62,15 @@ def get_driver(ip):
 
 def start(ip, not_click_tilte_list):
     url = 'https://km.58.com/daibanguohu/'
-    driver = get_driver(ip)
+    # driver = get_driver(ip)
+    driver = webdriver.Chrome()
 
     try:
         driver.get(url)
-        time.sleep(30)
-        
+        time.sleep(10)
+        driver.delete_all_cookies()
+        # driver.close()
+        # driver.quit()
     except:
         print('首页加载异常')
         driver.execute_script('window.stop()')
@@ -75,39 +78,38 @@ def start(ip, not_click_tilte_list):
         driver.close()
         driver.quit()
         return 0
-
     # WebDriverWait(driver, 15, 0.5).until(ec.presence_of_all_elements_located((By.CSS_SELECTOR, '#jingzhun')))
     html_str = driver.page_source
     html = HTML(html_str)
-    #table_res = html.xpath('//div[@id="infolist"]/table[1]//tr[@class="ac_item"]')
-    for i in range(1,4):
-        table_num = str(i)
-        table_res = html.xpath('//div[@id="infolist"]/table['+table_num+']//tr')
-        for num in range(1, len(table_res) + 1,2):
-            title_xpath = 'string(//div[@id="infolist"]/table['+table_num+']//tr[{num}]/td[2]//div[@class="tdiv"]/a/text())'.format(num=num)
-            title = html.xpath(title_xpath).replace('\n', '').replace('\t', '').replace('\r', '').strip()
-            if title not in not_click_tilte_list:
-                print(title)
-                #click_xpath = '//div[@id="infolist"]/table[1]//tr[@class="ac_item"][{num}]/td[2]//div[@class="tdiv"]/a'.format(num=num)
-                click_xpath = '//div[@id="infolist"]/table['+table_num+']//tr[{num}]/td[2]//div[@class="tdiv"]/a'.format(num=num)
-                ip = get_ip(IP_URL)
-                driver = get_driver(ip)
-                try:
-                    driver.get(url)
-                    time.sleep(30)
-                    driver.find_element_by_xpath(click_xpath).click()
-                    print('等待4分钟。。。')
-                    time.sleep(240)
-                    driver.delete_all_cookies()
-                    driver.close()
-                    driver.quit()
-                except:
-                    print('加载异常')
-                    driver.execute_script('window.stop()')
-                    driver.delete_all_cookies()
-                    driver.close()
-                    driver.quit()
-                    continue
+    # table_res = html.xpath('//div[@id="infolist"]/table[1]//tr[@class="ac_item"]')
+    table_res = html.xpath('//div[@id="infolist"]/table//a[@class="t ac_linkurl"]/@href')
+    print(table_res)
+    for num in range(1, len(table_res) + 1):
+        # title_xpath = 'string(//div[@id="infolist"]/table[1]//tr[@class="ac_item"][{num}]/td[2]//div[@class="tdiv"]/a/text())'.format(num=num)
+        # title = html.xpath(title_xpath).replace('\n', '').replace('\t', '').replace('\r', '').strip()
+        title_list = html.xpath('//div[@id="infolist"]/table//a[@class="t ac_linkurl"]/text()[1]')
+        title = title_list[num-1]
+        if title not in not_click_tilte_list:
+            print(title)
+            click_xpath = '//div[@id="infolist"]/table[1]//tr[@class="ac_item"][{num}]/td[2]//div[@class="tdiv"]/a'.format(num=num)
+            ip = get_ip(IP_URL)
+            driver = get_driver(ip)
+            try:
+                driver.get(url)
+                time.sleep(30)
+                driver.find_element_by_xpath(click_xpath).click()
+                print('等待4分钟。。。')
+                time.sleep(240)
+                driver.delete_all_cookies()
+                driver.close()
+                driver.quit()
+            except:
+                print('加载异常')
+                driver.execute_script('window.stop()')
+                driver.delete_all_cookies()
+                driver.close()
+                driver.quit()
+                continue
 
 
     print('该轮浏览完毕')
@@ -115,13 +117,10 @@ def start(ip, not_click_tilte_list):
 
 if __name__ == '__main__':
     print('程序开始运行。。。')
-    with open('标题.txt') as f:
-        not_click_tilte = f.read().strip().replace('\r','')
+    not_click_tilte = input('请输入不点击的标题名称：')
     not_click_tilte_list = not_click_tilte.split(',')
-    print('当前标题：'+str(not_click_tilte_list))
     while True:
         print('\n新的一轮开始。。。')
-        with open('讯代理.txt') as f:
-            IP_URL = f.read()
-        ip = get_ip(IP_URL)
+        # ip = get_ip(IP_URL)
+        ip = '127.0.0.1:9999'
         start(ip, not_click_tilte_list)
