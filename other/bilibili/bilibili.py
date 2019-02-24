@@ -62,6 +62,8 @@ def get_danmu(url):
         id = x['p'].split(',')[-1]
         id_list.append(id)
         print(id, x.text)
+        with open(title+'_id.txt','a') as f:
+            f.write(id+','+x.text+'\n')
 
     # print(comments)
 
@@ -83,6 +85,8 @@ def get_danmu(url):
     print(item_list)
     for item in item_list:
         print('弹幕内容：'+item['key']+'  出现的次数：'+str(item['value']))
+        with open(title+'_词频统计.txt','a') as f:
+            f.write('弹幕内容：'+item['key']+'  出现的次数：'+str(item['value'])+'\n')
 
     return comments,title
 
