@@ -27,17 +27,22 @@ headers = {
     'cache-control': "no-cache",
 }
 
-def get_danmu(id):
-    url = 'https://www.bilibili.com/video/av'+id
+def get_danmu(url):
+    # url = 'https://www.bilibili.com/video/av'+id
     print(url)
     response = requests.get(url, headers=headers, verify=False)
     # print(response.text)
     #在网页源码中用正则查找
     res = re.search('window.__INITIAL_STATE__=(.*?);\(function\(\){var s;',response.text).group(1)
     json_obj = json.loads(res)
+    # print(json.dumps(json_obj))
     #获取cid
-    title = json_obj['videoData']['title']
-    cid = str(json_obj['videoData']['cid'])
+    try:
+        title = json_obj['videoData']['title'].replace('/','').replace('“','').replace('”','').strip()
+        cid = str(json_obj['videoData']['cid'])
+    except:
+        title = json_obj['h1Title'].replace('/','').replace('“','').replace('”','').strip()
+        cid = str(json_obj['epList'][-1]['cid'])
 
     # 发起xml请求
     url = 'https://api.bilibili.com/x/v1/dm/list.so?oid='+cid  # 弹幕地址
@@ -79,9 +84,9 @@ def get_danmu(id):
     for item in item_list:
         print('弹幕内容：'+item['key']+'  出现的次数：'+str(item['value']))
 
-    return comments
+    return comments,title
 
-def get_ciyun(id,comments):
+def get_ciyun(title,comments):
     allComments = ' '.join(comments)
     text = allComments.encode()
     # 结巴分词
@@ -107,16 +112,16 @@ def get_ciyun(id,comments):
     # 展示词云图
     plt.imshow(myword)
     plt.axis("off")
-    plt.savefig(id+'.jpg')
+    plt.savefig(title+'.jpg')
     plt.show()
 
-def start(id):
-    comments = get_danmu(id)
-    get_ciyun(id,comments)
+def start(url):
+    comments,title = get_danmu(url)
+    get_ciyun(title,comments)
 
 
 
 if __name__ == '__main__':
-    id_list = ['44009942','43822309']
-    for id in id_list:
-        start(id)
+    url_list = ['https://www.bilibili.com/bangumi/play/ss5969#205890','https://www.bilibili.com/video/av43822309']
+    for url in url_list:
+        start(url)
