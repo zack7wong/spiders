@@ -50,9 +50,35 @@ def get_danmu(id):
     # 解析xml并提取弹幕内容
     soup = BeautifulSoup(html_data, 'lxml')
     results = soup.find_all('d')  # 找到所有的‘d'标签
-    comments = [x.text for x in results]  # 提取每个’d'标签的text内容，即弹幕文字
+    comments = []
+    id_list  = []
+    for x in results:  # 提取每个’d'标签的text内容，即弹幕文字
+        comments.append(x.text)
+        id = x['p'].split(',')[-1]
+        id_list.append(id)
+        print(id, x.text)
 
-    print(comments)
+    # print(comments)
+
+    item_list = []
+    account_list = []
+    for sent in comments:
+        if sent in account_list:
+            for item in item_list:
+                if item['key'] == sent:
+                    item['value'] += 1
+                    break
+        else:
+            account_list.append(sent)
+            obj = {
+                'key': sent,
+                'value': 1
+            }
+            item_list.append(obj)
+    print(item_list)
+    for item in item_list:
+        print('弹幕内容：'+item['key']+'  出现的次数：'+str(item['value']))
+
     return comments
 
 def get_ciyun(id,comments):
@@ -64,15 +90,17 @@ def get_ciyun(id,comments):
 
     d = path.dirname(__file__)
 
-    alice_mask = np.array(Image.open(path.join(d, "china.jpg")))
+    alice_mask = np.array(Image.open(path.join(d, "tupian.jpg")))
     # 设置词云
     wc = WordCloud(background_color="white",  # 设置背景颜色
                    mask=alice_mask,  # 设置背景图片
-                   max_words=1500,  # 设置最大显示的字数
-                   font_path="C:\Windows\Fonts\SimHei.ttf",
-                   # font_path="/System/Library/Fonts/PingFang.ttc",
+                   max_words=100,  # 设置最大显示的字数
+                   # font_path="C:\Windows\Fonts\SimHei.ttf",
+                   font_path="/System/Library/Fonts/PingFang.ttc",
                    max_font_size=50,  # 设置字体最大值
                    random_state=30,
+                   prefer_horizontal=1,#横向频率
+                   min_font_size = 14 #最小字体
                    )
     myword = wc.generate(wl)  # 生成词云
 
