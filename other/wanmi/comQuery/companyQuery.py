@@ -74,7 +74,7 @@ def parse(response):
 def start(domain):
 
     print(domain)
-    start_url = 'http://www.wanmi.cc/zd/'+domain
+    start_url = 'http://www.wanmi.cc/zd/'+domain+'?lx=0&zj=0&nx=0&px=0&ms=1'
     response = down.get_html(start_url,headers=headers,proxy=True)
     # response = requests.get(start_url, headers=headers)
     # print(response.text)
