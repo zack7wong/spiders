@@ -80,7 +80,7 @@ def start(ip, not_click_tilte_list):
     html_str = driver.page_source
     html = HTML(html_str)
     #table_res = html.xpath('//div[@id="infolist"]/table[1]//tr[@class="ac_item"]')
-    for i in range(1,4):
+    for i in range(1,2):
         table_num = str(i)
         table_res = html.xpath('//div[@id="infolist"]/table['+table_num+']//tr')
         for num in range(1, len(table_res) + 1,2):
