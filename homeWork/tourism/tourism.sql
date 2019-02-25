@@ -11,7 +11,7 @@
  Target Server Version : 50713
  File Encoding         : 65001
 
- Date: 22/02/2019 18:28:34
+ Date: 25/02/2019 16:25:40
 */
 
 SET NAMES utf8mb4;
@@ -31,7 +31,7 @@ CREATE TABLE `qunarComment` (
   `sightName` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`sightId`,`commentId`)
-) ENGINE=InnoDB AUTO_INCREMENT=21110 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21103 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of qunarComment
@@ -13593,7 +13593,7 @@ CREATE TABLE `qunarSight` (
   `addressDetail` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`sightId`)
-) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=92 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of qunarSight
@@ -13668,7 +13668,7 @@ COMMIT;
 DROP TABLE IF EXISTS `weiboComment`;
 CREATE TABLE `weiboComment` (
   `id` int(255) NOT NULL AUTO_INCREMENT,
-  `commentId` varchar(550) DEFAULT NULL,
+  `commentId` varchar(255) DEFAULT NULL,
   `content` text,
   `commentTime` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -13746,7 +13746,7 @@ CREATE TABLE `weiboSight` (
   `keyword` varchar(500) DEFAULT NULL,
   `startDate` varchar(500) DEFAULT NULL,
   `endDate` varchar(500) DEFAULT NULL,
-  `postId` varchar(500) DEFAULT NULL,
+  `postId` varchar(255) DEFAULT NULL,
   `url` varchar(500) DEFAULT NULL,
   `userName` varchar(500) DEFAULT NULL,
   `content` text,
