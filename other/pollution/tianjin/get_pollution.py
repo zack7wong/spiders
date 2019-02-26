@@ -62,6 +62,7 @@ def start(item):
     print(response.text)
     json_obj = json.loads(response.text)
     if json_obj['total'] == 0:
+        print('总量为0')
         return
 
     #处理第一页
