@@ -45,7 +45,7 @@ def start():
     # print(date_list)
 
     item_list = []
-    with open('fujian_id.txt') as f:
+    with open('fujian_id3.txt') as f:
         results = f.readlines()
         for res in results:
             url = res.split(',')[0]
@@ -56,51 +56,59 @@ def start():
             }
             item_list.append(obj)
 
-    # print(item_list)
+    print(len(item_list))
+    print(item_list[:10])
 
     for item in item_list:
         print(item)
-        for date in date_list:
-            print('当前日期:'+date)
-            start_url = item['url']
-            start_url = 'http://wryfb.fjemc.org.cn/page7.aspx?id=7WQYA9KY-Q905-59AG-7NMW-7SAXZILEE3WL&lawcode=75739058-1'
-            date = '2019-2-25'
-            title = item['title']
-            body = '__VIEWSTATE=%2FwEPDwUJNDk2MTM2Mzc5ZGTd37nDAAZ8HMoQ9C6MjYnecXynQQ%3D%3D&__EVENTVALIDATION=%2FwEWAwKKm%2FSpBwKnpoOOCwKY7%2B%2FtCc29g5gXa%2BvZaoWCWvhGPER39rFI&right%24l_date={date}&right%24Button1=%CB%D1%CB%F7'
-            data = body.format(date=date)
-            response = requests.post(start_url, data=data, headers=headers)
-            # print(response.text)
+        try:
+            for date in date_list:
+                print('当前日期:'+date)
+                start_url = item['url']
+                title = item['title']
+                body = '__VIEWSTATE=%2FwEPDwUJNDk2MTM2Mzc5ZGTd37nDAAZ8HMoQ9C6MjYnecXynQQ%3D%3D&__EVENTVALIDATION=%2FwEWAwKKm%2FSpBwKnpoOOCwKY7%2B%2FtCc29g5gXa%2BvZaoWCWvhGPER39rFI&right%24l_date={date}&right%24Button1=%CB%D1%CB%F7'
+                data = body.format(date=date)
+                try:
+                    response = requests.post(start_url, data=data, headers=headers,timeout=10)
+                except:
+                    continue
+                # print(response.text)
 
-            html =HTML(response.text)
-            tr_list = html.xpath('//form[@id="aspnetForm"]//div[@class="table3"]//tr')
-            if len(tr_list) == 1:
-                print('无数据')
-            for item in tr_list[1:]:
-                td_list = item.xpath('./td')
-                if len(td_list) == 8:
-                    jiancedianName = item.xpath('string(./td[1])')
-                    jianceTime = item.xpath('string(./td[2])')
-                    jianceProject = item.xpath('string(./td[3])')
-                    jianceValue = item.xpath('string(./td[4])')
-                    biaozhunValue = item.xpath('string(./td[5])')
-                    shifoudabiao = item.xpath('string(./td[6])')
-                    chaobiaobenshu = item.xpath('string(./td[7])')
-                    shifoutingchan = item.xpath('string(./td[8])')
-                elif len(td_list) == 6:
-                    jianceProject = item.xpath('string(./td[1])')
-                    jianceValue = item.xpath('string(./td[2])')
-                    biaozhunValue = item.xpath('string(./td[3])')
-                    shifoudabiao = item.xpath('string(./td[4])')
-                    chaobiaobenshu = item.xpath('string(./td[5])')
-                    shifoutingchan = item.xpath('string(./td[6])')
+                html =HTML(response.text)
+                tr_list = html.xpath('//form[@id="aspnetForm"]//div[@class="table3"]//tr')
+                if len(tr_list) == 1:
+                    print('无数据')
+                for item in tr_list[1:]:
+                    try:
+                        td_list = item.xpath('./td')
+                        if len(td_list) == 8:
+                            jiancedianName = item.xpath('string(./td[1])')
+                            jianceTime = item.xpath('string(./td[2])')
+                            jianceProject = item.xpath('string(./td[3])')
+                            jianceValue = item.xpath('string(./td[4])')
+                            biaozhunValue = item.xpath('string(./td[5])')
+                            shifoudabiao = item.xpath('string(./td[6])')
+                            chaobiaobenshu = item.xpath('string(./td[7])')
+                            shifoutingchan = item.xpath('string(./td[8])')
+                        elif len(td_list) == 6:
+                            jianceProject = item.xpath('string(./td[1])')
+                            jianceValue = item.xpath('string(./td[2])')
+                            biaozhunValue = item.xpath('string(./td[3])')
+                            shifoudabiao = item.xpath('string(./td[4])')
+                            chaobiaobenshu = item.xpath('string(./td[5])')
+                            shifoutingchan = item.xpath('string(./td[6])')
 
-                # 企业名称、污染源类型（废水、废气）、监测点名称、监测时间、监测项目、监测值、标准值、是否达标、超标倍数、是否停产
-                print(title,jiancedianName,jianceTime,jianceProject,jianceValue,biaozhunValue,shifoudabiao,chaobiaobenshu,shifoutingchan)
+                        # 企业名称、污染源类型（废水、废气）、监测点名称、监测时间、监测项目、监测值、标准值、是否达标、超标倍数、是否停产
+                        print(title,jiancedianName,jianceTime,jianceProject,jianceValue,biaozhunValue,shifoudabiao,chaobiaobenshu,shifoutingchan)
 
-                sql = "insert into fujian(title,jiancedianName,jianceTime,jianceProject,jianceValue,biaozhunValue,shifoudabiao,chaobiaobenshu,shifoutingchan)" \
-                      " VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" \
-                      % (title,jiancedianName,jianceTime,jianceProject,jianceValue,biaozhunValue,shifoudabiao,chaobiaobenshu,shifoutingchan)
-                dbclient.save(sql)
+                        sql = "insert into fujian(title,jiancedianName,jianceTime,jianceProject,jianceValue,biaozhunValue,shifoudabiao,chaobiaobenshu,shifoutingchan)" \
+                              " VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" \
+                              % (title,jiancedianName,jianceTime,jianceProject,jianceValue,biaozhunValue,shifoudabiao,chaobiaobenshu,shifoutingchan)
+                        dbclient.save(sql)
+                    except:
+                        continue
+        except:
+            continue
 
 
 if __name__ == '__main__':
