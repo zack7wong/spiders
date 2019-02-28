@@ -38,7 +38,7 @@ get_headers = {
 
 def start():
     item_list = []
-    with open('shandong_id.txt') as f:
+    with open('shandong_id3.txt') as f:
         results = f.readlines()
         for res in results:
             ip = res.split(',')[0]
@@ -63,7 +63,7 @@ def start():
             start_url = url.format(ip=item['ip'])
             data = body.format(entCode=item['entCode'],pageToken=1)
 
-            get_start_url = 'http://{ip}/ajax/npublic/NData.ashx?Method=GetMonitorDataList&entCode={entCode}&subType=&subID=&year=2014&itemCode=&dtStart=2014-01-01&dtEnd=2019-02-26&monitoring=&bReal=false&page={pageToken}&rows=1000'
+            get_start_url = 'http://{ip}/ajax/npublic/NData.ashx?Method=GetMonitorDataList&entCode={entCode}&subType=&subID=&year=2019&itemCode=&dtStart=2014-01-01&dtEnd=2019-02-26&monitoring=&bReal=false&page={pageToken}&rows=1000'
             get_start_url = get_start_url.format(ip=item['ip'], entCode=item['entCode'],pageToken=1)
             print(get_start_url)
             try:
@@ -93,6 +93,7 @@ def start():
 
 
             if json_obj['total'] == 0:
+                print('无数据')
                 continue
 
             # 处理第一页
@@ -113,13 +114,15 @@ def start():
                 print(title, EntTypeName, jiancedianName, jianceProject, jianceTime, jianceType, jiancePinci, jianceValue, zhixingbiaozhun, chaobiaobeishu)
 
                 sql = "insert into shandong(title, EntTypeName, jiancedianName, jianceProject, jianceTime, jianceType, jiancePinci, jianceValue, zhixingbiaozhun, chaobiaobeishu)" \
-                      " VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s')" \
-                      % (title, EntTypeName, jiancedianName, jianceProject, jianceTime, jianceType, jiancePinci, jianceValue, zhixingbiaozhun, chaobiaobeishu)
+                          " VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s')" \
+                          % (title, EntTypeName, jiancedianName, jianceProject, jianceTime, jianceType, jiancePinci,
+                             jianceValue, zhixingbiaozhun, chaobiaobeishu)+"ON DUPLICATE KEY UPDATE title='%s'"%(title)
                 dbclient.save(sql)
 
 
             # 获取总页数
             totalPage = math.ceil(json_obj['total'] / 1000)
+            print('总页数:'+str(totalPage))
 
             # 处理剩余页数
             for i in range(2, totalPage + 1):
@@ -127,7 +130,7 @@ def start():
                 start_url = url.format(ip=item['ip'])
                 data = body.format(entCode=item['entCode'], pageToken=i)
 
-                get_start_url = 'http://{ip}/ajax/npublic/NData.ashx?Method=GetMonitorDataList&entCode={entCode}&subType=&subID=&year=2014&itemCode=&dtStart=2014-01-01&dtEnd=2019-02-26&monitoring=&bReal=false&page={pageToken}&rows=1000'
+                get_start_url = 'http://{ip}/ajax/npublic/NData.ashx?Method=GetMonitorDataList&entCode={entCode}&subType=&subID=&year=2019&itemCode=&dtStart=2014-01-01&dtEnd=2019-02-26&monitoring=&bReal=false&page={pageToken}&rows=1000'
                 get_start_url = get_start_url.format(ip=item['ip'],entCode=item['entCode'], pageToken=i)
                 print(get_start_url)
                 try:
@@ -172,7 +175,7 @@ def start():
                     sql = "insert into shandong(title, EntTypeName, jiancedianName, jianceProject, jianceTime, jianceType, jiancePinci, jianceValue, zhixingbiaozhun, chaobiaobeishu)" \
                           " VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s')" \
                           % (title, EntTypeName, jiancedianName, jianceProject, jianceTime, jianceType, jiancePinci,
-                             jianceValue, zhixingbiaozhun, chaobiaobeishu)
+                             jianceValue, zhixingbiaozhun, chaobiaobeishu)+"ON DUPLICATE KEY UPDATE title='%s'"%(title)
                     dbclient.save(sql)
         except:
             continue
