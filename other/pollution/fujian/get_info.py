@@ -45,7 +45,7 @@ def start():
     print(date_list)
 
     item_list = []
-    with open('fujian_id4.txt') as f:
+    with open('fujian_id1.txt') as f:
         results = f.readlines()
         for res in results:
             url = res.split(',')[0]
