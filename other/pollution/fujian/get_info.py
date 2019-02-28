@@ -42,10 +42,10 @@ def start():
         results = f.readlines()
         for res in results:
             date_list.append(res.strip())
-    # print(date_list)
+    print(date_list)
 
     item_list = []
-    with open('fujian_id3.txt') as f:
+    with open('fujian_id4.txt') as f:
         results = f.readlines()
         for res in results:
             url = res.split(',')[0]
@@ -59,13 +59,13 @@ def start():
     print(len(item_list))
     print(item_list[:10])
 
-    for item in item_list:
-        print(item)
+    for itemObj in item_list:
+        print(itemObj)
         try:
             for date in date_list:
                 print('当前日期:'+date)
-                start_url = item['url']
-                title = item['title']
+                start_url = itemObj['url']
+                title = itemObj['title']
                 body = '__VIEWSTATE=%2FwEPDwUJNDk2MTM2Mzc5ZGTd37nDAAZ8HMoQ9C6MjYnecXynQQ%3D%3D&__EVENTVALIDATION=%2FwEWAwKKm%2FSpBwKnpoOOCwKY7%2B%2FtCc29g5gXa%2BvZaoWCWvhGPER39rFI&right%24l_date={date}&right%24Button1=%CB%D1%CB%F7'
                 data = body.format(date=date)
                 try:
