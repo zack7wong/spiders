@@ -29,7 +29,7 @@ headers = {
 
 def get_canInfo(item,EntType):
     url = 'http://www.aepb.gov.cn:8080/WRYJG/STZXGK/STAuto_Data.aspx?NewsID={id}&zdlx={EntType}'.format(id=item['id'],EntType=EntType)
-    response = requests.get(url,timeout=40)
+    response = requests.get(url,timeout=80)
     # print(response.text)
     html = HTML(response.text)
     jianceCodeList = html.xpath('//select[@id="DropPk"]/option/@value')
@@ -139,7 +139,7 @@ def start(item):
                             start_url = 'http://www.aepb.gov.cn:8080/WRYJG/STZXGK/STAuto_Data.aspx?NewsID={id}&zdlx={EntType}'.format(id=item['id'],EntType=EntType)
                             body = '__EVENTTARGET=DropPk&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={__VIEWSTATE}&txtkssj={startDate}&txtjssj={endDate}&DropPk={jianceCode}&AspNetPager1_input={pageToken}&AspNetPager1=go'
                             data = body.format(__VIEWSTATE=__VIEWSTATE,startDate=startDate,endDate=endDate,jianceCode=jianceCode,pageToken=1)
-                            response = requests.post(start_url,data=data,headers=headers,timeout=40)
+                            response = requests.post(start_url,data=data,headers=headers,timeout=80)
                             # print(response.text)
 
                             #获取总条数
@@ -162,7 +162,7 @@ def start(item):
                                     print('当前页：'+str(i))
                                     body = '__EVENTTARGET=DropPk&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={__VIEWSTATE}&txtkssj={startDate}&txtjssj={endDate}&DropPk={jianceCode}&AspNetPager1_input={pageToken}&AspNetPager1=go'
                                     data = body.format(__VIEWSTATE=__VIEWSTATE, startDate=startDate, endDate=endDate,jianceCode=jianceCode, pageToken=i)
-                                    response = requests.post(start_url, data=data, headers=headers,timeout=40)
+                                    response = requests.post(start_url, data=data, headers=headers,timeout=80)
                                     html = HTML(response.text)
                                     deal(html,item,EntType,jianceCodeName)
                                 except:
