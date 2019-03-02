@@ -48,7 +48,7 @@ def start():
             saveurl = 'http://1.189.191.146:8000/eMonPubHLJ/' + url
             saveRes = saveurl + ',' + title + '\n'
             if saveurl not in id_list:
-                with open('helongjiang_id.txt', 'a') as f:
+                with open('heilongjiang_id.txt', 'a') as f:
                     f.write(saveRes)
                 id_list.append(saveurl)
 
