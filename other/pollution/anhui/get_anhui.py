@@ -7,6 +7,7 @@ from lxml.etree import HTML
 import re
 from urllib.parse import quote
 import db
+import time
 
 headers = {
     'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
@@ -158,6 +159,8 @@ def start(item):
 
                             #处理剩余页数
                             for i in range(2,totalPage+1):
+                                print('暂停2秒')
+                                time.sleep(2)
                                 try:
                                     print('当前页：'+str(i))
                                     body = '__EVENTTARGET=DropPk&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={__VIEWSTATE}&txtkssj={startDate}&txtjssj={endDate}&DropPk={jianceCode}&AspNetPager1_input={pageToken}&AspNetPager1=go'
