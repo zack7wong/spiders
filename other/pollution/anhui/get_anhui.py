@@ -52,7 +52,13 @@ def get_canInfo(item,EntType):
     # print(__VIEWSTATE)
     return jianceCodeObjList,__VIEWSTATE
 
-def deal(html,item,EntType,jianceCodeName):
+def deal(response,html,item,EntType,jianceCodeName):
+
+    #获取__VIEWSTATE
+    __VIEWSTATE = re.search('id="__VIEWSTATE" value="(.*?)"', response.text).group(1)
+    __VIEWSTATE = quote(__VIEWSTATE).replace('/', '%2F')
+
+
     if EntType == 'fs':
         EntTypeName = '废水'
         trNum = 2
@@ -114,6 +120,8 @@ def deal(html,item,EntType,jianceCodeName):
         except:
             continue
 
+    return __VIEWSTATE
+
 
 def start(item):
     EntTypeName_list = ['fs','fq']
@@ -155,7 +163,7 @@ def start(item):
                             #处理第一页
                             print('当前页：1')
                             html = HTML(response.text)
-                            deal(html,item,EntType,jianceCodeName)
+                            __VIEWSTATE = deal(response,html,item,EntType,jianceCodeName)
 
                             #处理剩余页数
                             for i in range(2,totalPage+1):
@@ -165,9 +173,11 @@ def start(item):
                                     print('当前页：'+str(i))
                                     body = '__EVENTTARGET=DropPk&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={__VIEWSTATE}&txtkssj={startDate}&txtjssj={endDate}&DropPk={jianceCode}&AspNetPager1_input={pageToken}&AspNetPager1=go'
                                     data = body.format(__VIEWSTATE=__VIEWSTATE, startDate=startDate, endDate=endDate,jianceCode=jianceCode, pageToken=i)
+                                    print(start_url)
+                                    print(data)
                                     response = requests.post(start_url, data=data, headers=headers,timeout=80)
                                     html = HTML(response.text)
-                                    deal(html,item,EntType,jianceCodeName)
+                                    __VIEWSTATE = deal(response,html,item,EntType,jianceCodeName)
                                 except:
                                     continue
                         except:
