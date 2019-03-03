@@ -41,7 +41,7 @@ post_headers = {
 }
 
 def get_start_VIEWSTATE(url):
-    response = requests.get(url,headers=get_headers,timeout=10)
+    response = requests.get(url,headers=get_headers,timeout=20)
     # print(response.text)
     html = HTML(response.text)
     __VIEWSTATE = re.search('id="__VIEWSTATE" value="(.*?)"',response.text).group(1)
@@ -125,7 +125,7 @@ def start(item):
     first_body = 'ctl00%24ctl00%24ScriptManager1=ctl00%24ctl00%24ScriptManager1%7Cctl00%24ctl00%24cphMain%24cphMainPage%24UCDataSearch%24btnSearch&ctl00%24ctl00%24cphMain%24cphMainPage%24UCMonitorTrend%24ddlIndicatorCategory={category}&ctl00%24ctl00%24cphMain%24cphMainPage%24UCMonitorTrend%24ddlMonitorSite=-1&ctl00%24ctl00%24cphMain%24cphMainPage%24UCMonitorTrend%24ddlPollutantName=%E7%83%9F%E5%B0%98&ctl00%24ctl00%24cphMain%24cphMainPage%24UCMonitorTrend%24ddlDataType=-1&ctl00%24ctl00%24cphMain%24cphMainPage%24UCMonitorTrend%24txtStartTime=2019-03-01&ctl00%24ctl00%24cphMain%24cphMainPage%24UCMonitorTrend%24txtEndTime=2019-03-03&ctl00%24ctl00%24cphMain%24cphMainPage%24UCDataSearch%24ddlIndicatorCategory={category}&ctl00%24ctl00%24cphMain%24cphMainPage%24UCDataSearch%24ddlMonitorSite=-1&ctl00%24ctl00%24cphMain%24cphMainPage%24UCDataSearch%24ddlPollutantName=-1&ctl00%24ctl00%24cphMain%24cphMainPage%24UCDataSearch%24ddlDataType=-1&ctl00%24ctl00%24cphMain%24cphMainPage%24UCDataSearch%24txtStartTime={startDate}&ctl00%24ctl00%24cphMain%24cphMainPage%24UCDataSearch%24txtEndTime={endDate}&__EVENTTARGET=&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={__VIEWSTATE}&__VIEWSTATEGENERATOR=0C628C24&__ASYNCPOST=true&ctl00%24ctl00%24cphMain%24cphMainPage%24UCDataSearch%24btnSearch=%E6%9F%A5%20%E8%AF%A2'
     first_data = first_body.format(category=category, startDate=startDate, endDate=endDate, __VIEWSTATE=__VIEWSTATE)
     # print(first_data)
-    response = requests.post(url,data=first_data,headers=post_headers,timeout=10)
+    response = requests.post(url,data=first_data,headers=post_headers,timeout=20)
     # print(response.text)
 
     #获取__VIEWSTATE,nextId
@@ -141,7 +141,7 @@ def start(item):
             print('当前页：'+str(i))
             body = 'ctl00%24ctl00%24ScriptManager1=ctl00%24ctl00%24cphMain%24cphMainPage%24UCDataSearch%24UpdatePanel1%7C{nextId}&ctl00%24ctl00%24cphMain%24cphMainPage%24UCMonitorTrend%24ddlIndicatorCategory={category}&ctl00%24ctl00%24cphMain%24cphMainPage%24UCMonitorTrend%24ddlMonitorSite=-1&ctl00%24ctl00%24cphMain%24cphMainPage%24UCMonitorTrend%24ddlPollutantName=%E7%83%9F%E5%B0%98&ctl00%24ctl00%24cphMain%24cphMainPage%24UCMonitorTrend%24ddlDataType=-1&ctl00%24ctl00%24cphMain%24cphMainPage%24UCMonitorTrend%24txtStartTime=2019-03-01&ctl00%24ctl00%24cphMain%24cphMainPage%24UCMonitorTrend%24txtEndTime=2019-03-02&ctl00%24ctl00%24cphMain%24cphMainPage%24UCDataSearch%24ddlIndicatorCategory={category}&ctl00%24ctl00%24cphMain%24cphMainPage%24UCDataSearch%24ddlMonitorSite=-1&ctl00%24ctl00%24cphMain%24cphMainPage%24UCDataSearch%24ddlPollutantName=-1&ctl00%24ctl00%24cphMain%24cphMainPage%24UCDataSearch%24ddlDataType=-1&ctl00%24ctl00%24cphMain%24cphMainPage%24UCDataSearch%24txtStartTime={startDate}&ctl00%24ctl00%24cphMain%24cphMainPage%24UCDataSearch%24txtEndTime={endDate}&__EVENTTARGET=&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={__VIEWSTATE}&__VIEWSTATEGENERATOR=0C628C24&__ASYNCPOST=true&ctl00%24ctl00%24cphMain%24cphMainPage%24UCDataSearch%24gvHistoryData%24ctl23%24lbnNext.x=5&ctl00%24ctl00%24cphMain%24cphMainPage%24UCDataSearch%24gvHistoryData%24ctl23%24lbnNext.y=2'
             data = body.format(nextId=nextId,category=category, startDate=startDate, endDate=endDate, __VIEWSTATE=__VIEWSTATE)
-            response = requests.post(url, data=data, headers=post_headers,timeout=10)
+            response = requests.post(url, data=data, headers=post_headers,timeout=20)
             # print(response.text)
             __VIEWSTATE, nextId = get_nextId_VIEWSTATE(response)
             deal(response,title,EntTypeName)
