@@ -10,7 +10,7 @@
 """
 
 id_list = []
-with open('id.txt') as f:
+with open('hebei_id.txt') as f:
     resutls = f.readlines()
     for res in resutls:
         id_list.append(res.strip())
@@ -20,7 +20,7 @@ print(len(set(id_list)))
 
 
 name_list = []
-with open('name.txt') as f:
+with open('evenid.txt') as f:
     resutls = f.readlines()
     for res in resutls:
         name_list.append(res.strip())
@@ -29,6 +29,6 @@ print(len(name_list))
 print(len(set(name_list)))
 
 for name,id in zip(name_list,id_list):
-    save_res = name+','+id+'\n'
-    with open('hebei_id.txt','a') as f:
+    save_res = id+','+name+'\n'
+    with open('new_hebei_id.txt','a') as f:
         f.write(save_res)
