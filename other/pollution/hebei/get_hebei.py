@@ -42,7 +42,7 @@ post_headers = {
 
 def get_canInfo():
     url = 'http://121.28.49.84:8003/'
-    response = requests.get(url, headers=get_headers, timeout=10)
+    response = requests.get(url, headers=get_headers, timeout=15)
     # print(response.text)
 
 
@@ -55,9 +55,9 @@ def get_canInfo():
     tvsite_ExpandState = re.search('id="tvsite_ExpandState" value="(.*?)"', response.text).group(1)
     tvsite_ExpandState = quote(tvsite_ExpandState).replace('/', '%2F')
 
-    print(__VIEWSTATE)
-    print(__EVENTVALIDATION)
-    print(tvsite_ExpandState)
+    # print(__VIEWSTATE)
+    # print(__EVENTVALIDATION)
+    # print(tvsite_ExpandState)
 
     return __VIEWSTATE,__EVENTVALIDATION,tvsite_ExpandState
 
@@ -125,7 +125,7 @@ def start(item):
         #获取列表页参数
         body = 'ScriptManager1=UpdatePanel1%7Ctvsite&__EVENTTARGET=tvsite&__EVENTARGUMENT={__EVENTARGUMENT}&__LASTFOCUS=&tvsite_ExpandState={tvsite_ExpandState}&tvsite_SelectedNode={tvsite_SelectedNode}&tvsite_PopulateLog=&__VIEWSTATE={__VIEWSTATE}&__EVENTVALIDATION={__EVENTVALIDATION}&ddl_year=2018&txt_EnpName=%E8%AF%B7%E8%BE%93%E5%85%A5%E4%BC%81%E4%B8%9A%E5%90%8D%E7%A7%B0&rd_DataType={EntType}&txtStartDate_autoData=2019-03-02&txtEndDate_autoData=2019-03-02&rd_SiteType=1&txtStartDate_handData=2019-03-01&txtEndDate_handData=2019-03-31&txtStartDate_NoiseData=2019&txtStartDate_otherData=2019-03-01&txtEndDate_otherData=2019-03-31&txt_reason=2019-01-01&txt_reason_end=2019-12-31&txt_monplan=2019&txtyearreport=2019&ddl_city=&txt_monplan_sum=2019&__ASYNCPOST=true&'
         data = body.format(__EVENTARGUMENT=__EVENTARGUMENT, tvsite_ExpandState=tvsite_ExpandState, tvsite_SelectedNode=tvsite_SelectedNode, __VIEWSTATE=__VIEWSTATE, __EVENTVALIDATION=__EVENTVALIDATION, EntType=EntType)
-        response = requests.post('http://121.28.49.84:8003/', data=data, headers=post_headers, timeout=10)
+        response = requests.post('http://121.28.49.84:8003/', data=data, headers=post_headers, timeout=15)
 
         __VIEWSTATE = re.search('\|__VIEWSTATE\|(.*?)\|\d+\|hiddenField', response.text).group(1)
         __VIEWSTATE = quote(__VIEWSTATE).replace('/', '%2F')
@@ -145,8 +145,13 @@ def start(item):
             # body = 'ScriptManager1=UpdatePanel2%7CAsp_AutoData&ddl_year=2018&txt_EnpName=%E8%AF%B7%E8%BE%93%E5%85%A5%E4%BC%81%E4%B8%9A%E5%90%8D%E7%A7%B0&rd_DataType={EntType}&txtStartDate_autoData={startDate}&txtEndDate_autoData={endDate}&Asp_AutoData_input={pageToken}&rd_SiteType=1&txtStartDate_handData=2019-03-01&txtEndDate_handData=2019-03-31&Asp_HandData_input=1&txtStartDate_NoiseData=2019&txtStartDate_otherData=2019-03-01&txtEndDate_otherData=2019-03-31&txt_reason=2019-01-01&txt_reason_end=2019-12-31&txt_monplan=2019&txtyearreport=2019&ddl_city=&txt_monplan_sum=2019&__EVENTTARGET=&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={__VIEWSTATE}&__EVENTVALIDATION={__EVENTVALIDATION}&tvsite_ExpandState={tvsite_ExpandState}&tvsite_SelectedNode={tvsite_SelectedNode}&tvsite_PopulateLog=&__ASYNCPOST=true&Asp_AutoData=go'
             data = body.format(pageToken=1, EntType=EntType, startDate=startDate, endDate=endDate, __VIEWSTATE=__VIEWSTATE, __EVENTVALIDATION=__EVENTVALIDATION, tvsite_SelectedNode=tvsite_SelectedNode, tvsite_ExpandState=tvsite_ExpandState)
             # print(data)
-            response = requests.post(start_url, data=data, headers=post_headers, timeout=10)
+            response = requests.post(start_url, data=data, headers=post_headers, timeout=15)
             # print(response.text)
+
+            #无数据
+            if 'tbdata_auto1' in response.text:
+                print('无数据')
+                continue
 
             #获取总条数
             totalPage = re.search("共<font color='red'>(\d+)</font>页",response.text,re.S)
@@ -168,7 +173,7 @@ def start(item):
                 body = 'ScriptManager1=UpdatePanel2%7CAsp_AutoData&ddl_year=2018&txt_EnpName=%E8%AF%B7%E8%BE%93%E5%85%A5%E4%BC%81%E4%B8%9A%E5%90%8D%E7%A7%B0&rd_DataType={EntType}&txtStartDate_autoData={startDate}&txtEndDate_autoData={endDate}&Asp_AutoData_input={pageToken}&rd_SiteType=1&txtStartDate_handData=2019-03-01&txtEndDate_handData=2019-03-31&Asp_HandData_input=1&txtStartDate_NoiseData=2019&txtStartDate_otherData=2019-03-01&txtEndDate_otherData=2019-03-31&txt_reason=2019-01-01&txt_reason_end=2019-12-31&txt_monplan=2019&txtyearreport=2019&ddl_city=&txt_monplan_sum=2019&__EVENTTARGET=&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={__VIEWSTATE}&__EVENTVALIDATION={__EVENTVALIDATION}&tvsite_ExpandState={tvsite_ExpandState}&tvsite_SelectedNode={tvsite_SelectedNode}&tvsite_PopulateLog=&__ASYNCPOST=true&Asp_AutoData=go'
                 data = body.format(pageToken=i, EntType=EntType, startDate=startDate, endDate=endDate,__VIEWSTATE=__VIEWSTATE, __EVENTVALIDATION=__EVENTVALIDATION,tvsite_SelectedNode=tvsite_SelectedNode, tvsite_ExpandState=tvsite_ExpandState)
                 # print(data)
-                response = requests.post(start_url, data=data, headers=post_headers, timeout=10)
+                response = requests.post(start_url, data=data, headers=post_headers, timeout=15)
                 # print(response.text)
                 __VIEWSTATE, __EVENTVALIDATION = deal(response, item, EntType)
 
