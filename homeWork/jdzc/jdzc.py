@@ -51,64 +51,70 @@ count_headers = {
     }
 
 def start():
-    for i in range(194,200):
-        print('当前页：'+str(i))
-        start_url = 'https://z.jd.com/bigger/search.html'
-        body = 'status=&sort=&categoryId=&parentCategoryId=&sceneEnd=&productEnd=&keyword=&page='+str(i)
+    for i in range(1,400):
+        try:
+            print('当前页：'+str(i))
+            start_url = 'https://z.jd.com/bigger/search.html'
+            body = 'status=&sort=&categoryId=&parentCategoryId=&sceneEnd=&productEnd=&keyword=&page='+str(i)
 
-        response = requests.post(start_url, headers=headers,data=body)
-        # print(response.text)
-        html = HTML(response.text)
-        urls = html.xpath('//div[@class="l-result"]//li/a/@href')
+            response = requests.post(start_url, headers=headers,data=body,timeout=10)
+            # print(response.text)
+            html = HTML(response.text)
+            urls = html.xpath('//div[@class="l-result"]//li/a/@href')
 
-        print(len(urls))
+            print(len(urls))
 
-        for url in urls:
-            link = 'https://z.jd.com'+url
-            print(link)
-            try:
-                response = requests.get(link,headers=detail_headers)
-                id = re.search('https://z.jd.com/project/details/(\d+).html',link).group(1)
+            for url in urls:
+                link = 'https://z.jd.com'+url
+                print(link)
+                try:
+                    response = requests.get(link,headers=detail_headers,timeout=10)
+                    id = re.search('https://z.jd.com/project/details/(\d+).html',link).group(1)
 
-                html = HTML(response.text)
-                title = html.xpath('string(//h1)').replace(',','，').strip()
-                price = html.xpath('string(//p[@class="p-num"]/text())')
-                yu_price = html.xpath('string(//p[@id="projectMessage"]/span[2]/text())')
+                    html = HTML(response.text)
+                    title = html.xpath('string(//h1)').replace(',','，').strip()
+                    price = html.xpath('string(//p[@class="p-num"]/text())')
+                    yu_price = html.xpath('string(//p[@id="projectMessage"]/span[2]/text())')
+                    faqiNum = html.xpath('string(//div[@class="promoters-num"]/div[@class="fl start"]/span[@class="num"])')
+                    address = html.xpath('string(//div[@class="box-content"]/ul[@class="contact-box"]/li[2]/div[@class="val"])')
+                    dangciList = html.xpath('//div[@class="details-right-fixed-box"]/div[@class="box-grade"]//div[@class="t-price"]/span | //div[@class="details-right-fixed-box"]/div[@class="box-grade "]//div[@class="t-price"]/span | //div[@class="details-right-fixed-box"]/div[@class="box-grade "]//div[@class="t-price "]/span | //div[@class="details-right-fixed-box"]/div[@class="box-grade "]//div[@class="t-price"]/span')
+                    dangciNum = str(len(dangciList))
 
-                if 'video' in response.text:
-                    has_video = '是'
-                else:
-                    has_video = '否'
+                    if 'video' in response.text:
+                        has_video = '是'
+                    else:
+                        has_video = '否'
 
-                imgXpath = html.xpath('//div[@class="tab-div tab-current"]//p/img')
-                img_len = str(len(imgXpath))
+                    imgXpath = html.xpath('//div[@class="tab-div tab-current"]//p/img')
+                    img_len = str(len(imgXpath))
 
-                # like = html.xpath('string(//span[@id="praisCount"])').replace('(','').replace(')','')
-                # guanzhu = html.xpath('string(//span[@id="focusCount"])').replace('(','').replace(')','')
+                    # like = html.xpath('string(//span[@id="praisCount"])').replace('(','').replace(')','')
+                    # guanzhu = html.xpath('string(//span[@id="focusCount"])').replace('(','').replace(')','')
 
-                contentlist = html.xpath('//div[@id="proList"]//text()')
-                content = ''.join(contentlist)
-                content = content.replace(' ','').replace('\t','').replace('\n',' ').replace('\r',' ').replace(',','，').strip()
-
-
-                count_url = 'https://sq.jr.jd.com/cm/getCount?key=1000&systemId='+id
-                count_response = requests.get(count_url,headers=count_headers)
-                print(count_response.text)
-                json_obj = json.loads(count_response.text.replace('(','').replace(')',''))
-                like = str(json_obj['data']['praise'])
-                guanzhu = str(json_obj['data']['focus'])
+                    contentlist = html.xpath('//div[@id="proList"]//text()')
+                    content = ''.join(contentlist)
+                    content = content.replace(' ','').replace('\t','').replace('\n',' ').replace('\r',' ').replace(',','，').strip()
 
 
-                save_res = id+','+link+','+title+','+price+','+yu_price+','+has_video+','+img_len+','+content+','+like+','+guanzhu+'\n'
-                print(save_res)
-                with open('结果.csv','a',encoding='gbk',errors='ignore') as f:
-                    f.write(save_res)
-            except:
-                continue
+                    count_url = 'https://sq.jr.jd.com/cm/getCount?key=1000&systemId='+id
+                    count_response = requests.get(count_url,headers=count_headers,timeout=10)
+                    print(count_response.text)
+                    json_obj = json.loads(count_response.text.replace('(','').replace(')',''))
+                    like = str(json_obj['data']['praise'])
+                    guanzhu = str(json_obj['data']['focus'])
 
+
+                    save_res = id+','+link+','+title+','+price+','+yu_price+','+has_video+','+img_len+','+content+','+like+','+guanzhu+','+faqiNum+','+address+','+dangciNum+'\n'
+                    print(save_res)
+                    with open('结果.csv','a',encoding='gbk',errors='ignore') as f:
+                        f.write(save_res)
+                except:
+                    continue
+        except:
+            continue
 
 
 if __name__ == '__main__':
-    # with open('结果.csv','w',encoding='gbk') as f:
-    #     f.write('id,链接,标题,众筹金额,融资目标金额,有无视频,图片数量,项目情况,点赞数,关注数\n')
+    with open('结果.csv','w',encoding='gbk') as f:
+        f.write('id,链接,标题,众筹金额,融资目标金额,有无视频,图片数量,项目情况,点赞数,关注数\n')
     start()
