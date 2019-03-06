@@ -55,9 +55,9 @@ def get_canInfo():
     tvsite_ExpandState = re.search('id="tvsite_ExpandState" value="(.*?)"', response.text).group(1)
     tvsite_ExpandState = quote(tvsite_ExpandState).replace('/', '%2F')
 
-    # print(__VIEWSTATE)
-    # print(__EVENTVALIDATION)
-    # print(tvsite_ExpandState)
+    print(__VIEWSTATE)
+    print(__EVENTVALIDATION)
+    print(tvsite_ExpandState)
 
     return __VIEWSTATE,__EVENTVALIDATION,tvsite_ExpandState
 
@@ -117,66 +117,76 @@ def start(item):
     dateList = [{'startDate': '2014-01-01', 'endDate': '2014-01-31'}, {'startDate': '2014-02-01', 'endDate': '2014-02-28'}, {'startDate': '2014-03-01', 'endDate': '2014-03-31'}, {'startDate': '2014-04-01', 'endDate': '2014-04-30'}, {'startDate': '2014-05-01', 'endDate': '2014-05-31'}, {'startDate': '2014-06-01', 'endDate': '2014-06-30'}, {'startDate': '2014-07-01', 'endDate': '2014-07-31'}, {'startDate': '2014-08-01', 'endDate': '2014-08-31'}, {'startDate': '2014-09-01', 'endDate': '2014-09-30'}, {'startDate': '2014-10-01', 'endDate': '2014-10-31'}, {'startDate': '2014-11-01', 'endDate': '2014-11-30'}, {'startDate': '2014-12-01', 'endDate': '2014-12-31'}, {'startDate': '2015-01-01', 'endDate': '2015-01-31'}, {'startDate': '2015-02-01', 'endDate': '2015-02-28'}, {'startDate': '2015-03-01', 'endDate': '2015-03-31'}, {'startDate': '2015-04-01', 'endDate': '2015-04-30'}, {'startDate': '2015-05-01', 'endDate': '2015-05-31'}, {'startDate': '2015-06-01', 'endDate': '2015-06-30'}, {'startDate': '2015-07-01', 'endDate': '2015-07-31'}, {'startDate': '2015-08-01', 'endDate': '2015-08-31'}, {'startDate': '2015-09-01', 'endDate': '2015-09-30'}, {'startDate': '2015-10-01', 'endDate': '2015-10-31'}, {'startDate': '2015-11-01', 'endDate': '2015-11-30'}, {'startDate': '2015-12-01', 'endDate': '2015-12-31'}, {'startDate': '2016-01-01', 'endDate': '2016-01-31'}, {'startDate': '2016-02-01', 'endDate': '2016-02-28'}, {'startDate': '2016-03-01', 'endDate': '2016-03-31'}, {'startDate': '2016-04-01', 'endDate': '2016-04-30'}, {'startDate': '2016-05-01', 'endDate': '2016-05-31'}, {'startDate': '2016-06-01', 'endDate': '2016-06-30'}, {'startDate': '2016-07-01', 'endDate': '2016-07-31'}, {'startDate': '2016-08-01', 'endDate': '2016-08-31'}, {'startDate': '2016-09-01', 'endDate': '2016-09-30'}, {'startDate': '2016-10-01', 'endDate': '2016-10-31'}, {'startDate': '2016-11-01', 'endDate': '2016-11-30'}, {'startDate': '2016-12-01', 'endDate': '2016-12-31'}, {'startDate': '2017-01-01', 'endDate': '2017-01-31'}, {'startDate': '2017-02-01', 'endDate': '2017-02-28'}, {'startDate': '2017-03-01', 'endDate': '2017-03-31'}, {'startDate': '2017-04-01', 'endDate': '2017-04-30'}, {'startDate': '2017-05-01', 'endDate': '2017-05-31'}, {'startDate': '2017-06-01', 'endDate': '2017-06-30'}, {'startDate': '2017-07-01', 'endDate': '2017-07-31'}, {'startDate': '2017-08-01', 'endDate': '2017-08-31'}, {'startDate': '2017-09-01', 'endDate': '2017-09-30'}, {'startDate': '2017-10-01', 'endDate': '2017-10-31'}, {'startDate': '2017-11-01', 'endDate': '2017-11-30'}, {'startDate': '2017-12-01', 'endDate': '2017-12-31'}, {'startDate': '2018-01-01', 'endDate': '2018-01-31'}, {'startDate': '2018-02-01', 'endDate': '2018-02-28'}, {'startDate': '2018-03-01', 'endDate': '2018-03-31'}, {'startDate': '2018-04-01', 'endDate': '2018-04-30'}, {'startDate': '2018-05-01', 'endDate': '2018-05-31'}, {'startDate': '2018-06-01', 'endDate': '2018-06-30'}, {'startDate': '2018-07-01', 'endDate': '2018-07-31'}, {'startDate': '2018-08-01', 'endDate': '2018-08-31'}, {'startDate': '2018-09-01', 'endDate': '2018-09-30'}, {'startDate': '2018-10-01', 'endDate': '2018-10-31'}, {'startDate': '2018-11-01', 'endDate': '2018-11-30'}, {'startDate': '2018-12-01', 'endDate': '2018-12-31'}, {'startDate': '2019-01-01', 'endDate': '2019-01-31'}, {'startDate': '2019-02-01', 'endDate': '2019-02-28'}]
 
     for EntType in EntTypeName_list:
-        print('当前废水废气类型：'+str(EntType))
+        try:
+            print('当前废水废气类型：'+str(EntType))
 
-        #获取首页参数
-        __VIEWSTATE,__EVENTVALIDATION, tvsite_ExpandState = get_canInfo()
+            #获取首页参数
+            __VIEWSTATE,__EVENTVALIDATION, tvsite_ExpandState = get_canInfo()
 
-        #获取列表页参数
-        body = 'ScriptManager1=UpdatePanel1%7Ctvsite&__EVENTTARGET=tvsite&__EVENTARGUMENT={__EVENTARGUMENT}&__LASTFOCUS=&tvsite_ExpandState={tvsite_ExpandState}&tvsite_SelectedNode={tvsite_SelectedNode}&tvsite_PopulateLog=&__VIEWSTATE={__VIEWSTATE}&__EVENTVALIDATION={__EVENTVALIDATION}&ddl_year=2018&txt_EnpName=%E8%AF%B7%E8%BE%93%E5%85%A5%E4%BC%81%E4%B8%9A%E5%90%8D%E7%A7%B0&rd_DataType={EntType}&txtStartDate_autoData=2019-03-02&txtEndDate_autoData=2019-03-02&rd_SiteType=1&txtStartDate_handData=2019-03-01&txtEndDate_handData=2019-03-31&txtStartDate_NoiseData=2019&txtStartDate_otherData=2019-03-01&txtEndDate_otherData=2019-03-31&txt_reason=2019-01-01&txt_reason_end=2019-12-31&txt_monplan=2019&txtyearreport=2019&ddl_city=&txt_monplan_sum=2019&__ASYNCPOST=true&'
-        data = body.format(__EVENTARGUMENT=__EVENTARGUMENT, tvsite_ExpandState=tvsite_ExpandState, tvsite_SelectedNode=tvsite_SelectedNode, __VIEWSTATE=__VIEWSTATE, __EVENTVALIDATION=__EVENTVALIDATION, EntType=EntType)
-        response = requests.post('http://121.28.49.84:8003/', data=data, headers=post_headers, timeout=15)
-
-        __VIEWSTATE = re.search('\|__VIEWSTATE\|(.*?)\|\d+\|hiddenField', response.text).group(1)
-        __VIEWSTATE = quote(__VIEWSTATE).replace('/', '%2F')
-
-        __EVENTVALIDATION = re.search('\|__EVENTVALIDATION\|(.*?)\|\d+\|asyncPostBackControlIDs', response.text).group(1)
-        __EVENTVALIDATION = quote(__EVENTVALIDATION).replace('/', '%2F')
-
-        #开始日期循环
-        for dateObj in dateList:
-            print('当前日期：'+str(dateObj))
-            startDate = dateObj['startDate']
-            endDate = dateObj['endDate']
-
-            #获取第一页
-            start_url = 'http://121.28.49.84:8003/'
-            body = 'ScriptManager1=UpdatePanel2%7Cbtn_query_autodata&ddl_year=2018&txt_EnpName=%E8%AF%B7%E8%BE%93%E5%85%A5%E4%BC%81%E4%B8%9A%E5%90%8D%E7%A7%B0&rd_DataType={EntType}&txtStartDate_autoData={startDate}&txtEndDate_autoData={endDate}&Asp_AutoData_input={pageToken}&rd_SiteType=1&txtStartDate_handData=2019-03-01&txtEndDate_handData=2019-03-31&Asp_HandData_input=1&txtStartDate_NoiseData=2019&txtStartDate_otherData=2019-03-01&txtEndDate_otherData=2019-03-31&txt_reason=2019-01-01&txt_reason_end=2019-12-31&txt_monplan=2019&txtyearreport=2019&ddl_city=&txt_monplan_sum=2019&__EVENTTARGET=&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={__VIEWSTATE}&__EVENTVALIDATION={__EVENTVALIDATION}&tvsite_ExpandState={tvsite_ExpandState}&tvsite_SelectedNode={tvsite_SelectedNode}&tvsite_PopulateLog=&__ASYNCPOST=true&btn_query_autodata=%E6%9F%A5%20%20%20%E8%AF%A2'
-            # body = 'ScriptManager1=UpdatePanel2%7CAsp_AutoData&ddl_year=2018&txt_EnpName=%E8%AF%B7%E8%BE%93%E5%85%A5%E4%BC%81%E4%B8%9A%E5%90%8D%E7%A7%B0&rd_DataType={EntType}&txtStartDate_autoData={startDate}&txtEndDate_autoData={endDate}&Asp_AutoData_input={pageToken}&rd_SiteType=1&txtStartDate_handData=2019-03-01&txtEndDate_handData=2019-03-31&Asp_HandData_input=1&txtStartDate_NoiseData=2019&txtStartDate_otherData=2019-03-01&txtEndDate_otherData=2019-03-31&txt_reason=2019-01-01&txt_reason_end=2019-12-31&txt_monplan=2019&txtyearreport=2019&ddl_city=&txt_monplan_sum=2019&__EVENTTARGET=&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={__VIEWSTATE}&__EVENTVALIDATION={__EVENTVALIDATION}&tvsite_ExpandState={tvsite_ExpandState}&tvsite_SelectedNode={tvsite_SelectedNode}&tvsite_PopulateLog=&__ASYNCPOST=true&Asp_AutoData=go'
-            data = body.format(pageToken=1, EntType=EntType, startDate=startDate, endDate=endDate, __VIEWSTATE=__VIEWSTATE, __EVENTVALIDATION=__EVENTVALIDATION, tvsite_SelectedNode=tvsite_SelectedNode, tvsite_ExpandState=tvsite_ExpandState)
-            # print(data)
-            response = requests.post(start_url, data=data, headers=post_headers, timeout=15)
+            #获取列表页参数
+            body = 'ScriptManager1=UpdatePanel1%7Ctvsite&__EVENTTARGET=tvsite&__EVENTARGUMENT={__EVENTARGUMENT}&__LASTFOCUS=&tvsite_ExpandState={tvsite_ExpandState}&tvsite_SelectedNode={tvsite_SelectedNode}&tvsite_PopulateLog=&__VIEWSTATE={__VIEWSTATE}&__EVENTVALIDATION={__EVENTVALIDATION}&ddl_year=2018&txt_EnpName=%E8%AF%B7%E8%BE%93%E5%85%A5%E4%BC%81%E4%B8%9A%E5%90%8D%E7%A7%B0&rd_DataType={EntType}&txtStartDate_autoData=2019-03-02&txtEndDate_autoData=2019-03-02&rd_SiteType=1&txtStartDate_handData=2019-03-01&txtEndDate_handData=2019-03-31&txtStartDate_NoiseData=2019&txtStartDate_otherData=2019-03-01&txtEndDate_otherData=2019-03-31&txt_reason=2019-01-01&txt_reason_end=2019-12-31&txt_monplan=2019&txtyearreport=2019&ddl_city=&txt_monplan_sum=2019&__ASYNCPOST=true&'
+            data = body.format(__EVENTARGUMENT=__EVENTARGUMENT, tvsite_ExpandState=tvsite_ExpandState, tvsite_SelectedNode=tvsite_SelectedNode, __VIEWSTATE=__VIEWSTATE, __EVENTVALIDATION=__EVENTVALIDATION, EntType=EntType)
+            print(data)
+            response = requests.post('http://121.28.49.84:8003/', data=data, headers=post_headers, timeout=15)
             # print(response.text)
 
-            #无数据
-            if 'tbdata_auto1' in response.text:
-                print('无数据')
-                continue
+            __VIEWSTATE = re.search('\|__VIEWSTATE\|(.*?)\|\d+\|hiddenField', response.text).group(1)
+            __VIEWSTATE = quote(__VIEWSTATE).replace('/', '%2F')
 
-            #获取总条数
-            totalPage = re.search("共<font color='red'>(\d+)</font>页",response.text,re.S)
-            if totalPage:
-                totalPage = int(totalPage.group(1))
-                print('总页数：' + str(totalPage))
-            else:
-                print('无数据')
-                continue
+            __EVENTVALIDATION = re.search('\|__EVENTVALIDATION\|(.*?)\|\d+\|asyncPostBackControlIDs', response.text).group(1)
+            __EVENTVALIDATION = quote(__EVENTVALIDATION).replace('/', '%2F')
 
-            #处理第一页
-            print('当前页：1')
-            __VIEWSTATE,__EVENTVALIDATION = deal(response,item,EntType)
+            #开始日期循环
+            for dateObj in dateList:
+                try:
+                    print('当前日期：'+str(dateObj))
+                    startDate = dateObj['startDate']
+                    endDate = dateObj['endDate']
 
-            #处理剩余页数
-            for i in range(2,totalPage+1):
-                print('当前页：'+str(i))
-                # body = 'ScriptManager1=UpdatePanel2%7Cbtn_query_autodata&ddl_year=2018&txt_EnpName=%E8%AF%B7%E8%BE%93%E5%85%A5%E4%BC%81%E4%B8%9A%E5%90%8D%E7%A7%B0&rd_DataType={EntType}&txtStartDate_autoData={startDate}&txtEndDate_autoData={endDate}&Asp_AutoData_input={pageToken}&rd_SiteType=1&txtStartDate_handData=2019-03-01&txtEndDate_handData=2019-03-31&Asp_HandData_input=1&txtStartDate_NoiseData=2019&txtStartDate_otherData=2019-03-01&txtEndDate_otherData=2019-03-31&txt_reason=2019-01-01&txt_reason_end=2019-12-31&txt_monplan=2019&txtyearreport=2019&ddl_city=&txt_monplan_sum=2019&__EVENTTARGET=&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={__VIEWSTATE}&__EVENTVALIDATION={__EVENTVALIDATION}&tvsite_ExpandState={tvsite_ExpandState}&tvsite_SelectedNode={tvsite_SelectedNode}&tvsite_PopulateLog=&__ASYNCPOST=true&btn_query_autodata=%E6%9F%A5%20%20%20%E8%AF%A2'
-                body = 'ScriptManager1=UpdatePanel2%7CAsp_AutoData&ddl_year=2018&txt_EnpName=%E8%AF%B7%E8%BE%93%E5%85%A5%E4%BC%81%E4%B8%9A%E5%90%8D%E7%A7%B0&rd_DataType={EntType}&txtStartDate_autoData={startDate}&txtEndDate_autoData={endDate}&Asp_AutoData_input={pageToken}&rd_SiteType=1&txtStartDate_handData=2019-03-01&txtEndDate_handData=2019-03-31&Asp_HandData_input=1&txtStartDate_NoiseData=2019&txtStartDate_otherData=2019-03-01&txtEndDate_otherData=2019-03-31&txt_reason=2019-01-01&txt_reason_end=2019-12-31&txt_monplan=2019&txtyearreport=2019&ddl_city=&txt_monplan_sum=2019&__EVENTTARGET=&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={__VIEWSTATE}&__EVENTVALIDATION={__EVENTVALIDATION}&tvsite_ExpandState={tvsite_ExpandState}&tvsite_SelectedNode={tvsite_SelectedNode}&tvsite_PopulateLog=&__ASYNCPOST=true&Asp_AutoData=go'
-                data = body.format(pageToken=i, EntType=EntType, startDate=startDate, endDate=endDate,__VIEWSTATE=__VIEWSTATE, __EVENTVALIDATION=__EVENTVALIDATION,tvsite_SelectedNode=tvsite_SelectedNode, tvsite_ExpandState=tvsite_ExpandState)
-                # print(data)
-                response = requests.post(start_url, data=data, headers=post_headers, timeout=15)
-                # print(response.text)
-                __VIEWSTATE, __EVENTVALIDATION = deal(response, item, EntType)
+                    #获取第一页
+                    start_url = 'http://121.28.49.84:8003/'
+                    body = 'ScriptManager1=UpdatePanel2%7Cbtn_query_autodata&ddl_year=2018&txt_EnpName=%E8%AF%B7%E8%BE%93%E5%85%A5%E4%BC%81%E4%B8%9A%E5%90%8D%E7%A7%B0&rd_DataType={EntType}&txtStartDate_autoData={startDate}&txtEndDate_autoData={endDate}&Asp_AutoData_input={pageToken}&rd_SiteType=1&txtStartDate_handData=2019-03-01&txtEndDate_handData=2019-03-31&Asp_HandData_input=1&txtStartDate_NoiseData=2019&txtStartDate_otherData=2019-03-01&txtEndDate_otherData=2019-03-31&txt_reason=2019-01-01&txt_reason_end=2019-12-31&txt_monplan=2019&txtyearreport=2019&ddl_city=&txt_monplan_sum=2019&__EVENTTARGET=&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={__VIEWSTATE}&__EVENTVALIDATION={__EVENTVALIDATION}&tvsite_ExpandState={tvsite_ExpandState}&tvsite_SelectedNode={tvsite_SelectedNode}&tvsite_PopulateLog=&__ASYNCPOST=true&btn_query_autodata=%E6%9F%A5%20%20%20%E8%AF%A2'
+                    # body = 'ScriptManager1=UpdatePanel2%7CAsp_AutoData&ddl_year=2018&txt_EnpName=%E8%AF%B7%E8%BE%93%E5%85%A5%E4%BC%81%E4%B8%9A%E5%90%8D%E7%A7%B0&rd_DataType={EntType}&txtStartDate_autoData={startDate}&txtEndDate_autoData={endDate}&Asp_AutoData_input={pageToken}&rd_SiteType=1&txtStartDate_handData=2019-03-01&txtEndDate_handData=2019-03-31&Asp_HandData_input=1&txtStartDate_NoiseData=2019&txtStartDate_otherData=2019-03-01&txtEndDate_otherData=2019-03-31&txt_reason=2019-01-01&txt_reason_end=2019-12-31&txt_monplan=2019&txtyearreport=2019&ddl_city=&txt_monplan_sum=2019&__EVENTTARGET=&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={__VIEWSTATE}&__EVENTVALIDATION={__EVENTVALIDATION}&tvsite_ExpandState={tvsite_ExpandState}&tvsite_SelectedNode={tvsite_SelectedNode}&tvsite_PopulateLog=&__ASYNCPOST=true&Asp_AutoData=go'
+                    data = body.format(pageToken=1, EntType=EntType, startDate=startDate, endDate=endDate, __VIEWSTATE=__VIEWSTATE, __EVENTVALIDATION=__EVENTVALIDATION, tvsite_SelectedNode=tvsite_SelectedNode, tvsite_ExpandState=tvsite_ExpandState)
+                    # print(data)
+                    response = requests.post(start_url, data=data, headers=post_headers, timeout=15)
+                    # print(response.text)
 
+                    #无数据
+                    if 'tbdata_auto1' in response.text:
+                        print('无数据')
+                        continue
+
+                    #获取总条数
+                    totalPage = re.search("共<font color='red'>(\d+)</font>页",response.text,re.S)
+                    if totalPage:
+                        totalPage = int(totalPage.group(1))
+                        print('总页数：' + str(totalPage))
+                    else:
+                        print('无数据')
+                        continue
+
+                    #处理第一页
+                    print('当前页：1')
+                    __VIEWSTATE,__EVENTVALIDATION = deal(response,item,EntType)
+
+                    #处理剩余页数
+                    for i in range(2,totalPage+1):
+                        try:
+                            print('当前页：'+str(i))
+                            # body = 'ScriptManager1=UpdatePanel2%7Cbtn_query_autodata&ddl_year=2018&txt_EnpName=%E8%AF%B7%E8%BE%93%E5%85%A5%E4%BC%81%E4%B8%9A%E5%90%8D%E7%A7%B0&rd_DataType={EntType}&txtStartDate_autoData={startDate}&txtEndDate_autoData={endDate}&Asp_AutoData_input={pageToken}&rd_SiteType=1&txtStartDate_handData=2019-03-01&txtEndDate_handData=2019-03-31&Asp_HandData_input=1&txtStartDate_NoiseData=2019&txtStartDate_otherData=2019-03-01&txtEndDate_otherData=2019-03-31&txt_reason=2019-01-01&txt_reason_end=2019-12-31&txt_monplan=2019&txtyearreport=2019&ddl_city=&txt_monplan_sum=2019&__EVENTTARGET=&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={__VIEWSTATE}&__EVENTVALIDATION={__EVENTVALIDATION}&tvsite_ExpandState={tvsite_ExpandState}&tvsite_SelectedNode={tvsite_SelectedNode}&tvsite_PopulateLog=&__ASYNCPOST=true&btn_query_autodata=%E6%9F%A5%20%20%20%E8%AF%A2'
+                            body = 'ScriptManager1=UpdatePanel2%7CAsp_AutoData&ddl_year=2018&txt_EnpName=%E8%AF%B7%E8%BE%93%E5%85%A5%E4%BC%81%E4%B8%9A%E5%90%8D%E7%A7%B0&rd_DataType={EntType}&txtStartDate_autoData={startDate}&txtEndDate_autoData={endDate}&Asp_AutoData_input={pageToken}&rd_SiteType=1&txtStartDate_handData=2019-03-01&txtEndDate_handData=2019-03-31&Asp_HandData_input=1&txtStartDate_NoiseData=2019&txtStartDate_otherData=2019-03-01&txtEndDate_otherData=2019-03-31&txt_reason=2019-01-01&txt_reason_end=2019-12-31&txt_monplan=2019&txtyearreport=2019&ddl_city=&txt_monplan_sum=2019&__EVENTTARGET=&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={__VIEWSTATE}&__EVENTVALIDATION={__EVENTVALIDATION}&tvsite_ExpandState={tvsite_ExpandState}&tvsite_SelectedNode={tvsite_SelectedNode}&tvsite_PopulateLog=&__ASYNCPOST=true&Asp_AutoData=go'
+                            data = body.format(pageToken=i, EntType=EntType, startDate=startDate, endDate=endDate,__VIEWSTATE=__VIEWSTATE, __EVENTVALIDATION=__EVENTVALIDATION,tvsite_SelectedNode=tvsite_SelectedNode, tvsite_ExpandState=tvsite_ExpandState)
+                            # print(data)
+                            response = requests.post(start_url, data=data, headers=post_headers, timeout=15)
+                            # print(response.text)
+                            __VIEWSTATE, __EVENTVALIDATION = deal(response, item, EntType)
+                        except:
+                            continue
+                except:
+                    continue
+        except:
+            continue
 
 if __name__ == '__main__':
     dbclient = db.MysqlClient()
@@ -193,8 +203,7 @@ if __name__ == '__main__':
                 '__EVENTARGUMENT':__EVENTARGUMENT,
             }
             item_list.append(obj)
-    for item in item_list:
-        print(item)
+    for item in item_list[:119]:
         try:
             start(item)
         except:
