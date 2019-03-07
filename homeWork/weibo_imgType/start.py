@@ -182,7 +182,7 @@ def main(keyword):
         # print(response.text)
         json_obj = json.loads(response.text)
         totalNum = json_obj['cardlistInfo']['total']
-        pageNum = math.ceil(totalNum/0)
+        pageNum = math.ceil(totalNum/10)
         if 'cards' in json_obj and len(json_obj['cards'])>0:
             # for data in json_obj['cards'][1]['card_group']:
             for data in json_obj['cards'][0]['card_group']:
