@@ -188,6 +188,7 @@ def main(keyword):
             for data in json_obj['cards'][0]['card_group']:
                 try:
                     parse(data)
+                    time.sleep(config.sleepTime)
                 except:
                     continue
 
@@ -195,6 +196,7 @@ def main(keyword):
         for i in range(2,pageNum+1):
             print('微博翻页，当前页：'+str(i))
             try:
+                print(URL.format(keyword=keyword, pageToken=i,gsid=config.gsid,s=config.s))
                 response = down.get_html(URL.format(keyword=keyword, pageToken=i,gsid=config.gsid,s=config.s))
                 if response:
                     # print(response.text)
@@ -202,6 +204,7 @@ def main(keyword):
                     for data in json_obj['cards'][0]['card_group']:
                         try:
                             parse(data)
+                            time.sleep(config.sleepTime)
                         except:
                             continue
                 else:
