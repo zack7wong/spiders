@@ -14,13 +14,13 @@ commentsNum = 50
 repostsNum = 50
 
 #暂停时间
-sleepTime = 5
+sleepTime = 10
 
 gsid = '_2A252l9wGDeRxGeBI7VoY8izKyz2IHXVTBWjOrDV6PUJbkdANLXGjkWpNRm0hpm4-79PKFi9KhFjsQMZsgp-6Vzzd'
 s = '6f4aaaaa'
 
 #是否开启代理
-PROXY_SWITCH = True
+PROXY_SWITCH = False
 #是否使用cookies
 COOKIES_SWITCH = False
 #请求最大出错次数
