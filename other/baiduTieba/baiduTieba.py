@@ -13,7 +13,7 @@ def get_tieziReply(tid,pid):
         pageToken =1
         tieziReply = 'https://tieba.baidu.com/p/comment?tid={tid}&pid={pid}&pn={pageToken}'.format(tid=tid,pid=pid,pageToken=pageToken)
         # print(tieziReply)
-        response = requests.get(tieziReply)
+        response = requests.get(tieziReply,timeout=10)
         html = HTML(response.text)
         totalPage = html.xpath('string(//p[@class="j_pager l_pager pager_theme_2"]/a[last()]/@href)')
         if totalPage == '':
@@ -30,7 +30,7 @@ def get_tieziReply(tid,pid):
         for i in range(2,totalPage+1):
             try:
                 tieziReply = 'https://tieba.baidu.com/p/comment?tid={tid}&pid={pid}&pn={pageToken}'.format(tid=tid, pid=pid,pageToken=i)
-                response = requests.get(tieziReply)
+                response = requests.get(tieziReply,timeout=10)
                 html = HTML(response.text)
                 allStr_list2 = html.xpath('//li//span[@class="lzl_content_main"]/text()')
             except:
@@ -90,7 +90,7 @@ def get_detail(html,replyCount,title,saveUrl):
             if really_user_name == None:
                 continue
             userUrl = 'http://tieba.baidu.com/home/get/panel?ie=utf-8&un='+quote(really_user_name)
-            response = requests.get(userUrl)
+            response = requests.get(userUrl,timeout=10)
             # print(response.text)
             json_obj = json.loads(response.text)
             user_year = str(json_obj['data']['tb_age'])
@@ -125,7 +125,7 @@ def deal(html):
             link = 'http://tieba.baidu.com' + url
             print(link)
 
-            response = requests.get(link)
+            response = requests.get(link,timeout=10)
             html = HTML(response.text)
 
             #获取总页数
@@ -146,7 +146,7 @@ def deal(html):
                     print('帖子当前页：'+str(i))
                     pagelink = link +'?pn='+str(i)
                     print(pagelink)
-                    response = requests.get(pagelink)
+                    response = requests.get(pagelink,timeout=10)
                     html = HTML(response.text)
                     get_detail(html,replyCount,title,saveUrl)
                 except:
@@ -159,7 +159,7 @@ def start(item):
     pageToken = 0
     url = 'http://tieba.baidu.com/f?kw={kw}&pn={pageToken}'.format(kw=item,pageToken=pageToken)
     print(url)
-    response = requests.get(url)
+    response = requests.get(url,timeout=10)
     html = HTML(response.text)
 
     #获取总数
@@ -178,7 +178,7 @@ def start(item):
             pageToken = i*50
             url = 'http://tieba.baidu.com/f?kw={kw}&pn={pageToken}'.format(kw=item, pageToken=pageToken)
             print(url)
-            response = requests.get(url)
+            response = requests.get(url,timeout=10)
             html = HTML(response.text)
             deal(html)
         except:
