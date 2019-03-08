@@ -30,4 +30,4 @@ for i in range(1,20):
     for obj in json_obj['othersCommentList']:
         print(obj['content'])
         with open('结果.txt','a') as f:
-            f.write(obj['content'])
+            f.write(obj['content']+'\n')
