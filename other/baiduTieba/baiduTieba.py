@@ -8,6 +8,9 @@ from urllib.parse import quote
 import json
 import re
 
+
+set_id_list = []
+
 def get_tieziReply(tid,pid):
     try:
         pageToken =1
@@ -122,6 +125,12 @@ def deal(html):
     for url in urls:
         try:
             saveUrl = 'http://tieba.baidu.com' + url
+
+            if saveUrl in set_id_list:
+                continue
+            else:
+                set_id_list.append(saveUrl)
+
             link = 'http://tieba.baidu.com' + url
             print(link)
 
