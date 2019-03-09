@@ -48,7 +48,7 @@ def get_canInfo(item,EntType):
     __VIEWSTATE = re.search('id="__VIEWSTATE" value="(.*?)"',response.text).group(1)
     __VIEWSTATE = quote(__VIEWSTATE).replace('/','%2F')
     # totalPage = int(re.search('当前第1/(\d+)页',response.text).group(1))
-    print(jianceCodeList)
+    # print(jianceCodeList)
     # print(__VIEWSTATE)
     return jianceCodeObjList,__VIEWSTATE
 
@@ -173,8 +173,8 @@ def start(item):
                                     print('当前页：'+str(i))
                                     body = '__EVENTTARGET=DropPk&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={__VIEWSTATE}&txtkssj={startDate}&txtjssj={endDate}&DropPk={jianceCode}&AspNetPager1_input={pageToken}&AspNetPager1=go'
                                     data = body.format(__VIEWSTATE=__VIEWSTATE, startDate=startDate, endDate=endDate,jianceCode=jianceCode, pageToken=i)
-                                    print(start_url)
-                                    print(data)
+                                    # print(start_url)
+                                    # print(data)
                                     response = requests.post(start_url, data=data, headers=headers,timeout=80)
                                     html = HTML(response.text)
                                     __VIEWSTATE = deal(response,html,item,EntType,jianceCodeName)
