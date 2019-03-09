@@ -98,10 +98,10 @@ def deal(response,item,EntType):
 
         print(title,EntTypeName,jianceTime,jianceProject,jiancedianName,jianceValue,danwei,zhixingBiaozhunName,biaozhunXianzhi,shifouChaobiao,chaobiaoBeishu,publishDate,paifangFangshi,paifangQuxiang)
 
-        # sql = "insert into hebei(title,EntTypeName,jianceTime,jianceProject,jiancedianName,jianceValue,danwei,zhixingBiaozhunName,biaozhunXianzhi,shifouChaobiao,chaobiaoBeishu,publishDate,paifangFangshi,paifangQuxiang)" \
-        #       " VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" \
-        #       % (title,EntTypeName,jianceTime,jianceProject,jiancedianName,jianceValue,danwei,zhixingBiaozhunName,biaozhunXianzhi,shifouChaobiao,chaobiaoBeishu,publishDate,paifangFangshi,paifangQuxiang) + "ON DUPLICATE KEY UPDATE title='%s'" % (title)
-        # dbclient.save(sql)
+        sql = "insert into hebei(title,EntTypeName,jianceTime,jianceProject,jiancedianName,jianceValue,danwei,zhixingBiaozhunName,biaozhunXianzhi,shifouChaobiao,chaobiaoBeishu,publishDate,paifangFangshi,paifangQuxiang)" \
+              " VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" \
+              % (title,EntTypeName,jianceTime,jianceProject,jiancedianName,jianceValue,danwei,zhixingBiaozhunName,biaozhunXianzhi,shifouChaobiao,chaobiaoBeishu,publishDate,paifangFangshi,paifangQuxiang) + "ON DUPLICATE KEY UPDATE title='%s'" % (title)
+        dbclient.save(sql)
 
 
 
@@ -208,7 +208,7 @@ if __name__ == '__main__':
     city_list = [{'cityId':'s130100','cityName':'石家庄市'},{'cityId':'s130200','cityName':'唐山市'},{'cityId':'s130300','cityName':'秦皇岛市'},{'cityId':'s130400','cityName':'邯郸市'},{'cityId':'s130500','cityName':'邢台市'},{'cityId':'s130600','cityName':'保定市'},{'cityId':'s130700','cityName':'张家口市'},{'cityId':'s130800','cityName':'承德市'},{'cityId':'s130900','cityName':'沧州市'},{'cityId':'s131000','cityName':'廊坊市'},{'cityId':'s131100','cityName':'衡水市'},{'cityId':'s139100','cityName':'定州市'},{'cityId':'s130181','cityName':'辛集市'}]
     dbclient = db.MysqlClient()
     item_list = []
-    fileName = '定州市'
+    fileName = '张家口市'
     with open(fileName+'.txt') as f:
         results = f.readlines()
         for res in results:
@@ -221,7 +221,8 @@ if __name__ == '__main__':
                 '__EVENTARGUMENT':__EVENTARGUMENT,
             }
             item_list.append(obj)
-    for item in item_list[:119]:
+    for item in item_list: ########## 起始位置
+        print(item)
         try:
             start(item,fileName)
         except:
