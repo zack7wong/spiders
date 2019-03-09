@@ -15,14 +15,14 @@ wl = " ".join(wordlist)
 
 d = path.dirname(__file__)
 
-alice_mask = np.array(Image.open(path.join(d, "2222.png")))
+alice_mask = np.array(Image.open(path.join(d, "hua.jpeg")))
 # 设置词云
 wc = WordCloud(background_color="white",  # 设置背景颜色
                mask = alice_mask,  #设置背景图片
                max_words=2000,  # 设置最大显示的字数
                # stopwords = "", #设置停用词
-               # font_path="C:\Windows\Fonts\SimHei.ttf",
-               font_path="/System/Library/Fonts/PingFang.ttc",
+               font_path="C:\Windows\Fonts\SimHei.ttf",
+               # font_path="/System/Library/Fonts/PingFang.ttc",
                max_font_size=50,  # 设置字体最大值
                random_state=30,
                )
@@ -31,4 +31,5 @@ myword = wc.generate(wl)  # 生成词云
 # 展示词云图
 plt.imshow(myword)
 plt.axis("off")
+plt.savefig('resutls.png')
 plt.show()
