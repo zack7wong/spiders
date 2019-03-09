@@ -139,7 +139,7 @@ def doing(seccode,headers,link,mycomment):
     # 开始回复
     tid = re.search('https://forum.cyberctm.com/forum.php\?mod=viewthread&tid=(\d+)&extra=', link).group(1)
     reply_url = 'https://forum.cyberctm.com/forum.php?mod=post&action=reply&fid=291&tid={tid}&extra=&replysubmit=yes&infloat=yes&handlekey=fastpost&inajax=1'.format(tid=tid)
-    body = 'message={message}&seccodehash={seccode}&seccodemodid=forum%3A%3Aviewthread&seccodeverify={seccodeverify}&posttime={posttime}&formhash=e633004f&usesig=1&subject=%2B%2B'
+    body = 'message={message}&seccodehash={seccode}&seccodemodid=forum%3A%3Aviewthread&seccodeverify={seccodeverify}&posttime={posttime}&formhash=f2030dad&usesig=1&subject=%2B%2B'
     posttime = str(int(time.time()) - 1)
     data = body.format(message=quote(mycomment), seccodeverify=captcha_res, posttime=posttime, seccode=seccode)
     # print(data)
