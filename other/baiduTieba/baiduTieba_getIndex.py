@@ -202,8 +202,8 @@ def start(item):
 
 if __name__ == '__main__':
 
-    saveFileName = '顺丰'
-    tieba_list = ['顺丰']
+    saveFileName = '苏宁快递'
+    tieba_list = ['苏宁快递']
 
     # with open(saveFileName+'.csv','w',encoding='gbk',errors='ignore') as f:
     # # with open(saveFileName+'.csv','w',encoding='utf8',errors='ignore') as f:

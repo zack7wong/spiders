@@ -61,7 +61,7 @@ def get_tieziReply(tid,pid):
         allStr = ''
     return allStr
 
-def get_detail(html,replyCount,title,saveUrl):
+def get_detail(html,replyCount,title,saveUrl,writeNum):
     div_list = html.xpath('//div[@id="j_p_postlist"]/div')
 
     for div in div_list:
@@ -112,7 +112,7 @@ def get_detail(html,replyCount,title,saveUrl):
             save_res = saveUrl+'|||'+str(replyCount)+'|||'+title+'|||'+userName+'|||'+str(level)+'|||'+user_year+'|||'+user_postNum+'|||'+content+'|||'+publishDate+'|||'+floor+'|||'+allStr
             save_res = save_res.replace(',','，').replace('\n',' ').replace('\r',' ').replace('|||',',').strip()+'\n'
             print(save_res)
-            with open(saveFileName+'.csv','a',encoding='gbk',errors='ignore') as f:
+            with open(saveFileName+str(writeNum)+'.csv','a',encoding='gbk',errors='ignore') as f:
             # with open(saveFileName+'.csv','a',encoding='utf8',errors='ignore') as f:
                 f.write(save_res)
         except:
@@ -120,11 +120,11 @@ def get_detail(html,replyCount,title,saveUrl):
 
 
 
-def deal(urls):
+def deal(urls,num):
     for url in urls:
         try:
             saveUrl = url
-            with open(saveFileName+'_已采集.txt','a') as f:
+            with open(saveFileName+str(num)+'_已采集.txt','a') as f:
                 f.write(saveUrl+'\n')
             link = url
             print(link)
@@ -141,7 +141,7 @@ def deal(urls):
 
             #处理第一页
             print('当前页数：1')
-            get_detail(html,replyCount,title,saveUrl)
+            get_detail(html,replyCount,title,saveUrl,num)
 
             #处理剩余页数
             for i in range(2,totalPage+1):
@@ -151,7 +151,7 @@ def deal(urls):
                     print(pagelink)
                     response = requests.get(pagelink,timeout=10)
                     html = HTML(response.text)
-                    get_detail(html,replyCount,title,saveUrl)
+                    get_detail(html,replyCount,title,saveUrl,num)
                 except:
                     continue
         except:
@@ -182,17 +182,17 @@ if __name__ == '__main__':
     i = a * 9
     j = a * 10
     args = (
-        (urls[:a],),
-        (urls[a:b],),
-        (urls[b:c],),
-        (urls[c:d],),
-        (urls[d:e],),
-        (urls[e:f],),
-        (urls[f:g],),
-        (urls[g:h],),
-        (urls[h:i],),
-        (urls[i:j],),
-        (urls[j:],)
+        (urls[:a],1),
+        (urls[a:b],2),
+        (urls[b:c],3),
+        (urls[c:d],4),
+        (urls[d:e],5),
+        (urls[e:f],6),
+        (urls[f:g],7),
+        (urls[g:h],8),
+        (urls[h:i],9),
+        (urls[i:j],10),
+        (urls[j:],11)
     )
     p = multiprocessing.Pool(10)
     for arg in args:
