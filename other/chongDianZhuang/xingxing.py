@@ -14,7 +14,11 @@ def start(item):
     name = json_obj['data']['name']
     address = json_obj['data']['address']
     try:
-        if '1.40.00' in json.loads(json_obj['data']['stubCntInfo']):
+        if '1.120.00' in json.loads(json_obj['data']['stubCntInfo']):
+            zhiliu = str(json.loads(json_obj['data']['stubCntInfo'])['1.120.00'])
+        elif '1.30.00' in json.loads(json_obj['data']['stubCntInfo']):
+            zhiliu = str(json.loads(json_obj['data']['stubCntInfo'])['1.30.00'])
+        elif '1.40.00' in json.loads(json_obj['data']['stubCntInfo']):
             zhiliu = str(json.loads(json_obj['data']['stubCntInfo'])['1.40.00'])
         else:
             zhiliu = str(json.loads(json_obj['data']['stubCntInfo'])['1.60.00'])
