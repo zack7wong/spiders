@@ -4,6 +4,39 @@
 import requests
 import json
 
+def get_detail(chargingStationId):
+    url = "https://app-api-prod.e-chong.com/station/pile/list"
+
+    payload = "{\"stationId\":\""+chargingStationId+"\"}"
+    headers = {
+        'USER_TOKEN': "",
+        'USER_DEVICE_ID': "863100032895926",
+        'APP_VER': "3.0.4",
+        'PLAT_TYPE': "android",
+        'PLAT_INFO': "Redmi Note 4|6.0",
+        'Content-Type': "application/json; charset=utf-8",
+        'Host': "app-api-prod.e-chong.com",
+        'Connection': "Keep-Alive",
+        'Accept-Encoding': "gzip",
+        'User-Agent': "okhttp/3.11.0",
+        'cache-control': "no-cache",
+        'Postman-Token': "db1fdce1-3de9-4d02-9a11-5e765e69292b"
+    }
+
+    response = requests.request("POST", url, data=payload, headers=headers,verify=False)
+    json_obj = json.loads(response.text)
+
+    print(response.text)
+    allCount = 0
+    for data in json_obj['data']:
+        allCount +=data['plugCount']
+
+    return str(allCount)
+
+
+
+
+
 def start(item):
     lon = item['lon']
     lat = item['lat']
@@ -42,12 +75,11 @@ def start(item):
         stationName = data['stationName']
         addrStreet = data['addrStreet']
 
-        if data['isChargeNow'] == 1:
-            zhuangshu = str(data['pileNums'])
-        else:
-            zhuangshu = str(data['pileNums']*2)
+        zhuangshu = str(data['pileNums'])
 
-        if data['isOpenPublic'] == 1:
+        qiangshu = get_detail(chargingStationId)
+
+        if data['isGroupOpen'] == 1:
             dianzanLeix = '公共充电站'
         else:
             dianzanLeix = '专用充电站'
@@ -57,7 +89,7 @@ def start(item):
         latitude = data['latitude']
         longitude = data['longitude']
 
-        save_res = chargingStationId + '||' + stationName + '||' + addrStreet + '||' + zhuangshu + '||' + dianzanLeix + '||' + electFee + '||' + serviceFee + '||' + latitude + '||' + longitude
+        save_res = chargingStationId + '||' + stationName + '||' + addrStreet + '||' + zhuangshu+'||'+qiangshu + '||' + dianzanLeix + '||' + electFee + '||' + serviceFee + '||' + latitude + '||' + longitude
         save_res = save_res.replace(',', '，').replace('\n', '').replace('\r', '').replace('\t', '').replace('||',',').strip() + '\n'
         print(save_res)
         with open('E充站.csv', 'a', encoding='gbk') as f:
@@ -66,7 +98,7 @@ def start(item):
 if __name__ == '__main__':
 
     with open('E充站.csv','w',encoding='gbk') as f:
-        f.write('id,名称,地址,桩数,电站类型,充电费用,服务费用,经度,纬度\n')
+        f.write('id,名称,地址,桩数,枪数,电站类型,充电费用,服务费用,经度,纬度\n')
 
     id_list = []
 
