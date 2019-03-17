@@ -18,15 +18,15 @@ class TextRank(object):
     # 对句子进行分词
     def cutSentence(self):
         # jieba.load_userdict('user_dict.txt')
-        stopList = [line.strip() for line in open('user_dict.txt').readlines()]
+        # stopList = [line.strip() for line in open('user_dict.txt').readlines()]
         tag_filter = ['a', 'd', 'n', 'v']
         seg_result = pseg.cut(self.sentence)
         self.word_list = [s.word for s in seg_result if s.flag in tag_filter]
-        for each in self.word_list:
-            if each[0] in stopList:
-                del self.word_list[self.word_list.index(each)]
+        # for each in self.word_list:
+        #     if each[0] in stopList:
+        #         del self.word_list[self.word_list.index(each)]
 
-        print(self.sentence)
+        # print(self.sentence)
         print(self.word_list)
 
     # 根据窗口，构建每个节点的相邻节点,返回边的集合
@@ -97,13 +97,14 @@ class TextRank(object):
 
 if __name__ == '__main__':
     item_list = []
-    with open('994291.txt') as f:
+    with open('one(2).txt') as f:
         results = f.readlines()
         for res in results:
             if res == '\n':
                 continue
             item_list.append(res.strip())
     for item in item_list[:10]:
+        print(item)
         s = item
         tr = TextRank(s, 3, 0.85, 700)
         tr.cutSentence()
