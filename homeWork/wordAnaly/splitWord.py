@@ -57,11 +57,12 @@ class NPExtractor(object):
         # filtered_sentence = [w for w in tokens if not w in stop_words]
         # print(filtered_sentence)
 
-        filtered_sentence = []
-
-        for w in tokens:
-            if w not in stop_words:
-                filtered_sentence.append(w)
+        filtered_sentence = tokens
+        # filtered_sentence = []
+        #
+        # for w in tokens:
+        #     if w not in stop_words:
+        #         filtered_sentence.append(w)
         # print(filtered_sentence)
 
         tags = self.normalize_tags(bigram_tagger.tag(filtered_sentence))
