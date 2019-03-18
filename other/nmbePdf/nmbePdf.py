@@ -12,7 +12,7 @@ headers = {
     'accept-encoding': "gzip, deflate, br",
     'accept-language': "zh-CN,zh;q=0.9",
     'cache-control': "no-cache,no-cache",
-    'cookie': "_ga=GA1.2.954549164.1552822222; _gid=GA1.2.2103385567.1552822222; WSCSESSID=o6tcp6lllvkks8bvjmsbreg8u5; _gat=1",
+    # 'cookie': "WSCSESSID=ls2rr8rf5avts3aa62damg7lc0",
     'pragma': "no-cache",
     'referer': "https://wsc.nmbe.ch/bibliography",
     'upgrade-insecure-requests': "1",
@@ -24,45 +24,101 @@ proxies = {
     'https':'http://127.0.0.1:1087'
 }
 
+def login():
+
+    url = "https://wsc.nmbe.ch/user/login"
+
+    payload = "prot={prot}&email=linhaoranaa%40126.com&pass=sb2001.3&rememberMe=&login=Log%20In"
+    login_headers = {
+        'accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+        'accept-encoding': "gzip, deflate, br",
+        'accept-language': "zh-CN,zh;q=0.9",
+        'cache-control': "no-cache,no-cache",
+        'content-type': "application/x-www-form-urlencoded",
+        'origin': "https://wsc.nmbe.ch",
+        'pragma': "no-cache",
+        'referer': "https://wsc.nmbe.ch/user/login",
+        'upgrade-insecure-requests': "1",
+        'user-agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36",
+    }
+
+    response = requests.get(url, verify=False,proxies=proxies)
+    # print(response.text)
+    cookieDic = response.cookies.get_dict()
+
+    login_headers['cookie'] = 'WSCSESSID=' + cookieDic['WSCSESSID']
+    # print(login_headers)
+
+    prot = re.search('name="prot" value="(.*?)"', response.text).group(1)
+    data = payload.format(prot=prot)
+    print(data)
+    login_headers['content-length'] = str(len(prot))
+    response = requests.post(url, data=data, headers=login_headers, verify=False,proxies=proxies, allow_redirects=False)
+    del login_headers['content-length']
+    del login_headers['content-type']
+    del login_headers['origin']
+
+    # print(response.text)
+    print(response.status_code)
+
+    # response = requests.get(url, headers=login_headers, verify=False, proxies=proxies)
+    response = requests.get(url, headers=login_headers, verify=False, proxies=proxies, allow_redirects=False)
+    cookieDic = response.cookies.get_dict()
+    print(cookieDic)
+    print(response.status_code)
+    headers['cookie'] = 'WSCSESSID=' + cookieDic['WSCSESSID']
+
+
+
+
+
 def start(year,dicPath):
+    print('正在登录。。')
+    login()
     start_url = 'https://wsc.nmbe.ch/listbib/'+year
     response = requests.get(start_url, headers=headers, verify=False,proxies=proxies)
     # print(response.text)
     html = HTML(response.text)
     p_list = html.xpath('//div[@class="reference"]/p')
     for p in p_list:
-        url = p.xpath('string(./a[@class="pdfdown"]/@href)')
-        fileNameStr = p.xpath('string(./text())')
-        fileNameRe = re.search('^(.*?\(.*?\)).',fileNameStr)
-        if fileNameRe:
-            fileName = fileNameRe.group(1)+'.pdf'
-        else:
-            print('error')
-            continue
+        url_list = p.xpath('./a[@class="pdfdown"]/@href')
+        num = 1
+        for url in url_list:
+            fileNameStr = p.xpath('string(./text())')
+            fileNameRe = re.search('^(.*?\(.*?\)).',fileNameStr)
+            if fileNameRe:
+                if len(url_list)>1:
+                    fileName = fileNameRe.group(1)+'_'+str(num) + '.pdf'
+                    num+=1
+                else:
+                    fileName = fileNameRe.group(1)+'.pdf'
+            else:
+                print('error')
+                continue
 
-        link = 'https://wsc.nmbe.ch' + url
-        print('正在下载：'+fileName)
-        print(link)
-        savePath = os.path.join(dicPath,fileName)
-        if os.path.exists(savePath):
-            print('已经下载过了')
-            continue
+            link = 'https://wsc.nmbe.ch' + url
+            print('正在下载：'+fileName)
+            print(link)
+            savePath = os.path.join(dicPath,fileName)
+            if os.path.exists(savePath):
+                print('已经下载过了')
+                continue
 
-        # urllib.request.urlretrieve(link, savePath)
-        try:
-            down_response = requests.get(link,headers=headers,verify=False,proxies=proxies)
-        except:
-            print('error...')
-            with open('下载失败.txt','a') as f:
-                f.write(fileName+'\n')
-            continue
+            # urllib.request.urlretrieve(link, savePath)
+            try:
+                down_response = requests.get(link,headers=headers,verify=False,proxies=proxies)
+            except:
+                print('error...')
+                with open('下载失败.txt','a') as f:
+                    f.write(fileName+'\n')
+                continue
 
-        try:
-            with open(savePath,'wb') as f:
-                f.write(down_response.content)
-        except:
-            with open('下载失败.txt','a') as f:
-                f.write(fileName+'\n')
+            try:
+                with open(savePath,'wb') as f:
+                    f.write(down_response.content)
+            except:
+                with open('下载失败.txt','a') as f:
+                    f.write(fileName+'\n')
 
 
 if __name__ == '__main__':
