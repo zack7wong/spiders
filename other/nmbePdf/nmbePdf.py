@@ -53,10 +53,16 @@ def start(year,dicPath):
             down_response = requests.get(link,headers=headers,verify=False,proxies=proxies)
         except:
             print('error...')
+            with open('下载失败.txt','a') as f:
+                f.write(fileName+'\n')
             continue
 
-        with open(savePath,'wb') as f:
-            f.write(down_response.content)
+        try:
+            with open(savePath,'wb') as f:
+                f.write(down_response.content)
+        except:
+            with open('下载失败.txt','a') as f:
+                f.write(fileName+'\n')
 
 
 if __name__ == '__main__':
