@@ -740,7 +740,6 @@ RC CAI,rc-cai,13d3964b672c61cc9aa0a50551f91f20
 Frank Wang,wang-frank-9,295521b1b9bbc50513bc3e57bf3c550e
 陈司翰,chen-si-han-55,c4498c0e596e8081b0f566858677333c
 王文栋,wang-wen-dong-99,c85d4b85a92c3036b1b10418ebeebb82
-丑老头,denisyao,922f8baf58150a97ccc69c40148c8bb8
 简而不凡,zhang-xiao-chong-3,5e4fdaf5d0f950560b5de67969c484c0
 知乎用户,,608c1bf776aee513dec5b00be3e5fb03
 知乎用户,,abb3771dd8f3cb2c912b5e54dc1e8e6e
@@ -1040,7 +1039,6 @@ Q3341398469,chen-yun-zhong-14,6708639cec23b01a98cd8b2675070266
 王啸,lazing,b9e1ce4a8092fd203f9ab9f32201ccb9
 ThinkXen,ThinkTrance,944aef8dfbf9488d598ef5a05f25d3c7
 surer,surer,055c94eb13b135b11fa1aef4db9489f7
-丑老头,denisyao,922f8baf58150a97ccc69c40148c8bb8
 叶振,xie-zhen-22,2071df7a389aafb49688ad8887b7b7b6
 仝仲峰,tong-zhong-feng,81a2cacc9589f389632879c1bd64fb3e
 陈文珊,wenshan,ad000b005934e8f81968e8832ce6035d
@@ -1068,7 +1066,6 @@ Brian,brianxan,ec3f056525dc2d08cb42c177b55e2e18
 叶振,xie-zhen-22,2071df7a389aafb49688ad8887b7b7b6
 林梦音,linmengyin,95b60df472d704d4495a2005d97f63df
 匿名用户,,0
-丑老头,denisyao,922f8baf58150a97ccc69c40148c8bb8
 知乎用户,,85467d60082ea975a0cb3538669d08cc
 独自前来围观,jaywangye,c841dce6b3a4a3d8e570ac4c0366cf5e
 黎睿,li-rui-75,20e7c3b638af0d61bf863a61c1e54b80
@@ -1076,7 +1073,6 @@ Brian,brianxan,ec3f056525dc2d08cb42c177b55e2e18
 林梦音,linmengyin,95b60df472d704d4495a2005d97f63df
 章平,zhang-ping-1-13,b213c62c053982888ff0be51dde819f9
 之崖先生,QAOldman,b7471c81a7c80fbff3cd87a4565a244a
-丑老头,denisyao,922f8baf58150a97ccc69c40148c8bb8
 知乎用户,,439085e936c2cdc1bd1183b4996812dc
 少游,castleyan,c646371550f74a70f0935a1a921b3892
 林梦音,linmengyin,95b60df472d704d4495a2005d97f63df

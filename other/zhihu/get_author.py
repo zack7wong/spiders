@@ -42,6 +42,7 @@ async def main():
 
             total = json_obj['paging']['totals']
             if total == 0:
+                print('关注数为0')
                 continue
 
             #处理第一页
@@ -73,27 +74,6 @@ async def main():
                     mysql_cli.save(sql)
 
 
-
-        # for i in range(40):
-        #     url = start_url.format(pageToken=i * 10)
-        #     html = await fetch(session, url)
-        #     print(html)
-        #     json_obj = json.loads(html)
-        #     for data in json_obj['data']:
-        #         id = str(data['target']['id'])
-        #         title = str(data['target']['title'])
-        #         name = str(data['target']['author']['name'])
-        #         save_re = id+','+title.replace(',','，')+','+name.replace(',','，')+'\n'
-        #         print(save_re)
-        #         with open('zhihu_id.txt','a') as f:
-        #             f.write(save_re)
-        #
-        #         sql = "insert into question(postId,title,name)" \
-        #               " VALUES ('%s', '%s', '%s')" \
-        #               % (id,title,name)
-        #         print(sql)
-        #
-        #         mysql_cli.save(sql)
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
