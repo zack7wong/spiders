@@ -27,8 +27,8 @@ def get_date():
     month_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     fun = lambda year, month: list(range(1, 1+time.localtime(time.mktime((year,month+1,1,0,0,0,0,0,0)) - 86400).tm_mday))
 
-    for month in month_list:
-        for year in year_list:
+    for year in year_list:
+        for month in month_list:
             day_list = fun(year, month)
             for day in day_list:
                 save_res = str(year)+'%2f'+str(month)+'%2f'+str(day)
@@ -67,12 +67,11 @@ def start():
             rank = str(item['rank'])
 
             save_res = save_date+','+save_num+','+name+','+searchCount+','+rank+'\n'
-            with open('微博热搜.csv','a',encoding='gbk') as f:
+            print(save_res)
+            with open('微博热搜.csv','a',encoding='gbk',errors='ignore') as f:
                 f.write(save_res)
 
 
-
-        break
 
 if __name__ == '__main__':
     start()
