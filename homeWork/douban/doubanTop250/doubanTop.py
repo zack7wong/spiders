@@ -13,7 +13,7 @@ headers = {
     'Accept-Language': "zh-CN,zh;q=0.9",
     'Cache-Control': "no-cache",
     'Connection': "keep-alive",
-    'Cookie': 'bid=jiPiWxCsnbg; ll="118282"; _vwo_uuid_v2=DBCE20527FFC5F06CAEE989D0D0A1CA6E|d3a1206da68d4dffd70ab6cfdb29e357; _ga=GA1.2.2071961702.1531198334; douban-profile-remind=1; douban-fav-remind=1; viewed="6049132"; gr_user_id=c902b75b-be37-423a-8589-cd0a81e33537; __yadk_uid=TNAAa6V3q1b0pjypK2OWoVq0XWqwrxlC; __utmz=223695111.1550920499.4.3.utmcsr=accounts.douban.com|utmccn=(referral)|utmcmd=referral|utmcct=/passport/login; push_noty_num=0; push_doumail_num=0; __utmv=30149280.19229; ct=y; __utmz=30149280.1552644645.51.23.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); _pk_ref.100001.4cf6=%5B%22%22%2C%22%22%2C1553423248%2C%22https%3A%2F%2Faccounts.douban.com%2Fpassport%2Flogin%3Fredir%3Dhttps%253A%252F%252Fmovie.douban.com%252Fexplore%22%5D; _pk_ses.100001.4cf6=*; ap_v=0,6.0; __utma=30149280.2071961702.1531198334.1552644645.1553423249.52; __utmb=30149280.0.10.1553423249; __utmc=30149280; __utma=223695111.2071961702.1531198334.1552373181.1553423249.8; __utmb=223695111.0.10.1553423249; __utmc=223695111; dbcl2="174901236:Ud60RwKZOSY"; ck=4JGP; _pk_id.100001.4cf6=4d713e5636800d95.1550840314.8.1553428893.1552373269.',
+    'Cookie': 'bid=jiPiWxCsnbg; ll="118282"; _vwo_uuid_v2=DBCE20527FFC5F06CAEE989D0D0A1CA6E|d3a1206da68d4dffd70ab6cfdb29e357; _ga=GA1.2.2071961702.1531198334; douban-profile-remind=1; douban-fav-remind=1; viewed="6049132"; gr_user_id=c902b75b-be37-423a-8589-cd0a81e33537; __yadk_uid=TNAAa6V3q1b0pjypK2OWoVq0XWqwrxlC; push_noty_num=0; push_doumail_num=0; ct=y; __utmz=30149280.1552644645.51.23.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); __utmc=30149280; __utmc=223695111; __utma=30149280.2071961702.1531198334.1553423249.1553431696.53; __utmv=30149280.17490; __utma=223695111.2071961702.1531198334.1553423249.1553431704.9; __utmb=223695111.0.10.1553431704; __utmz=223695111.1553431704.9.4.utmcsr=douban.com|utmccn=(referral)|utmcmd=referral|utmcct=/misc/sorry; _pk_ref.100001.4cf6=%5B%22%22%2C%22%22%2C1553431704%2C%22https%3A%2F%2Fwww.douban.com%2Fmisc%2Fsorry%3Foriginal-url%3Dhttps%253A%252F%252Fmovie.douban.com%252Fsubject%252F1294240%252F%22%5D; _pk_ses.100001.4cf6=*; ps=y; __utmt=1; __utmb=30149280.14.9.1553435821761; dbcl2="174901236:XWSMNyw5H6s"; ck=90dW; _pk_id.100001.4cf6=4d713e5636800d95.1550840314.9.1553435842.1553428897.',
     'Host': "movie.douban.com",
     'Pragma': "no-cache",
     'Referer': "https://movie.douban.com/top250?start=225&filter=",
@@ -72,6 +72,7 @@ def start():
             Year = json_obj['datePublished']
             Country = re.search('制片国家/地区:</span>(.*?)<br/>',response.text).group(1).replace('\n','').replace('\'','"').strip()
             timeLong = re.search('片长:</span> <span property="v:runtime" content="(\d+)"',response.text).group(1).replace('\n','').replace('\'','"').strip()
+            language = re.search('语言:</span>(.*?)<br/>',response.text).group(1).replace('\n','').replace('\'','"').strip()
 
             Grenre = '|'.join(json_obj['genre'])
             Rating = json_obj['aggregateRating']['ratingValue']
@@ -90,7 +91,7 @@ def start():
             # print(RatingNum)
             # print(Description)
 
-            sql = "insert into info(movieId,num,MovieName,EnglishName,OtherName,Director,Actors,Year,Country,Grenre,Rating,RatingNum,Description,timeLong) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s') " %(movieId,num,MovieName,EnglishName,OtherName,Director,Actors,Year,Country,Grenre,Rating,RatingNum,Description,timeLong)
+            sql = "insert into info(movieId,num,MovieName,EnglishName,OtherName,Director,Actors,Year,Country,Grenre,Rating,RatingNum,Description,timeLong,language) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s') " %(movieId,num,MovieName,EnglishName,OtherName,Director,Actors,Year,Country,Grenre,Rating,RatingNum,Description,timeLong,language)
             num +=1
 
             print(sql)
