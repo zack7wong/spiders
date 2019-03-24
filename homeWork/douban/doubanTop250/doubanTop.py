@@ -66,7 +66,7 @@ def start():
 
             ActorsList = []
             for dire in json_obj['actor']:
-                DirectorList.append(dire['name'])
+                ActorsList.append(dire['name'])
             Actors = '|'.join(ActorsList).replace('\'','"')
 
             Year = json_obj['datePublished']
