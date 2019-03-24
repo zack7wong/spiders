@@ -25,7 +25,8 @@ headers = {
 
 def start():
     num = 1
-    for i in range(1,12):
+    for i in range(0,10):
+        print('当前页：'+str(i))
         pageToken = i*25
         #
         start_url = 'https://movie.douban.com/top250?start={pageToken}&filter='.format(pageToken=pageToken)
@@ -71,6 +72,7 @@ def start():
 
             Year = json_obj['datePublished']
             Country = re.search('制片国家/地区:</span>(.*?)<br/>',response.text).group(1).replace('\n','').replace('\'','"').strip()
+            timeLong = re.search('片长:</span> <span property="v:runtime" content="(\d+)"',response.text).group(1).replace('\n','').replace('\'','"').strip()
 
             Grenre = '|'.join(json_obj['genre'])
             Rating = json_obj['aggregateRating']['ratingValue']
@@ -89,7 +91,7 @@ def start():
             # print(RatingNum)
             # print(Description)
 
-            sql = "insert into info(movieId,num,MovieName,EnglishName,OtherName,Director,Actors,Year,Country,Grenre,Rating,RatingNum,Description) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s') " %(movieId,num,MovieName,EnglishName,OtherName,Director,Actors,Year,Country,Grenre,Rating,RatingNum,Description)
+            sql = "insert into info(movieId,num,MovieName,EnglishName,OtherName,Director,Actors,Year,Country,Grenre,Rating,RatingNum,Description,timeLong) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s') " %(movieId,num,MovieName,EnglishName,OtherName,Director,Actors,Year,Country,Grenre,Rating,RatingNum,Description,timeLong)
             num +=1
 
             print(sql)
