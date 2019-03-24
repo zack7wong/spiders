@@ -24,11 +24,10 @@ headers = {
     }
 
 def start():
-    num = 101
-    for i in range(4,10):
+    num = 1
+    for i in range(0,10):
         print('当前页：'+str(i))
         pageToken = i*25
-        #
         start_url = 'https://movie.douban.com/top250?start={pageToken}&filter='.format(pageToken=pageToken)
         print(start_url)
         response = requests.get(start_url,headers=headers)
