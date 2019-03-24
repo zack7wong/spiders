@@ -24,8 +24,8 @@ headers = {
     }
 
 def start():
-    num = 1
-    for i in range(0,10):
+    num = 101
+    for i in range(4,10):
         print('当前页：'+str(i))
         pageToken = i*25
         #
