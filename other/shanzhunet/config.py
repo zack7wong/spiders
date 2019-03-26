@@ -7,7 +7,7 @@ CHANGE_IP = 150
 
 
 #是否开启代理
-PROXY_SWITCH = False
+PROXY_SWITCH = True
 
 
 #请求最大出错次数
@@ -18,6 +18,8 @@ HOST_URL = 'https://www.zhipin.com'
 
 #讯代理配置
 IP_URL =''
+
+COOKIES_SWITCH = ''
 
 #请求头配置
 HEADERS = {

@@ -37,14 +37,14 @@ class Download(object):
             sleep(5)
             return self.get_ip(url)
 
-    def get_html(self, url, method='get', body=None, headers=config.HEADERS,proxy=False):
+    def get_html(self, url, method='get', body=None, headers=config.HEADERS,proxy=False,IP_URL=''):
         if self.retry_num > config.ERROR_MAX:
             self.retry_num = 0
             print('请求出错次数大于最大出错次数，已终止')
             return None
         if config.PROXY_SWITCH and proxy:
             if self.chang_ip_num % config.CHANGE_IP == 0:
-                self.ip = self.get_ip(config.IP_URL)
+                self.ip = self.get_ip(IP_URL)
         self.chang_ip_num += 1
         proxies = {
                 'http': 'http://' + self.ip,
@@ -54,7 +54,7 @@ class Download(object):
             if config.COOKIES_SWITCH:
                 response = requests.get(url, headers=headers, cookies=config.COOKIES, proxies=proxies)
             else:
-                if config.PROXY_SWITCH:
+                if config.PROXY_SWITCH and proxy:
                     if method == 'get':
                         response = requests.get(url, headers=headers, proxies=proxies, timeout=15)
                     elif method == 'post':
