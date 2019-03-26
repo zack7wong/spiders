@@ -84,7 +84,10 @@ def get_objects(keyword, pageToken):
     url = SEARCH_URL.format(kw=kw, pageToken=pageToken)
     print(url)
 
-    search_response = requests.get(url,headers=headers)
+    try:
+        search_response = requests.get(url,headers=headers,verify=False)
+    except:
+        return
 
     # print(search_response.text)
     html = HTML(search_response.text)
@@ -149,12 +152,17 @@ if __name__ == '__main__':
 
         pageToken = '0'
         num = 1
-        while pageToken:
-            print('当前页：'+str(num))
-            pageToken = get_objects(kw,pageToken)
-            if pageToken == False:
-                print('已结束')
-                break
-            num+=1
-            print('暂停3秒')
-            time.sleep(3)
+        # while pageToken:
+        for i in range(0,11):
+            try:
+                pageToken = str(i)
+                print('当前页：'+str(num))
+                pageToken = get_objects(kw,pageToken)
+                if pageToken == False:
+                    print('已结束')
+                    break
+                num+=1
+                print('暂停3秒')
+                time.sleep(3)
+            except:
+                continue
