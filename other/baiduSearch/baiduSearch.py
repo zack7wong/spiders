@@ -100,14 +100,15 @@ def get_objects(keyword, pageToken):
     rank = 1
 
     for div in div_list:
-        if re.search('class="EC_newppim',etree.tostring(div,encoding='utf8').decode('utf8')):
-            eachItem_list = div.xpath('./div')
-            for eachItem in eachItem_list:
-                deal(eachItem,rank)
+        if re.search('广告', etree.tostring(div, encoding='utf8').decode('utf8')):
+            if re.search('class="EC_newppim',etree.tostring(div,encoding='utf8').decode('utf8')):
+                    eachItem_list = div.xpath('./div')
+                    for eachItem in eachItem_list:
+                        deal(eachItem,rank)
+                        rank+=1
+            else:
+                deal(div,rank)
                 rank+=1
-        else:
-            deal(div,rank)
-            rank+=1
 
     # # 获取真实url
     # for site in site_list:
