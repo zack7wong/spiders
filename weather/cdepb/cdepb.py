@@ -86,7 +86,7 @@ def start():
 
 if __name__ == '__main__':
     while True:
-        print('当前时间：'+time.strftime('%Y-%m-%d %H:%M:%S'))
+        print('当前时间：'+time.strftime('%Y-%m-%d %H:%M:%S') )
         try:
             start()
             print('1小时后重新运行。。')
