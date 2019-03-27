@@ -50,7 +50,7 @@ def start():
                 vip = html.xpath('string(//input[@id="vip"]/@value)')
 
                 print(name,phone,address,company,position,vip)
-                savr_res = name+','+phone+','+address+','+company+','+position+','+vip+'\n'
+                savr_res = str(i)+','+name+','+phone+','+address+','+company+','+position+','+vip+'\n'
                 with open('结果.csv','a',encoding='gbk',errors='ignore') as f:
                     f.write(savr_res)
         except:
@@ -61,7 +61,7 @@ def start():
 
 if __name__ == '__main__':
     with open('结果.csv', 'w', encoding='gbk', errors='ignore') as f:
-        f.write('姓名,电话,地址,公司,职位,是否vip\n')
+        f.write('id,姓名,电话,地址,公司,职位,是否vip\n')
 
     down = download.Download()
     start()
