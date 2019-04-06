@@ -9,6 +9,7 @@ from lxml.etree import HTML
 import re
 import json
 import urllib
+import os
 from urllib.parse import quote,unquote
 
 headers = {
@@ -42,14 +43,25 @@ location_headers = {
     'Postman-Token': "66de2a0a-f2e1-4b69-8426-0261c82e5431"
     }
 
-def start():
+def start(item):
+    pageNum = int(item['pageNum'])
+    catName = item['catName']
+    url = item['url']
 
-    for i in range(1,224):
+    path = os.path.join(os.getcwd(), catName)
+    folder = os.path.exists(path)
+    if not folder:  # 判断是否存在文件夹如果不存在则创建为文件夹
+        os.makedirs(path)
+
+    for i in range(1,pageNum):
         print('当前页：'+str(i))
-        url = 'https://ibaotu.com/tupian/974/{pageToken}.html'
+        if 'pageToken' in url:
+            start_url = url.format(pageToken=i)
+        else:
+            start_url = url
 
         try:
-            response = requests.get(url.format(pageToken=i),timeout=10)
+            response = requests.get(start_url,timeout=10)
         except:
             print('请求列表错误')
             continue
@@ -84,15 +96,32 @@ def start():
 
 
             print('正在下载。。'+savefileName)
+            endPath = os.path.join(path,savefileName)
             # video_response = requests.get(src,headers=headers)
             # with open(fileName,'wb') as f:
             #     f.write(video_response.content)
             try:
-                urllib.request.urlretrieve(location_url, savefileName)
+                urllib.request.urlretrieve(location_url, endPath)
             except:
                 print('下载出错')
                 continue
 
 
 if __name__ == '__main__':
-    start()
+
+    item_list = []
+    with open('ibaotu.txt') as f:
+        results = f.readlines()
+        for res in results:
+            catName = res.split(',')[0]
+            url = res.split(',')[1]
+            pageNum = res.split(',')[2].strip()
+            obj = {
+                'catName':catName,
+                'url':url,
+                'pageNum':pageNum,
+            }
+            item_list.append(obj)
+    for item in item_list:
+        print(item)
+        start(item)
