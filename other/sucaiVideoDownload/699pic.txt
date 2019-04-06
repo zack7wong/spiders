@@ -1,0 +1,9 @@
+AE模板,http://699pic.com/video-sousuo-0-2-{pageToken}-all-popular-0-0-0.html,314
+会声会影,http://699pic.com/video-sousuo-0-3-{pageToken}-all-popular-0-0-0.html,100
+实拍视频,http://699pic.com/video-sousuo-0-1-{pageToken}-all-popular-0-0-0.html,49
+背景视频,http://699pic.com/video-sousuo-0-7-{pageToken}-all-popular-0-0-0.html,253
+PR模板,http://699pic.com/video-sousuo-0-5-{pageToken}-all-popular-0-0-0.html,49
+Edius,http://699pic.com/video-sousuo-0-4-{pageToken}-all-popular-0-0-0.html,8
+MG动画,http://699pic.com/video-sousuo-0-6-{pageToken}-all-popular-0-0-0.html,17
+视频元素,http://699pic.com/video-sousuo-0-260-{pageToken}-all-popular-0-0-0.html,77
+小视频,http://699pic.com/video-sousuo-0-220-{pageToken}-all-popular-0-0-0.html,8
